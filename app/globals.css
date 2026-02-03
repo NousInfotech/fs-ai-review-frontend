@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  /* Audit Portal Theme Variables */
+  --color-sidebar-bg: #0f172a; /* Dark navy/deep blue */
+  --color-sidebar-text: #f8fafc; /* White text on dark */
+  --color-sidebar-text-muted: #94a3b8; /* Muted gray */
+  --color-content-bg: #f3f4f6; /* Light gray/off-white neutral */
+  --color-card-bg: #ffffff; /* White cards */
+  --color-text-primary: #1e293b; /* Dark charcoal/black */
+  --color-text-secondary: #64748b; /* Muted gray */
+  --color-accent: #6366f1; /* Indigo/Soft purple */
+  --color-accent-hover: #4f46e5;
+  --color-border: #e2e8f0;
+  
+  --background: var(--color-content-bg);
+  --foreground: var(--color-text-primary);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  --color-sidebar: var(--color-sidebar-bg);
+  --color-card: var(--color-card-bg);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* Card Utilities */
+.audit-card {
+  background-color: var(--color-card-bg);
+  border-radius: 1rem; /* Rounded cards */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); /* Soft shadows */
+  border: 1px solid var(--color-border);
+}
+
+.audit-card:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05); /* Smooth elevation */
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Sidebar Utilities */
+.sidebar-gradient {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Glassmorphism Legacy Support (Optional - phasing out or repurposing) */
+.glass {
+  background: white;
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+}
+
