@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Plus, UploadCloud, FileText, CheckCircle, AlertTriangle, Bell, Loader2 } from "lucide-react";
+import { Plus, UploadCloud, FileText, CheckCircle, AlertTriangle, Bell, Loader2, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import PortalLayout from "@/components/PortalLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,15 +20,16 @@ export default function DashboardPage() {
     queryKey: ['dashboardStats'],
     queryFn: async () => {
       try {
-        const response = await api.get('/dashboard/stats');
+        const response = await api.get('/api/v1/dashboard/stats');
         return response.data;
       } catch (error) {
         console.error("Failed to fetch dashboard stats", error);
         // Return zeroed stats on error to prevent UI crash
         return {
-          totalReviews: 0,
-          completed: 0,
-          actionRequired: 0
+          totalDocuments: 0,
+          completedReviews: 0,
+          issuesFound: 0,
+          accuracy: "0%"
         };
       }
     },
@@ -76,12 +77,12 @@ export default function DashboardPage() {
       description="Overview of your financial review activities"
     >
       {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
          <div className="audit-card p-6 flex items-center justify-between">
            <div>
-             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Total Reviews</div>
+             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Total Documents</div>
              <div className="text-3xl font-bold text-[var(--color-text-primary)] mt-1">
-               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.totalReviews || 0)}
+               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.totalDocuments || 0)}
              </div>
            </div>
            <div className="p-3 rounded-xl bg-white border border-gray-100 shadow-sm text-[var(--color-accent)]">
@@ -93,7 +94,7 @@ export default function DashboardPage() {
            <div>
              <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Completed</div>
              <div className="text-3xl font-bold text-[var(--color-text-primary)] mt-1">
-               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.completed || 0)}
+               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.completedReviews || 0)}
              </div>
            </div>
            <div className="p-3 rounded-xl bg-white border border-gray-100 shadow-sm text-green-600">
@@ -103,13 +104,25 @@ export default function DashboardPage() {
 
          <div className="audit-card p-6 flex items-center justify-between">
            <div>
-             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Action Required</div>
+             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Issues Found</div>
              <div className="text-3xl font-bold text-[var(--color-text-primary)] mt-1">
-               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.actionRequired || 0)}
+               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.issuesFound || 0)}
              </div>
            </div>
            <div className="p-3 rounded-xl bg-white border border-gray-100 shadow-sm text-yellow-600">
              <AlertTriangle className="h-6 w-6" />
+           </div>
+         </div>
+
+         <div className="audit-card p-6 flex items-center justify-between">
+           <div>
+             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Accuracy</div>
+             <div className="text-3xl font-bold text-[var(--color-text-primary)] mt-1">
+               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.accuracy || "0%")}
+             </div>
+           </div>
+           <div className="p-3 rounded-xl bg-white border border-gray-100 shadow-sm text-blue-600">
+             <Target className="h-6 w-6" />
            </div>
          </div>
       </div>

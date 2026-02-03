@@ -13,80 +13,14 @@ import DisclosureBreaches from "@/components/results/DisclosureBreaches";
 import ReconciliationTables from "@/components/results/ReconciliationTables";
 import CorrectItems from "@/components/results/CorrectItems";
 
-// Mock Data for testing
-const MOCK_DATA: ReviewResult = {
-  "A": {
-    "title": "CONFIRMED CORRECT ITEMS",
-    "items": [
-      {
-        "test_id": "T1",
-        "category": "GENERAL",
-        "area": "Visual Layout Integrity",
-        "details": "Document layout matches standard requirements."
-      }
-    ]
-  },
-  "B": {
-    "title": "CRITICAL ERRORS",
-    "items": [
-      {
-        "id": "B1",
-        "test_id": "T4",
-        "category": "BALANCE_SHEET",
-        "type": "arithmetical",
-        "severity": "critical",
-        "description": "Balance sheet does not balance.",
-        "location": {
-          "page": 7,
-          "section": "Equity",
-          "note": null,
-          "line_hint": "Total Equity"
-        },
-        "reported_value": 52000,
-        "expected_value": 50000,
-        "difference": 2000,
-        "reason": "Summation error in retained earnings.",
-        "financial_impact": "Overstatement of equity by 2000.",
-        "suggested_fix": "Correct the retained earnings summation."
-      }
-    ]
-  },
-  "C": {
-    "title": "DISCLOSURE & REGULATORY BREACHES",
-    "items": []
-  },
-  "D": {
-    "title": "RECONCILIATION TABLES",
-    "tables": {
-      "equity": {
-        "columns": ["2024", "2023"],
-        "rows": [
-          { "description": "Share capital", "values": [1200, 1200] },
-          { "description": "Retained earnings", "values": [49000, 45000] }
-        ]
-      }
-    }
-  },
-  "E": {
-    "title": "FINAL VERDICT",
-    "verdict": "FINANCIAL STATEMENTS ARE NOT FIT FOR APPROVAL – ERRORS PRESENT"
-  }
-};
-
 const fetchResults = async (uploadId: string): Promise<ReviewResult> => {
-  // In a real scenario, uncomment the API call:
-  // try {
-  //   const response = await api.get(`/reviews/${uploadId}`);
-  //   return response.data.review_result;
-  // } catch (error) {
-  //   console.error("Failed to fetch results, using mock data", error);
-  //   return MOCK_DATA;
-  // }
-  
-  // For now, return mock data to simulate API response
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(MOCK_DATA), 1000);
-  });
+  try {
+    const response = await api.get(`/api/v1/reviews/${uploadId}/result`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch results", error);
+    throw error;
+  }
 };
 
 export default function ResultsPage() {
