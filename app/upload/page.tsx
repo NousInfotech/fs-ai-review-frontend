@@ -9,16 +9,33 @@ import { Loader2, ArrowLeft, Upload as UploadIcon, AlertTriangle } from "lucide-
 import { motion } from "framer-motion";
 import PortalLayout from "@/components/PortalLayout";
 
+const COUNTRY_OPTIONS = ["US", "IN", "GB"];
+const COMPANY_TYPE_OPTIONS = ["LISTED", "PRIVATE", "BANKING", "INSURANCE"];
+const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "US_GAAP", "IND_AS"];
+const REGULATOR_OPTIONS = ["SEC", "SEBI", "MCA"];
+
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
+  const [countryCode, setCountryCode] = useState("US");
+  const [companyType, setCompanyType] = useState("LISTED");
+  const [accountingStandard, setAccountingStandard] = useState("US_GAAP");
+  const [regulator, setRegulator] = useState("SEC");
+  
   const router = useRouter();
 
   const uploadMutation = useMutation({
     mutationFn: async (fileToUpload: File) => {
       const formData = new FormData();
       formData.append("file", fileToUpload);
-      // In a real app, you might want to send more metadata
-      const response = await api.post("/upload", formData, {
+      
+      const queryParams = new URLSearchParams({
+        countryCode,
+        companyType,
+        accountingStandard,
+        regulator
+      }).toString();
+
+      const response = await api.post(`/api/v1/upload?${queryParams}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -27,8 +44,15 @@ export default function UploadPage() {
     },
     onSuccess: (data) => {
       // Deduct credit removed
-      // Assuming backend returns { uploadId: '...' }
-      router.push(`/processing/${data.uploadId}`);
+      // Backend returns { id: "..." }
+      const uploadId = data.id;
+
+      if (!uploadId) {
+        console.error("Upload ID missing in response:", data);
+        return;
+      }
+
+      router.push(`/processing/${uploadId}`);
     },
     onError: (error) => {
       console.error("Upload failed", error);
@@ -74,6 +98,54 @@ export default function UploadPage() {
           
           <div className="p-8">
             <div className="max-w-xl mx-auto space-y-8">
+              
+              {/* Metadata Selection Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">Country</label>
+                  <select 
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2 text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  >
+                    {COUNTRY_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">Company Type</label>
+                  <select 
+                    value={companyType}
+                    onChange={(e) => setCompanyType(e.target.value)}
+                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2 text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  >
+                    {COMPANY_TYPE_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">Accounting Standard</label>
+                  <select 
+                    value={accountingStandard}
+                    onChange={(e) => setAccountingStandard(e.target.value)}
+                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2 text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  >
+                    {ACCOUNTING_STANDARD_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">Regulator</label>
+                  <select 
+                    value={regulator}
+                    onChange={(e) => setRegulator(e.target.value)}
+                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2 text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  >
+                    {REGULATOR_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                  </select>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
                   Document

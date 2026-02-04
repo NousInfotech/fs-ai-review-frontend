@@ -41,12 +41,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (loading) return;
 
     // Define public routes that don't require authentication
-    const publicRoutes = ["/login", "/signup"]; 
+    const publicRoutes = ["/login", "/signup", "/admin/login"];
     const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route));
 
-    if (!user && !isPublicRoute) {
-      router.push("/login");
-    }
+    if (!user) {
+      // Special-case admin namespace to use the admin login page
+      const isAdminNamespace = pathname.startsWith("/admin");
+      if (isAdminNamespace && pathname !== "/admin/login") {
+        router.push("/admin/login");
+        return;
+      }
+      if (!isPublicRoute) {
+        router.push("/login");
+      }
+    } 
   }, [user, loading, pathname, router]);
 
   const signOut = async () => {

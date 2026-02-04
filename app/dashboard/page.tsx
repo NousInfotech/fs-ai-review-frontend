@@ -39,26 +39,30 @@ export default function DashboardPage() {
 
   const uploadMutation = useMutation({
     mutationFn: async (fileToUpload: File) => {
-      // Mock implementation for frontend demo without backend
-      // In a real app, this would be:
-      // const formData = new FormData();
-      // formData.append("file", fileToUpload);
-      // const response = await api.post("/upload", formData, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
-      // return response.data;
-
-      return new Promise<{ uploadId: string }>((resolve) => {
-        setTimeout(() => {
-          resolve({ uploadId: "mock-upload-id-123" });
-        }, 1500);
+      const formData = new FormData();
+      formData.append("file", fileToUpload);
+      
+      const response = await api.post("/api/v1/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+      return response.data;
     },
     onSuccess: (data) => {
       // Deduct credit on successful upload
       deductCredit();
-      // Assuming backend returns { uploadId: '...' }
-      router.push(`/processing/${data.uploadId}`);
+      
+      // Ensure we capture the ID correctly from backend response
+      // Backend returns { id: "..." }
+      const uploadId = data.id;
+      
+      if (!uploadId) {
+        console.error("Upload ID missing in response:", data);
+        return;
+      }
+      
+      router.push(`/processing/${uploadId}`);
     },
     onError: (error) => {
       console.error("Upload failed", error);

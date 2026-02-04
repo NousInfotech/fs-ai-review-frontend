@@ -26,6 +26,14 @@ export interface CriticalError {
   reason?: string;
   financial_impact?: string;
   suggested_fix?: string;
+  annotated_image_url?: string | null;
+  extractedValues?: {
+    section?: string;
+    error_id?: string;
+    reported_value?: any;
+    expected_value?: any;
+    [key: string]: any;
+  };
 }
 
 export interface DisclosureBreach {
@@ -86,9 +94,18 @@ export interface ReviewResult {
   E: SectionE;
 }
 
+export interface TestResult {
+  id: string;
+  testCaseId: string;
+  status: 'PASS' | 'FAIL' | 'WARNING';
+  message: string;
+  annotated_image_url?: string;
+  extractedValues?: Record<string, any>;
+}
+
 export interface ReviewResponse {
   id: string;
   status: string;
-  review_result: ReviewResult;
+  review_result: TestResult[]; // Updated to array of TestResult
   created_at: string;
 }

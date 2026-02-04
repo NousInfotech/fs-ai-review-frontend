@@ -9,7 +9,8 @@ import api from "@/lib/api";
 import { format } from "date-fns";
 
 interface ReviewHistoryItem {
-  _id: string;
+  id: string;
+  _id?: string;
   userId: string;
   fileHash: string;
   fileUrl: string;
@@ -26,7 +27,11 @@ export default function HistoryPage() {
     queryFn: async () => {
       try {
         const response = await api.get('/api/v1/reviews/');
-        return response.data as ReviewHistoryItem[];
+        // Handle potential _id/id mismatch from backend
+        return (response.data as any[]).map(item => ({
+          ...item,
+          id: item.id || item._id
+        })) as ReviewHistoryItem[];
       } catch (error) {
         console.error("Failed to fetch reviews", error);
         throw error;
@@ -107,10 +112,10 @@ export default function HistoryPage() {
         >
           {reviews.map((review) => (
             <motion.div
-              key={review._id}
+              key={review.id}
               variants={item}
               whileHover={{ y: -5 }}
-              onClick={() => router.push(`/results/${review._id}`)}
+              onClick={() => router.push(`/results/${review.id}`)}
               className="audit-card p-6 cursor-pointer group relative overflow-hidden"
             >
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -134,8 +139,8 @@ export default function HistoryPage() {
                 </span>
               </div>
 
-              <h3 className="text-lg font-medium text-[var(--color-text-primary)] truncate mb-2" title={getFilename(review.fileUrl) || review._id}>
-                {getFilename(review.fileUrl) || `Review #${review._id.substring(0, 8)}`}
+              <h3 className="text-lg font-medium text-[var(--color-text-primary)] truncate mb-2" title={getFilename(review.fileUrl) || review.id}>
+                {getFilename(review.fileUrl) || `Review #${review.id.substring(0, 8)}`}
               </h3>
               
               <div className="flex items-center text-sm text-[var(--color-text-secondary)]">

@@ -8,16 +8,18 @@ interface VerdictSectionProps {
 
 export default function VerdictSection({ data, criticalErrors }: VerdictSectionProps) {
   const hasErrors = criticalErrors.items.length > 0;
+  const isNotFit = data.verdict.toUpperCase().includes("NOT FIT FOR APPROVAL");
+  const isDanger = isNotFit || hasErrors;
 
   return (
     <div className={`mb-8 p-6 rounded-xl border-l-8 shadow-sm ${
-      hasErrors 
+      isDanger 
         ? "bg-red-50 border-red-600 text-red-900" 
         : "bg-green-50 border-green-600 text-green-900"
     }`}>
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0 mt-1">
-          {hasErrors ? (
+          {isDanger ? (
             <ShieldAlert className="h-8 w-8 text-red-600" />
           ) : (
             <CheckCircle className="h-8 w-8 text-green-600" />

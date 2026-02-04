@@ -10,14 +10,13 @@ import { motion } from "framer-motion";
 import PortalLayout from "@/components/PortalLayout";
 
 interface ProcessingStatus {
-  status: 'queued' | 'ocr' | 'analyzing' | 'completed' | 'failed';
-  progress: number;
-  stage: string;
+  id: string;
+  status: 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  // Add other fields if returned by API, e.g., fileHash, filename
 }
 
-// Mock API function (in reality this would be in api.ts or inline)
 const fetchStatus = async (uploadId: string): Promise<ProcessingStatus> => {
-  const response = await api.get(`/processing/${uploadId}`);
+  const response = await api.get(`/api/v1/reviews/${uploadId}`);
   return response.data;
 };
 
@@ -26,62 +25,58 @@ export default function ProcessingPage() {
   const router = useRouter();
   const uploadId = params.uploadId as string;
 
-  // Simulate progress for demo purposes if backend is not ready
-  const [mockStatus, setMockStatus] = useState<ProcessingStatus>({
-    status: 'queued',
-    progress: 0,
-    stage: 'Initializing...'
-  });
+  // Prevent API calls for the deprecated mock ID
+  const isMockId = uploadId === 'mock-upload-id-123';
 
   // Real polling query
-  const { data: statusData } = useQuery({
+  const { data: statusData, error } = useQuery({
     queryKey: ['processingStatus', uploadId],
     queryFn: () => fetchStatus(uploadId),
     refetchInterval: (query) => {
       const data = query.state.data;
-      if (data?.status === 'completed' || data?.status === 'failed') {
+      if (data?.status === 'COMPLETED' || data?.status === 'FAILED') {
         return false;
       }
-      return 5000;
+      return 2000;
     },
-    enabled: false, 
+    enabled: !!uploadId && !isMockId, 
   });
 
-  // Simulation effect for demo
   useEffect(() => {
-    const stages: ProcessingStatus[] = [
-      { status: 'ocr', progress: 25, stage: 'Extracting text from PDF (OCR)...' },
-      { status: 'analyzing', progress: 50, stage: 'Analyzing financial statements...' },
-      { status: 'analyzing', progress: 75, stage: 'Running compliance tests...' },
-      { status: 'completed', progress: 100, stage: 'Analysis complete!' },
-    ];
+    if (isMockId) {
+        // Redirect deprecated mock ID to dashboard or show error
+        // We'll let the UI handle it below for clarity
+        return;
+    }
+    if (statusData?.status === 'COMPLETED') {
+      router.push(`/results/${uploadId}`);
+    }
+  }, [statusData, router, uploadId, isMockId]);
 
-    let currentStage = 0;
-    
-    const interval = setInterval(() => {
-      if (currentStage < stages.length) {
-        setMockStatus(stages[currentStage]);
-        if (stages[currentStage].status === 'completed') {
-           setTimeout(() => {
-             router.push(`/results/${uploadId}`);
-           }, 1000);
-           clearInterval(interval);
-        }
-        currentStage++;
-      }
-    }, 3000); 
+  if (isMockId) {
+     return (
+        <PortalLayout title="Processing" description="Invalid Session">
+          <div className="flex flex-col justify-center items-center py-12">
+             <div className="text-yellow-600 text-lg font-medium mb-2">Demo Session Expired</div>
+             <p className="text-gray-500 mb-4">The ID {uploadId} is no longer valid.</p>
+             <button onClick={() => router.push('/dashboard')} className="text-indigo-600 underline">Start New Review</button>
+          </div>
+        </PortalLayout>
+     )
+  }
 
-    return () => clearInterval(interval);
-  }, [router, uploadId]);
+  if (error) {
+     return (
+        <PortalLayout title="Processing" description="Error">
+          <div className="flex flex-col justify-center items-center py-12">
+             <div className="text-red-500 mb-4">Failed to check processing status.</div>
+             <button onClick={() => window.location.reload()} className="text-indigo-600 underline">Retry</button>
+          </div>
+        </PortalLayout>
+     )
+  }
 
-  const currentStatus = statusData || mockStatus;
-
-  const steps = [
-    { name: 'Upload Received', status: 'complete' },
-    { name: 'OCR Processing', status: currentStatus.progress >= 25 ? (currentStatus.progress > 25 ? 'complete' : 'current') : 'upcoming' },
-    { name: 'AI Analysis', status: currentStatus.progress >= 50 ? (currentStatus.progress > 75 ? 'complete' : 'current') : 'upcoming' },
-    { name: 'Generating Report', status: currentStatus.progress === 100 ? 'complete' : 'upcoming' },
-  ];
+  const isFailed = statusData?.status === 'FAILED';
 
   return (
     <PortalLayout title="Processing" description="Analyzing your document">
@@ -91,6 +86,13 @@ export default function ProcessingPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-lg audit-card p-8 relative overflow-hidden"
         >
+          {isFailed ? (
+            <div className="text-center">
+                <div className="text-red-600 text-xl font-bold mb-2">Processing Failed</div>
+                <p className="text-gray-500">There was an error processing your document. Please try again.</p>
+            </div>
+          ) : (
+          <>
           <div className="text-center mb-8">
             <motion.div
               animate={{ 
@@ -110,67 +112,21 @@ export default function ProcessingPage() {
               Processing Document
             </h2>
             <p className="text-[var(--color-text-secondary)]">
-              {currentStatus.stage}
+              AI Analysis in progress...
             </p>
           </div>
 
-          {/* Progress Bar */}
+          {/* Simple Progress Indication */}
           <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden mb-10">
             <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${currentStatus.progress}%` }}
-              transition={{ duration: 0.5 }}
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
               className="absolute top-0 left-0 h-full bg-indigo-600"
             />
           </div>
-
-          {/* Steps */}
-          <div className="space-y-6">
-            {steps.map((step, index) => (
-              <div key={step.name} className="flex items-center">
-                <div className="flex-shrink-0 relative">
-                  {step.status === 'complete' ? (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center border border-green-200"
-                    >
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                    </motion.div>
-                  ) : step.status === 'current' ? (
-                    <div className="h-8 w-8 rounded-full border-2 border-indigo-500 flex items-center justify-center relative">
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="h-2.5 w-2.5 rounded-full bg-indigo-500"
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-8 w-8 rounded-full border-2 border-gray-200 flex items-center justify-center">
-                      <Circle className="h-4 w-4 text-gray-300" />
-                    </div>
-                  )}
-                  
-                  {index !== steps.length - 1 && (
-                    <div className={clsx(
-                      "absolute top-8 left-1/2 -translate-x-1/2 h-6 w-0.5",
-                      step.status === 'complete' ? "bg-green-200" : "bg-gray-100"
-                    )} />
-                  )}
-                </div>
-                
-                <div className="ml-4 flex-1">
-                  <p className={clsx(
-                    "text-sm font-medium",
-                    step.status === 'complete' ? "text-[var(--color-text-primary)]" : 
-                    step.status === 'current' ? "text-indigo-600" : "text-gray-400"
-                  )}>
-                    {step.name}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          </>
+          )}
         </motion.div>
       </div>
     </PortalLayout>

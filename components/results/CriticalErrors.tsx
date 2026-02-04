@@ -1,15 +1,63 @@
 import { SectionB } from "@/types/review";
-import { AlertOctagon, ArrowRight, Calculator, MapPin, Wrench } from "lucide-react";
+import { AlertOctagon, ArrowRight, Calculator, MapPin, Wrench, Eye, X } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CriticalErrorsProps {
   data: SectionB;
 }
 
 export default function CriticalErrors({ data }: CriticalErrorsProps) {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   if (data.items.length === 0) return null;
 
   return (
     <div className="mb-10">
+      {/* Image Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-4xl w-full bg-white rounded-xl overflow-hidden shadow-2xl"
+            >
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="max-h-[80vh] overflow-auto bg-gray-100 flex items-center justify-center p-2">
+                <img
+                  src={selectedImage}
+                  alt="Error Evidence"
+                  className="max-w-full h-auto object-contain shadow-lg"
+                />
+              </div>
+              <div className="p-4 bg-white border-t border-gray-100">
+                <h4 className="font-bold text-gray-900 flex items-center">
+                  <AlertOctagon className="h-4 w-4 text-red-600 mr-2" />
+                  Visual Evidence
+                </h4>
+                <p className="text-sm text-gray-500 mt-1">
+                  The red box highlights where the discrepancy was detected in the original document.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
         <AlertOctagon className="h-6 w-6 text-red-600 mr-2" />
         {data.title}
@@ -38,6 +86,15 @@ export default function CriticalErrors({ data }: CriticalErrorsProps) {
                   </div>
                   <h4 className="text-lg font-bold text-gray-900">{item.description}</h4>
                 </div>
+                {item.annotated_image_url && (
+                  <button
+                    onClick={() => setSelectedImage(item.annotated_image_url!)}
+                    className="flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-100 transition-colors border border-indigo-200"
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Evidence
+                  </button>
+                )}
               </div>
 
               {/* Math/Logic Details Grid */}
