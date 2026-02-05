@@ -6,7 +6,6 @@ import { FileText, Clock, ChevronRight, Search, Loader2, AlertCircle } from "luc
 import { motion } from "framer-motion";
 import PortalLayout from "@/components/PortalLayout";
 import api from "@/lib/api";
-import { format } from "date-fns";
 
 interface ReviewHistoryItem {
   id: string;
@@ -56,7 +55,7 @@ export default function HistoryPage() {
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'yyyy-MM-dd');
+      return new Date(dateString).toLocaleDateString('en-CA');
     } catch (e) {
       return dateString;
     }
