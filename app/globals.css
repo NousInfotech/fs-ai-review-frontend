@@ -1,37 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Audit Portal Theme Variables */
-  --color-sidebar-bg: #0f172a; /* Dark navy/deep blue */
-  --color-sidebar-text: #f8fafc; /* White text on dark */
-  --color-sidebar-text-muted: #94a3b8; /* Muted gray */
-  --color-content-bg: #f3f4f6; /* Light gray/off-white neutral */
-  --color-card-bg: #ffffff; /* White cards */
-  --color-text-primary: #1e293b; /* Dark charcoal/black */
-  --color-text-secondary: #64748b; /* Muted gray */
-  --color-accent: #6366f1; /* Indigo/Soft purple */
-  --color-accent-hover: #4f46e5;
-  --color-border: #e2e8f0;
-  
-  --background: var(--color-content-bg);
-  --foreground: var(--color-text-primary);
+  --primary-color: #0f1729;
+  --light-color: #ffffff;
+  --dark-color: #000000;
+
+  /* Core backgrounds */
+  --background: 228 100% 98%;
+  --foreground: 222 47% 11%;
+
+  /* Sidebar colors */
+  --sidebar-background: 222 47% 11%;
+  --sidebar-foreground: 220 14% 96%;
+  --sidebar-primary: 43 96% 56%;
+  --sidebar-primary-foreground: 222 47% 11%;
+  --sidebar-accent: 215 25% 27%;
+  --sidebar-accent-foreground: 220 14% 96%;
+  --sidebar-border: 215 25% 27%;
+  --sidebar-ring: 43 96% 56%;
+  --sidebar-hover: 215 25% 27%;
+  --sidebar-active: 222 47% 19%;
+  --sidebar-logo-bg: 222 47% 11%;
+
+  /* Accent colors */
+  --accent: 0 0% 45%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 220 14% 96%;
+  --radius: 0.75rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-primary: var(--primary-color);
+  --color-light: var(--light-color);
+  --color-dark: var(--dark-color);
+  --font-poppins: "Poppins", sans-serif;
+  --font-sans: var(--font-poppins);
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --color-sidebar-active: hsl(var(--sidebar-active));
+  --color-sidebar-hover: hsl(var(--sidebar-hover));
   
-  --color-sidebar: var(--color-sidebar-bg);
-  --color-card: var(--color-card-bg);
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --radius-4xl: 2rem;
+}
+
+html, body, * {
+  font-family: var(--font-poppins) !important;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   min-height: 100vh;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;   /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+
+/* Premium Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--sidebar-background));
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--sidebar-accent));
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--sidebar-background)) hsl(var(--muted));
 }
 
 /* Card Utilities */
