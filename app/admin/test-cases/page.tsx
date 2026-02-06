@@ -26,7 +26,7 @@ const SEVERITY_OPTIONS = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
 const CATEGORY_OPTIONS = ['Financial', 'Compliance', 'Arithmetic'];
 const COUNTRY_OPTIONS = ["US", "IN", "GB"];
 const COMPANY_TYPE_OPTIONS = ["LISTED", "PRIVATE", "BANKING", "INSURANCE"];
-const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "US_GAAP", "IND_AS"];
+const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "GAPSME"];
 const REGULATOR_OPTIONS = ["SEC", "SEBI", "MCA"];
 
 export default function TestCasesPage() {
@@ -46,7 +46,7 @@ export default function TestCasesPage() {
     enabled: true,
     countryCode: 'US',
     companyType: 'LISTED',
-    accountingStandard: 'US_GAAP',
+    accountingStandard: 'IFRS',
     regulator: 'SEC'
   });
 
@@ -97,9 +97,9 @@ export default function TestCasesPage() {
       category: 'Financial',
       enabled: true,
       countryCode: 'US',
-      companyType: 'LISTED',
-      accountingStandard: 'US_GAAP',
-      regulator: 'SEC'
+    companyType: 'LISTED',
+    accountingStandard: 'IFRS',
+    regulator: 'SEC'
     });
     setIsModalOpen(true);
   };
@@ -114,7 +114,7 @@ export default function TestCasesPage() {
       enabled: tc.enabled,
       countryCode: tc.countryCode || 'US',
       companyType: tc.companyType || 'LISTED',
-      accountingStandard: tc.accountingStandard || 'US_GAAP',
+      accountingStandard: tc.accountingStandard || 'IFRS',
       regulator: tc.regulator || 'SEC'
     });
     setIsModalOpen(true);

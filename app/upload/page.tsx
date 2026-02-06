@@ -13,14 +13,14 @@ import { toast } from "react-hot-toast";
 
 const COUNTRY_OPTIONS = ["US", "IN", "GB"];
 const COMPANY_TYPE_OPTIONS = ["LISTED", "PRIVATE", "BANKING", "INSURANCE"];
-const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "US_GAAP", "IND_AS"];
+const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "GAPSME"];
 const REGULATOR_OPTIONS = ["SEC", "SEBI", "MCA"];
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [countryCode, setCountryCode] = useState("US");
   const [companyType, setCompanyType] = useState("LISTED");
-  const [accountingStandard, setAccountingStandard] = useState("US_GAAP");
+  const [accountingStandard, setAccountingStandard] = useState("IFRS");
   const [regulator, setRegulator] = useState("SEC");
   
   const router = useRouter();

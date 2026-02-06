@@ -73,7 +73,16 @@ export default function HistoryPage() {
       {isError ? (
         <div className="flex flex-col items-center justify-center h-64 text-red-500">
           <AlertCircle className="h-10 w-10 mb-4" />
-          <p>Failed to load history. Please try again later.</p>
+          <p className="font-medium">Failed to load history</p>
+          <p className="text-sm mt-2 text-gray-500">
+            Check your internet connection or ensure the backend API is reachable.
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm transition-colors"
+          >
+            Retry
+          </button>
         </div>
       ) : (
         <HistoryList documents={reviews || []} isLoading={isLoading} />
