@@ -2,21 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { FileText, Clock, ChevronRight, Search, Loader2, AlertCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import { Search, Loader2, AlertCircle } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import api from "@/lib/api";
-
-interface ReviewHistoryItem {
-  id: string;
-  _id?: string;
-  userId: string;
-  fileHash: string;
-  fileUrl: string;
-  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
-  totalPages: number;
-  createdAt: string;
-}
+import HistoryList from "@/components/history/HistoryList";
+import { HistoryDocument } from "@/lib/types";
+import { generateDisplayId } from "@/lib/utils";
 
 export default function HistoryPage() {
   const router = useRouter();
@@ -26,50 +17,42 @@ export default function HistoryPage() {
     queryFn: async () => {
       try {
         const response = await api.get('/api/v1/reviews/');
-        // Handle potential _id/id mismatch from backend
-        return (response.data as any[]).map(item => ({
-          ...item,
-          id: item.id || item._id
-        })) as ReviewHistoryItem[];
+        // Transform backend response to HistoryDocument
+        return (response.data as any[]).map(item => {
+          const id = item.id || item._id;
+          
+          // Robust extraction of company name and date from various possible fields
+          const companyName = 
+            item.companyName || 
+            item.company_name || 
+            item.metadata?.companyName || 
+            item.metadata?.company_name || 
+            "Unknown Company";
+
+          const documentDate = 
+            item.documentDate || 
+            item.document_date || 
+            item.metadata?.documentDate || 
+            item.metadata?.document_date || 
+            "Date Not Found";
+
+          return {
+            id: id,
+            displayId: item.displayId || generateDisplayId(id),
+            companyName: companyName,
+            documentDate: documentDate,
+            uploadDate: item.createdAt || new Date().toISOString(),
+            fileUrl: item.fileUrl,
+            status: item.status,
+            totalPages: item.totalPages || 0
+          } as HistoryDocument;
+        });
       } catch (error) {
         console.error("Failed to fetch reviews", error);
         throw error;
       }
     }
   });
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
-
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-CA');
-    } catch (e) {
-      return dateString;
-    }
-  };
-
-  const getFilename = (url: string) => {
-    if (!url) return null;
-    try {
-      const decoded = decodeURIComponent(url);
-      return decoded.split('/').pop() || null;
-    } catch {
-      return url.split('/').pop() || null;
-    }
-  };
 
   return (
     <PortalLayout 
@@ -87,74 +70,13 @@ export default function HistoryPage() {
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-          <Loader2 className="h-10 w-10 animate-spin mb-4 text-[var(--color-accent)]" />
-          <p>Loading your history...</p>
-        </div>
-      ) : isError ? (
+      {isError ? (
         <div className="flex flex-col items-center justify-center h-64 text-red-500">
           <AlertCircle className="h-10 w-10 mb-4" />
           <p>Failed to load history. Please try again later.</p>
         </div>
-      ) : !reviews || reviews.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-          <FileText className="h-12 w-12 mb-4 opacity-20" />
-          <p>No reviews found.</p>
-        </div>
       ) : (
-        <motion.div 
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {reviews.map((review) => (
-            <motion.div
-              key={review.id}
-              variants={item}
-              whileHover={{ y: -5 }}
-              onClick={() => router.push(`/results/${review.id}`)}
-              className="audit-card p-6 cursor-pointer group relative overflow-hidden"
-            >
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-indigo-500" />
-              </div>
-              
-              <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-xl ${
-                  review.status === 'COMPLETED' ? 'bg-indigo-50 text-indigo-600' :
-                  review.status === 'PROCESSING' ? 'bg-yellow-50 text-yellow-600' :
-                  'bg-red-50 text-red-600'
-                }`}>
-                  <FileText className="h-6 w-6" />
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                  review.status === 'COMPLETED' ? 'bg-green-100 text-green-700 border-green-200' :
-                  review.status === 'PROCESSING' ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
-                  'bg-red-100 text-red-700 border-red-200'
-                }`}>
-                  {review.status.charAt(0).toUpperCase() + review.status.slice(1).toLowerCase()}
-                </span>
-              </div>
-
-              <h3 className="text-lg font-medium text-[var(--color-text-primary)] truncate mb-2" title={getFilename(review.fileUrl) || review.id}>
-                {getFilename(review.fileUrl) || `Review #${review.id.substring(0, 8)}`}
-              </h3>
-              
-              <div className="flex items-center text-sm text-[var(--color-text-secondary)]">
-                <Clock className="h-4 w-4 mr-1" />
-                <span>{formatDate(review.createdAt)}</span>
-              </div>
-
-              {review.status === 'PROCESSING' && (
-                <div className="mt-4 w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-yellow-500 h-1.5 rounded-full w-2/3 animate-pulse"></div>
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
+        <HistoryList documents={reviews || []} isLoading={isLoading} />
       )}
     </PortalLayout>
   );

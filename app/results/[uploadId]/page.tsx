@@ -2,14 +2,23 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Download, Loader2, CheckCircle, XCircle, AlertTriangle, ImageIcon, ExternalLink } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { 
+  ArrowLeft, 
+  Loader2, 
+  CheckCircle, 
+  XCircle, 
+  Clock, 
+  Download
+} from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import api from "@/lib/api";
-import { TestResult } from "@/types/review";
+import { StandardizedResultResponse, HistoryDocument } from "@/lib/types";
 import { clsx } from "clsx";
+import TestList from "@/components/results/TestList";
+import { generateDisplayId } from "@/lib/utils";
 
-const fetchResults = async (uploadId: string): Promise<TestResult[]> => {
+const fetchResults = async (uploadId: string): Promise<StandardizedResultResponse> => {
   try {
     const response = await api.get(`/api/v1/reviews/${uploadId}/result`);
     return response.data;
@@ -19,41 +28,63 @@ const fetchResults = async (uploadId: string): Promise<TestResult[]> => {
   }
 };
 
+const fetchReviewMetadata = async (uploadId: string): Promise<HistoryDocument> => {
+  const response = await api.get(`/api/v1/reviews/${uploadId}`);
+  const item = response.data;
+  const id = item.id || item._id || uploadId;
+  return {
+    id: id,
+    displayId: item.displayId || generateDisplayId(id),
+    companyName: item.companyName || "Unknown Company",
+    documentDate: item.documentDate || "Date Not Found",
+    uploadDate: item.createdAt || new Date().toISOString(),
+    fileUrl: item.fileUrl,
+    status: item.status,
+    totalPages: item.totalPages || 0
+  };
+};
+
 export default function ResultsPage() {
   const params = useParams();
   const router = useRouter();
   const uploadId = params.uploadId as string;
-
-  // Prevent API calls for the deprecated mock ID
-  const isMockId = uploadId === 'mock-upload-id-123';
-
-  const { data: results, isLoading, error } = useQuery({
+  const [isDownloading, setIsDownloading] = useState(false);
+  
+  const { data: results, isLoading: isLoadingResults, error: resultsError } = useQuery({
     queryKey: ['reviewResults', uploadId],
     queryFn: () => fetchResults(uploadId),
-    enabled: !isMockId, // Disable query for mock ID
   });
 
-  if (isMockId) {
-    return (
-      <PortalLayout>
-        <div className="text-center py-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 mb-6">
-            <AlertTriangle className="w-8 h-8 text-yellow-600" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Demo Session Expired</h3>
-          <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            The demo ID <code>{uploadId}</code> is no longer supported. Please start a new review to use the live system.
-          </p>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-          >
-            Start New Review
-          </button>
-        </div>
-      </PortalLayout>
-    );
-  }
+  const { data: metadata, isLoading: isLoadingMetadata } = useQuery({
+    queryKey: ['reviewMetadata', uploadId],
+    queryFn: () => fetchReviewMetadata(uploadId),
+  });
+
+  const isLoading = isLoadingResults || isLoadingMetadata;
+  const error = resultsError;
+
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
+      const response = await api.get(`/api/v1/reviews/${uploadId}/pdf`, {
+        responseType: 'blob',
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `audit-report-${uploadId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download PDF", error);
+      alert("Failed to download the report. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -62,7 +93,6 @@ export default function ResultsPage() {
           <div className="text-center">
             <Loader2 className="h-12 w-12 animate-spin text-indigo-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900">Loading Results...</h3>
-            <p className="text-gray-500">Retrieving detailed analysis report</p>
           </div>
         </div>
       </PortalLayout>
@@ -86,120 +116,64 @@ export default function ResultsPage() {
     );
   }
 
+  // Use metadata if available, otherwise fallback to basic info
+  const displayTitle = metadata?.companyName && metadata.companyName !== "Unknown Company" 
+    ? `${metadata.companyName} - Audit Results` 
+    : "Audit Results";
+    
+  const displayId = metadata?.displayId || generateDisplayId(uploadId);
+
   return (
     <PortalLayout 
-      title="Review Results" 
-      description={`Analysis Report ID: ${uploadId}`}
+      title={displayTitle}
+      description={`Analysis Report ID: ${displayId}`}
     >
       {/* Header Actions */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-8">
         <button
           onClick={() => router.push('/dashboard')}
-          className="flex items-center text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors"
+          className="flex items-center text-sm text-gray-500 hover:text-indigo-600 transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
           Back to Dashboard
         </button>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          type="button"
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          <Download className="-ml-1 mr-2 h-4 w-4" aria-hidden="true" />
-          Download PDF Report
-        </motion.button>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className={clsx(
+              "px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-2",
+              results.status === 'COMPLETED' ? "bg-green-100 text-green-700" : 
+              results.status === 'FAILED' ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
+            )}>
+              {results.status === 'COMPLETED' && <CheckCircle className="h-4 w-4" />}
+              {results.status === 'FAILED' && <XCircle className="h-4 w-4" />}
+              {results.status === 'PROCESSING' && <Loader2 className="h-4 w-4 animate-spin" />}
+              {results.status}
+            </div>
+
+            <button
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-indigo-200"
+            >
+              {isDownloading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Download Report
+            </button>
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
+            <Clock className="w-4 h-4 mr-2 text-gray-400" />
+            Processed in <span className="font-bold ml-1">{results.processingTimeSeconds}s</span>
+          </div>
+        </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow overflow-hidden"
-      >
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Compliance Test Results</h3>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
-                  Test ID
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-64">
-                  Details
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
-                  View Image
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {results.map((result) => (
-                <tr key={result.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {result.testCaseId}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={clsx(
-                      "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                      result.status === 'PASS' ? "bg-green-100 text-green-800" :
-                      result.status === 'FAIL' ? "bg-red-100 text-red-800" :
-                      "bg-yellow-100 text-yellow-800"
-                    )}>
-                      {result.status === 'PASS' && <CheckCircle className="w-3 h-3 mr-1" />}
-                      {result.status === 'FAIL' && <XCircle className="w-3 h-3 mr-1" />}
-                      {result.status === 'WARNING' && <AlertTriangle className="w-3 h-3 mr-1" />}
-                      {result.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    {result.message}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    {result.extractedValues ? (
-                       <div className="space-y-1">
-                         {Object.entries(result.extractedValues).map(([key, value]) => (
-                           <div key={key} className="flex justify-between text-xs">
-                             <span className="font-medium text-gray-600 capitalize">{key.replace(/_/g, ' ')}:</span>
-                             <span className="text-gray-800">{String(value)}</span>
-                           </div>
-                         ))}
-                       </div>
-                    ) : (
-                      <span className="text-gray-400 italic">No details</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {result.annotated_image_url ? (
-                      <a 
-                        href={result.annotated_image_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
-                      >
-                        <ImageIcon className="w-4 h-4 mr-1" />
-                        View
-                        <ExternalLink className="w-3 h-3 ml-1" />
-                      </a>
-                    ) : (
-                      <span className="text-gray-400">N/A</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </motion.div>
+      {/* Results Groups */}
+      <TestList uploadId={uploadId} />
     </PortalLayout>
   );
 }

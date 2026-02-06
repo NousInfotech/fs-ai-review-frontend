@@ -7,15 +7,12 @@ import {
     ChevronDown, 
     ChevronUp, 
     X, 
-    FileText 
+    FileText,
+    LayoutDashboard,
+    Archive,
+    Upload,
+    Settings
 } from "lucide-react";
-import { 
-    DashboardSquare02Icon, 
-    ArchiveIcon, 
-    Upload01Icon, 
-    Settings02Icon 
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { cn } from "../lib/utils";
 import {
     Tooltip,
@@ -65,33 +62,33 @@ export default function Sidebar({
 
     const menu: MenuItem[] = [
         {
-            slug: "dashboard",
-            label: "Main Dashboard",
-            icon: DashboardSquare02Icon,
-            href: "/dashboard",
-            description: "Overview and insights",
-            section: "primary"
-        },
-        {
-            slug: "history",
-            label: "History",
-            icon: ArchiveIcon,
-            href: "/history",
-            description: "Past reviews",
-            section: "primary"
-        },
-        {
             slug: "upload",
             label: "Upload Statement",
-            icon: Upload01Icon,
+            icon: Upload,
             href: "/upload",
             description: "Process new documents",
             section: "primary"
         },
         {
+            slug: "history",
+            label: "History",
+            icon: Archive,
+            href: "/history",
+            description: "Past reviews",
+            section: "primary"
+        },
+        {
+            slug: "dashboard",
+            label: "Dashboard",
+            icon: LayoutDashboard,
+            href: "/dashboard",
+            description: "Overview and insights",
+            section: "primary"
+        },
+        {
             slug: "settings",
             label: "Settings",
-            icon: Settings02Icon,
+            icon: Settings,
             href: "/settings",
             description: "Account and app settings",
             section: "settings"
@@ -193,11 +190,7 @@ export default function Sidebar({
                             color: isActive ? `hsl(var(--sidebar-primary-foreground))` : `hsl(var(--sidebar-foreground))`
                         }}
                     >
-                        {typeof item.icon === 'function' || (typeof item.icon === 'object' && item.icon && 'render' in item.icon) ? (
-                            <item.icon className={cn(isCollapsed ? "h-4 w-4" : "h-5 w-5")} />
-                        ) : (
-                            <HugeiconsIcon icon={item.icon} className={cn(isCollapsed ? "h-4 w-4" : "h-5 w-5")} />
-                        )}
+                        <item.icon className={cn(isCollapsed ? "h-4 w-4" : "h-5 w-5")} />
                     </div>
 
                     {!isCollapsed && (
