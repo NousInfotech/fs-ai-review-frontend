@@ -72,7 +72,7 @@
 }
 
 html {
-  scroll-behavior: smooth !important;
+  /* scroll-behavior: smooth removed to prevent conflict with Lenis */
 }
 
 section[id], div[id] {

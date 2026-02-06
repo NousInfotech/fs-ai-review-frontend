@@ -16,8 +16,8 @@ export default function FadeIn({
   children,
   delay = 0,
   direction = "up",
-  duration = 0.5,
-  distance = 20,
+  duration = 0.8,
+  distance = 40,
   className = "",
 }: FadeInProps) {
   const directions = {
@@ -28,23 +28,31 @@ export default function FadeIn({
     none: { x: 0, y: 0 },
   };
 
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        ...directions[direction],
-      }}
-      whileInView={{
-        opacity: 1,
-        x: 0,
-        y: 0,
-      }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{
+  const variants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.95,
+      ...directions[direction],
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      y: 0,
+      transition: {
         duration: duration,
         delay: delay,
-        ease: [0.21, 0.47, 0.32, 0.98],
-      }}
+        ease: [0.16, 1, 0.3, 1] as any,
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={variants}
       className={className}
     >
       {children}

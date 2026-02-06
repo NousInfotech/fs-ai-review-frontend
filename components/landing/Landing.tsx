@@ -7,7 +7,12 @@ import Hero from './Hero'
 import TrustedBy from './TrustedBy'
 import HowItWorks from './HowItWorks'
 import Features from './Features'
+import AuditGradeChecks from './AuditGradeChecks'
+import WhatWeCheck from './WhatWeCheck'
+import WhoItIsFor from './WhoItIsFor'
 import Pricing from './Pricing'
+import StandardsSupported from './StandardsSupported'
+import RegistryMatching from './RegistryMatching'
 import FAQ from './FAQ'
 import CTA from './CTA'
 import Footer from './Footer'
@@ -27,31 +32,31 @@ const Landing = () => {
           ) : (
             <motion.div
               key="content"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.15,
-                    delayChildren: 0.2
-                  }
-                }
-              }}
             >
-              <motion.div variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}>
+              <motion.div 
+                initial="hidden"
+                animate="visible"
+                variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
+              >
                 <Navbar />
               </motion.div>
               
               <main>
-                <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] } } }}>
+                <motion.div 
+                  initial="hidden"
+                  animate="visible"
+                  variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] } } }}
+                >
                   <Hero />
                 </motion.div>
-                
+                <AuditGradeChecks />
                 <HowItWorks />
                 <Features />
+                <WhatWeCheck />
+                <WhoItIsFor />
                 <Pricing />
+                <StandardsSupported />
+                <RegistryMatching />
                 <FAQ />
                 <CTA />
               </main>

@@ -4,7 +4,8 @@ import { ReactNode } from "react";
 import { cn } from "@/lib/utils"; // Assuming utils exists, otherwise I'll define a simple cn
 
 interface LandingButtonProps {
-  href: string;
+  href?: string;
+  onClick?: () => void;
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   className?: string;
@@ -14,6 +15,7 @@ interface LandingButtonProps {
 
 export default function LandingButton({
   href,
+  onClick,
   children,
   variant = 'primary',
   className,
@@ -28,18 +30,31 @@ export default function LandingButton({
     ghost: "bg-transparent text-[var(--landing-text-gray)] hover:text-[var(--landing-text-dark)] hover:bg-gray-100"
   };
 
-  return (
-    <Link 
-      href={href}
-      className={cn(
-        "inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-base font-medium transition-all duration-200",
-        variants[variant],
-        className
-      )}
-    >
+  const commonClasses = cn(
+    "inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-base font-medium transition-all duration-200",
+    variants[variant],
+    className
+  );
+
+  const content = (
+    <>
       {icon && iconPosition === 'left' && <span className="mr-2">{icon}</span>}
       {children}
       {icon && iconPosition === 'right' && <span className="ml-2">{icon}</span>}
-    </Link>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={commonClasses} onClick={onClick}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" className={commonClasses} onClick={onClick}>
+      {content}
+    </button>
   );
 }

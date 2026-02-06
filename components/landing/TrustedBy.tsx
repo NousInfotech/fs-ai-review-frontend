@@ -1,5 +1,6 @@
 "use client"
 import { motion } from "framer-motion";
+import FadeIn from "./animations/FadeIn";
 
 const brands = [
   "Goldman & Co",
@@ -17,20 +18,19 @@ export default function TrustedBy() {
         <p className="text-center text-xs font-semibold uppercase tracking-widest text-(--landing-text-gray) mb-8">
           Trusted by leading financial institutions & auditing firms
         </p>
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          {brands.map((brand, index) => (
-            <motion.div
+        <FadeIn
+          delay={0.1}
+          className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
+        >
+          {brands.map((brand) => (
+            <div
               key={brand}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
               className="text-xl md:text-2xl font-bold tracking-tighter text-gray-900"
             >
               {brand}
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

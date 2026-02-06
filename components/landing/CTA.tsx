@@ -25,7 +25,7 @@ export default function CTA() {
             </motion.div>
 
             <TextReveal
-              text="Ready to Transform Your Financial Audits?"
+              text="Run a final check before you sign or send your Financial Statements."
               as="h2"
               className="text-4xl font-medium text-white tracking-tight mb-3 max-w-4xl"
             />

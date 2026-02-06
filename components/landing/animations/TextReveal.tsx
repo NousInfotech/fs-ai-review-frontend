@@ -7,6 +7,7 @@ interface TextRevealProps {
   delay?: number;
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span";
   once?: boolean;
+  animate?: "visible" | "hidden";
 }
 
 export default function TextReveal({ 
@@ -14,7 +15,8 @@ export default function TextReveal({
   className = "", 
   delay = 0, 
   as = "h2",
-  once = true
+  once = true,
+  animate
 }: TextRevealProps) {
   const words = text.split(" ");
   
@@ -40,8 +42,8 @@ export default function TextReveal({
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   };
@@ -50,12 +52,13 @@ export default function TextReveal({
     <MotionComponent
       variants={containerVariants}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once, margin: "-100px" }}
+      whileInView={animate ? undefined : "visible"}
+      animate={animate}
+      viewport={animate ? undefined : { once, amount: 0.2 }}
       className={className}
     >
       {words.map((word, index) => (
-        <span key={index} className="inline-block overflow-hidden mr-[0.25em] py-2 -my-2">
+        <span key={index} className="inline-block relative mr-[0.25em] py-1">
           <motion.span
             variants={wordVariants}
             className="inline-block"
