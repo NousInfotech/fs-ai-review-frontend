@@ -1,132 +1,192 @@
-import Link from "next/link";
-import { ArrowRight, CheckCircle, FileText, Zap } from "lucide-react";
-import { motion } from "framer-motion";
+"use client"
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Zap, CheckCircle, CheckCircle2 } from "lucide-react";
+import LandingButton from "./LandingButton";
+import TextReveal from './animations/TextReveal';
+import HeroSkeleton from './HeroSkeleton';
 
 export default function Hero() {
+  const [isLoading, setIsLoading] = useState(true);
+  const video1 = useRef<HTMLVideoElement>(null);
+  const video2 = useRef<HTMLVideoElement>(null);
+
+  const handleVideoLoad = () => {
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    const v1 = video1.current;
+    const v2 = video2.current;
+    if (!v1 || !v2 || isLoading) return;
+
+    const tryPlay = async (video: HTMLVideoElement) => {
+      try {
+        await video.play();
+      } catch (err) {
+        console.warn("Video autoplay blocked:", err);
+      }
+    };
+
+    v1.currentTime = 0;
+    v2.currentTime = 0;
+    tryPlay(v1);
+    tryPlay(v2);
+
+    const restart = () => {
+      v1.currentTime = 0;
+      v2.currentTime = 0;
+      tryPlay(v1);
+      tryPlay(v2);
+    };
+
+    v1.addEventListener("ended", restart);
+    v2.addEventListener("ended", restart);
+
+    return () => {
+      v1.removeEventListener("ended", restart);
+      v2.removeEventListener("ended", restart);
+    };
+  }, [isLoading]);
+
   return (
-    <div className="relative overflow-hidden bg-white pt-24 pb-16 lg:pt-32 lg:pb-24">
-      {/* Background Gradients */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-50 rounded-full blur-3xl opacity-50" />
-        <div className="absolute top-1/2 right-0 w-64 h-64 bg-purple-50 rounded-full blur-3xl opacity-50" />
-      </div>
+    <>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-4xl mx-auto">
+      <section id="hero" className="relative pt-20 pb-8 md:pt-24 md:pb-12 flex flex-col lg:flex-row items-stretch px-5 md:px-10 overflow-hidden gap-12 transition-opacity duration-700">
+        {/* Background Video */}
+        <div className="absolute inset-0 z-0 h-full">
+          <video 
+            ref={video1}
+            autoPlay 
+            muted 
+            playsInline 
+            loop
+            onLoadedData={handleVideoLoad}
+            className="w-full h-full object-cover opacity-40 dark:opacity-30"
+          >
+            <source src="/video/Vacei_Ai_Review.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay for depth and readability */}
+          <div className="absolute inset-0 bg-linear-to-b from-white/80 via-white/40 to-white/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent,white)]" />
+        </div>
+
+        <div className="relative z-10 w-full lg:w-[75%] flex flex-col justify-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, x: -40, scale: 0.98 }}
+            animate={!isLoading ? { opacity: 1, x: 0, scale: 1 } : {}}
+            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className='space-y-3'
           >
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 mb-6 border border-indigo-100">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-(--landing-icon-bg) text-(--landing-primary-blue) border border-(--landing-gradient-blue-1)/30 uppercase tracking-wide">
               <Zap className="w-3 h-3 mr-1.5 fill-current" />
-              New: AI-Powered Financial Reconciliation
+              FS = Financial Statements
             </span>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-tight">
-              Automate Your Financial <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                Audit & Compliance Reviews
-              </span>
-            </h1>
-            <p className="mt-4 text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Instantly analyze financial statements for compliance errors, arithmetic inconsistencies, and disclosure breaches with enterprise-grade AI.
-            </p>
             
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link 
-                href="/dashboard"
-                className="inline-flex items-center justify-center px-8 py-3.5 border border-transparent rounded-xl shadow-lg text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all hover:-translate-y-1"
-              >
-                Start Free Analysis
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-              <Link 
-                href="#demo"
-                className="inline-flex items-center justify-center px-8 py-3.5 border border-gray-200 rounded-xl shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
-              >
-                View Sample Report
-              </Link>
-            </div>
+            <TextReveal
+              text="Final review checks for Financial Statements — with evidence."
+              as="h1"
+              className="text-3xl md:text-5xl leading-tight font-medium text-(--landing-text-heading) tracking-tight"
+            />
+            
+            <p className="text-base md:text-lg text-(--landing-text-gray) max-w-xl">
+              Run an automated final check on your Financial Statements before sign-off.
+            </p>
 
-            <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-500">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span>SOC2 Compliant</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span>99.9% Accuracy</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span>Bank-Grade Security</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Hero Image / Dashboard Preview */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="mt-16 relative"
-          >
-            <div className="relative rounded-2xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-3xl lg:p-4">
-              <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200">
-                {/* Abstract UI Representation */}
-                <div className="aspect-[16/9] bg-gray-50 relative overflow-hidden group">
-                  <div className="absolute top-0 left-0 w-full h-12 bg-white border-b border-gray-200 flex items-center px-4 gap-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-400" />
-                      <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                      <div className="w-3 h-3 rounded-full bg-green-400" />
-                    </div>
+            <div className="space-y-4">
+              {[
+                "Totals and subtotals recalculated",
+                "Notes and statements checked for consistency",
+                "Formatting and presentation issues flagged",
+                "Every issue shown with screenshot evidence"
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-4">
+                  <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
                   </div>
-                  <div className="p-8 mt-8 grid grid-cols-12 gap-6">
-                    <div className="col-span-3 space-y-3">
-                      <div className="h-20 bg-white rounded-lg border border-gray-100 shadow-sm" />
-                      <div className="h-8 bg-indigo-50 rounded w-3/4" />
-                      <div className="h-4 bg-gray-200 rounded w-1/2" />
-                      <div className="h-4 bg-gray-200 rounded w-2/3" />
-                    </div>
-                    <div className="col-span-9 space-y-4">
-                      <div className="flex gap-4">
-                        <div className="flex-1 h-32 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-                          <div className="w-8 h-8 rounded-lg bg-green-100 mb-3" />
-                          <div className="h-6 w-12 bg-gray-100 rounded mb-2" />
-                          <div className="h-4 w-24 bg-gray-100 rounded" />
-                        </div>
-                        <div className="flex-1 h-32 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-                          <div className="w-8 h-8 rounded-lg bg-red-100 mb-3" />
-                          <div className="h-6 w-12 bg-gray-100 rounded mb-2" />
-                          <div className="h-4 w-24 bg-gray-100 rounded" />
-                        </div>
-                        <div className="flex-1 h-32 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-                          <div className="w-8 h-8 rounded-lg bg-indigo-100 mb-3" />
-                          <div className="h-6 w-12 bg-gray-100 rounded mb-2" />
-                          <div className="h-4 w-24 bg-gray-100 rounded" />
-                        </div>
-                      </div>
-                      <div className="h-64 bg-white rounded-xl border border-gray-200 shadow-sm" />
-                    </div>
-                  </div>
-                  
-                  {/* Floating Badge */}
-                  <div className="absolute bottom-8 right-8 bg-white p-4 rounded-xl shadow-xl border border-gray-100 flex items-center gap-3 animate-bounce">
-                    <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                      <CheckCircle className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-gray-900">Audit Complete</div>
-                      <div className="text-xs text-gray-500">0.4s processing time</div>
-                    </div>
-                  </div>
+                  <span className="text-sm md:text-base text-(--landing-text-heading) font-medium opacity-90">{item}</span>
                 </div>
+              ))}
+            </div>
+            
+            <div className="pt-4">
+              <div className="flex flex-col md:flex-row gap-4 items-center">
+                <LandingButton 
+                  href="/dashboard"
+                  icon={<ArrowRight className="w-5 h-5" />}
+                  className="w-full md:w-auto text-white px-8"
+                >
+                  Get 3 free checks
+                </LandingButton>
+                <LandingButton 
+                  href="#demo"
+                  variant="outline"
+                  className="w-full md:w-auto px-8"
+                >
+                  Book a 10-minute demo
+                </LandingButton>
               </div>
+              <p className="mt-4 text-[10px] md:text-xs text-(--landing-text-gray) italic flex items-center gap-2">
+                <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                Used by firms as a final review step before sign-off.
+              </p>
             </div>
           </motion.div>
         </div>
-      </div>
-    </div>
-  );
+        
+        <div className="z-10 w-full lg:w-[55%] flex flex-col justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={!isLoading ? { opacity: 1, scale: 1, y: 0 } : {}}
+            transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative h-full"
+          >
+            <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl h-full border border-white/50">
+              <AnimatePresence mode="wait">
+                {isLoading && (
+                  <motion.div
+                    key="skeleton"
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 z-20"
+                  >
+                    <HeroSkeleton />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <video
+                ref={video2}
+                autoPlay
+                muted
+                playsInline
+                loop
+                className="w-full h-full object-cover"
+              >
+                <source src="/video/Vacei_Ai_Review.mp4" type="video/mp4" />
+              </video>
+            </div>
+            
+            {/* Floating Caption Overlay */}
+            {/* <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 1.2, duration: 0.6 }}
+               className="absolute -bottom-6 right-6 lg:-right-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/50 z-20 max-w-[260px]"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                </div>
+                <p className="text-[13px] font-semibold text-(--landing-text-heading) leading-tight">
+                   “Every issue includes screenshot evidence.”
+                </p>
+              </div>
+            </motion.div> */}
+          </motion.div>
+        </div>
+      </section>
+    </>
+  )
 }
+

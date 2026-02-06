@@ -1,0 +1,80 @@
+:root {
+  /* New palette from vacei-website */
+  --landing-background: #ecf0f0;
+  --landing-background-secondary: #ffffff;
+  --landing-foreground: #171717;
+  --landing-primary: #242748;
+  --landing-primary-blue: #3b49e6;
+  --landing-gradient-blue-1: #a9b0ff;
+  --landing-gradient-blue-2: #a3aaff;
+  --landing-text-dark: #26294a;
+  --landing-purple-logo: #8b5cf6;
+  --landing-purple-bg: #6f74b8;
+  --landing-navbar-btn-bg: #3640ad;
+  --landing-navbar-btn-border: #8993ff;
+  --landing-section-bg-light: #d8e5e5;
+  --landing-hero-bg: #111235;
+  --landing-hero-bg-dark: #1e2040;
+  --landing-hero-glow: #989fea;
+  --landing-gradient-container: #1e1e2f;
+  --landing-primary-blue-hover: #2f3bc4;
+  --landing-button-indigo: #4f46e5;
+  --landing-tab-active: #525ceb;
+  --landing-tab-active-hover: #4048b8;
+  --landing-card-hover-overlay: #3d4494;
+  --landing-card-bg: #2a2d55;
+  --landing-text-heading: #181c42;
+  --landing-text-gray: #52525b;
+  --landing-icon-bg: #eff0f6;
+  --landing-dark-hover: #0f1229;
+  --landing-purple-hover: #5a5f9a;
+  --landing-success: #4ade80;
+  --landing-error: #f87171;
+  --landing-progress-purple: #c2c7ff;
+  --landing-footer-hero-bg: #1e174a;
+  --landing-text-light-gray: #9ea3c0;
+}
+
+@theme {
+  --color-landing-background: var(--landing-background);
+  --color-landing-background-secondary: var(--landing-background-secondary);
+  --color-landing-foreground: var(--landing-foreground);
+  --color-landing-primary: var(--landing-primary);
+  --color-landing-primary-blue: var(--landing-primary-blue);
+  --color-landing-gradient-blue-1: var(--landing-gradient-blue-1);
+  --color-landing-gradient-blue-2: var(--landing-gradient-blue-2);
+  --color-landing-text-dark: var(--landing-text-dark);
+  --color-landing-purple-logo: var(--landing-purple-logo);
+  --color-landing-purple-bg: var(--landing-purple-bg);
+  --color-landing-navbar-btn-bg: var(--landing-navbar-btn-bg);
+  --color-landing-navbar-btn-border: var(--landing-navbar-btn-border);
+  --color-landing-section-bg-light: var(--landing-section-bg-light);
+  --color-landing-hero-bg: var(--landing-hero-bg);
+  --color-landing-hero-bg-dark: var(--landing-hero-bg-dark);
+  --color-landing-hero-glow: var(--landing-hero-glow);
+  --color-landing-gradient-container: var(--landing-gradient-container);
+  --color-landing-primary-blue-hover: var(--landing-primary-blue-hover);
+  --color-landing-button-indigo: var(--landing-button-indigo);
+  --color-landing-tab-active: var(--landing-tab-active);
+  --color-landing-tab-active-hover: var(--landing-tab-active-hover);
+  --color-landing-card-hover-overlay: var(--landing-card-hover-overlay);
+  --color-landing-card-bg: var(--landing-card-bg);
+  --color-landing-text-heading: var(--landing-text-heading);
+  --color-landing-text-gray: var(--landing-text-gray);
+  --color-landing-icon-bg: var(--landing-icon-bg);
+  --color-landing-dark-hover: var(--landing-dark-hover);
+  --color-landing-purple-hover: var(--landing-purple-hover);
+  --color-landing-success: var(--landing-success);
+  --color-landing-error: var(--landing-error);
+  --color-landing-progress-purple: var(--landing-progress-purple);
+  --color-landing-footer-hero-bg: var(--landing-footer-hero-bg);
+  --color-landing-text-light-gray: var(--landing-text-light-gray);
+}
+
+html {
+  /* scroll-behavior: smooth removed to prevent conflict with Lenis */
+}
+
+section[id], div[id] {
+  scroll-margin-top: 5rem;
+}
