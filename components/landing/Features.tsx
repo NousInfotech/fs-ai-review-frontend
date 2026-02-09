@@ -110,13 +110,13 @@ export default function Features() {
               delay={feature.delay}
               className={feature.span}
               footer={
-                <button 
-                  onClick={() => setSelectedFeature(feature)}
-                  className="flex items-center gap-2 text-(--landing-primary-blue) font-semibold hover:gap-3 transition-all group/btn"
-                >
-                  Learn more 
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                </button>
+                  <button 
+                    onClick={() => setSelectedFeature(feature)}
+                    className="flex items-center gap-2 text-(--landing-primary-blue) font-semibold hover:gap-3 transition-all group/btn relative z-20 py-2 cursor-pointer touch-manipulation active:scale-95"
+                  >
+                    Learn more 
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                  </button>
               }
             />
           ))}

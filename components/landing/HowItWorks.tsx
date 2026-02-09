@@ -147,11 +147,11 @@ function TimelineStep({ step, index, scrollYProgress }: { step: typeof steps[0],
         <div className="relative">
           <motion.div
             style={{ opacity }}
-            className="w-16 h-16 rounded-2xl bg-white border-2 border-slate-100 shadow-xl flex items-center justify-center -translate-x-1/2 lg:translate-x-0"
+            className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl lg:rounded-2xl bg-white border-2 border-slate-100 shadow-xl flex items-center justify-center -translate-x-1/2 lg:translate-x-0"
           >
-            <step.icon className="w-8 h-8 text-(--landing-primary-blue)" />
+            <step.icon className="w-5 h-5 lg:w-8 lg:h-8 text-(--landing-primary-blue)" />
             {/* Step Number Badge */}
-            <div className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-(--landing-primary-blue) text-white text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md">
+            <div className="absolute -top-2 -right-2 lg:-top-3 lg:-right-3 w-5 h-5 lg:w-7 lg:h-7 rounded-full bg-(--landing-primary-blue) text-white text-[8px] lg:text-[10px] font-bold flex items-center justify-center border-2 border-white shadow-md">
               {step.id}
             </div>
           </motion.div>
@@ -161,7 +161,7 @@ function TimelineStep({ step, index, scrollYProgress }: { step: typeof steps[0],
       {/* Text Content */}
       <motion.div 
         style={{ opacity, x: xTranslate }}
-        className={`w-full lg:w-1/2 pl-24 lg:pl-0 ${isEven ? 'lg:pr-24 lg:text-right' : 'lg:pl-24 lg:text-left'}`}
+        className={`w-full lg:w-1/2 pl-20 lg:pl-0 ${isEven ? 'lg:pr-24 lg:text-right' : 'lg:pl-24 lg:text-left'}`}
       >
         <div className="space-y-2 md:space-y-4">
           <TextReveal

@@ -7,7 +7,7 @@ import TextReveal from "./animations/TextReveal";
 export default function CTA() {
   return (
     <section className="py-10 px-4 sm:px-6 lg:px-8 bg-(--landing-background)">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto">
         <div className="relative overflow-hidden rounded-[2.5rem] bg-(--landing-footer-hero-bg) p-10 shadow-2xl">
           {/* Decorative background elements */}
           <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-(--landing-primary-blue)/20 rounded-full blur-[120px]" />
@@ -27,7 +27,7 @@ export default function CTA() {
             <TextReveal
               text="Run a final check before you sign or send your Financial Statements."
               as="h2"
-              className="md:text-4xl text-lg font-medium text-white tracking-tight mb-3 max-w-4xl"
+              className="md:text-4xl font-medium text-white tracking-tight mb-3 max-w-4xl "
             />
             
             <p className="text-gray-400 text-xs md:text-lg mb-10">

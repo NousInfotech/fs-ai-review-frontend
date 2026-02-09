@@ -101,9 +101,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen });
 
-      gsap.set(lineTop, { y: -5, rotate: 0 });
+      gsap.set(lineTop, { y: 0, rotate: 0 });
       gsap.set(lineMid, { opacity: 1, scaleX: 1 });
-      gsap.set(lineBot, { y: 5, rotate: 0 });
+      gsap.set(lineBot, { y: 0, rotate: 0 });
       gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
 
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
@@ -261,19 +261,19 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
     spinTweenRef.current?.kill();
 
-    if (opening) {
-      spinTweenRef.current = gsap
-        .timeline({ defaults: { ease: 'power4.out', duration: 0.5 } })
-        .to(top, { y: 0, rotate: 45 }, 0)
-        .to(mid, { opacity: 0, scaleX: 0 }, 0)
-        .to(bot, { y: 0, rotate: -45 }, 0);
-    } else {
-      spinTweenRef.current = gsap
-        .timeline({ defaults: { ease: 'power3.inOut', duration: 0.35 } })
-        .to(top, { y: -5, rotate: 0 }, 0)
-        .to(mid, { opacity: 1, scaleX: 1 }, 0)
-        .to(bot, { y: 5, rotate: 0 }, 0);
-    }
+      if (opening) {
+        spinTweenRef.current = gsap
+          .timeline({ defaults: { ease: 'power4.out', duration: 0.5 } })
+          .to(top, { y: 7, rotate: 45 }, 0)
+          .to(mid, { opacity: 0, scaleX: 0 }, 0)
+          .to(bot, { y: -7, rotate: -45 }, 0);
+      } else {
+        spinTweenRef.current = gsap
+          .timeline({ defaults: { ease: 'power3.inOut', duration: 0.35 } })
+          .to(top, { y: 0, rotate: 0 }, 0)
+          .to(mid, { opacity: 1, scaleX: 1 }, 0)
+          .to(bot, { y: 0, rotate: 0 }, 0);
+      }
   }, []);
 
   const animateColor = useCallback(
@@ -385,7 +385,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         </div>
 
         <header
-          className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[0.7rem_1.2rem] bg-transparent pointer-events-none z-50"
+          className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between h-16 px-5 md:px-10 bg-transparent pointer-events-none z-50"
           aria-label="Main navigation header"
         >
           <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
@@ -419,20 +419,20 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           >
             <span
               ref={iconRef}
-              className="sm-icon relative w-6 h-6 shrink-0 inline-flex items-center justify-center will-change-transform"
+              className="sm-icon relative w-6 h-6 shrink-0 flex flex-col items-center justify-center gap-[5px] will-change-transform"
               aria-hidden="true"
             >
               <span
                 ref={lineTopRef}
-                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                className="sm-icon-line w-full h-[2px] bg-current rounded-full will-change-transform"
               />
               <span
                 ref={lineMidRef}
-                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                className="sm-icon-line w-full h-[2px] bg-current rounded-full will-change-transform"
               />
               <span
                 ref={lineBotRef}
-                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                className="sm-icon-line w-full h-[2px] bg-current rounded-full will-change-transform"
               />
             </span>
           </button>
@@ -519,7 +519,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
       <style>{`
 .sm-scope .staggered-menu-wrapper { position: relative; width: 100%; height: 100%; pointer-events: none; }
-.sm-scope .staggered-menu-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; background: transparent; pointer-events: none; z-index: 50; }
+.sm-scope .staggered-menu-header { position: absolute; top: 0; left: 0; width: 100%; height: 4rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem; background: transparent; pointer-events: none; z-index: 50; }
+@media (min-width: 768px) { .sm-scope .staggered-menu-header { padding: 0 2.5rem; } }
 .sm-scope .staggered-menu-header > * { pointer-events: auto; }
 .sm-scope .sm-logo { display: flex; align-items: center; user-select: none; }
 .sm-scope .sm-logo-img { display: block; height: 32px; width: auto; object-fit: contain; }
@@ -528,9 +529,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-toggle-textWrap { position: relative; margin-right: 0.3em; display: inline-block; height: 1em; overflow: hidden; white-space: nowrap; width: var(--sm-toggle-width, auto); min-width: var(--sm-toggle-width, auto); }
 .sm-scope .sm-toggle-textInner { display: flex; flex-direction: column; line-height: 1; }
 .sm-scope .sm-toggle-line { display: block; height: 1em; line-height: 1; }
-.sm-scope .sm-icon { position: relative; width: 14px; height: 14px; flex: 0 0 14px; display: inline-flex; align-items: center; justify-content: center; will-change: transform; }
+.sm-scope .sm-icon { position: relative; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; will-change: transform; }
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
-.sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
+.sm-scope .sm-icon-line { position: relative; width: 100%; height: 2px; background: currentColor; border-radius: 2px; will-change: transform; }
 .sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 100%, 420px); height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2rem 2rem 2rem; overflow-y: auto; z-index: 10; }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
 .sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: 100%; pointer-events: none; z-index: 5; }

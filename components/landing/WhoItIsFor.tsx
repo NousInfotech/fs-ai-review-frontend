@@ -36,11 +36,11 @@ export default function WhoItIsFor() {
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-(--landing-primary-blue)/5 rounded-full blur-3xl -z-10" />
       
       <div className="container mx-auto px-5 md:px-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-16 items-stretch">
           
           {/* Left Column: Content & Checklist */}
           <div className="order-1 lg:order-1 space-y-10 flex flex-col justify-center">
-            <div className="space-y-6">
+            <div className="space-y-3">
               <FadeIn>
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-xs font-semibold uppercase tracking-widest border border-blue-100">
                   <Users2 className="w-3.5 h-3.5 mr-2" />
@@ -51,11 +51,11 @@ export default function WhoItIsFor() {
               <TextReveal
                 text="Who it’s for"
                 as="h2"
-                className="text-3xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]"
+                className="text-2xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]"
               />
               
               <FadeIn delay={0.2}>
-                <p className="text-lg md:text-xl text-(--landing-text-gray) leading-relaxed">
+                <p className="md:text-xl text-(--landing-text-gray) leading-relaxed">
                   Providing a deterministic verification layer for those who need 
                   audit-grade certainty in their financial reporting.
                 </p>
@@ -65,7 +65,7 @@ export default function WhoItIsFor() {
             <div className="space-y-6">
               {audiences.map((audience, idx) => (
                 <FadeIn key={idx} delay={0.3 + (idx * 0.1)}>
-                  <div className="flex items-start gap-6 p-6 rounded-3xl transition-all duration-500 bg-slate-50 border border-slate-100">
+                  <div className="flex md:flex-row flex-col items-start gap-6 p-6 rounded-3xl transition-all duration-500 bg-slate-50 border border-slate-100">
                     <div className="w-12 h-12 rounded-2xl bg-white text-(--landing-primary-blue) flex items-center justify-center shrink-0 shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
                       {audience.icon}
                     </div>
@@ -75,14 +75,6 @@ export default function WhoItIsFor() {
                       <p className="text-slate-600 font-medium leading-relaxed">
                         {audience.description}
                       </p>
-                      <div className="flex items-center gap-2 pt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
-                          <ShieldCheck className="w-3.5 h-3.5 text-(--landing-primary-blue)" />
-                        </div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                          Confidence Layer Added
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </FadeIn>
@@ -91,9 +83,9 @@ export default function WhoItIsFor() {
           </div>
 
           {/* Right Column: Dual Image/Visual Stack */}
-          <div className="order-2 lg:order-2 flex flex-col gap-6">
-            <FadeIn direction="right" className="h-1/2">
-              <div className="relative h-full rounded-4xl overflow-hidden bg-slate-100 shadow-2xl group border border-slate-100">
+          <div className="order-2 lg:order-2 flex flex-row lg:flex-col gap-4 md:gap-6 h-[180px] md:h-full">
+            <FadeIn direction="right" className="w-1/2 lg:w-full h-full lg:h-1/2">
+              <div className="relative h-full rounded-2xl md:rounded-4xl overflow-hidden bg-slate-100 shadow-2xl group border border-slate-100">
                 <Image 
                   src="/images/landing/whoitsfor-1-new.png"
                   alt="Audit & accounting firms visual"
@@ -105,8 +97,8 @@ export default function WhoItIsFor() {
               </div>
             </FadeIn>
 
-            <FadeIn direction="right" delay={0.2} className="h-1/2">
-              <div className="relative h-full rounded-4xl overflow-hidden bg-slate-100 shadow-2xl group border border-slate-100">
+            <FadeIn direction="right" delay={0.2} className="w-1/2 lg:w-full h-full lg:h-1/2">
+              <div className="relative h-full rounded-2xl md:rounded-4xl overflow-hidden bg-slate-100 shadow-2xl group border border-slate-100">
                 <Image 
                   src="/images/landing/whoitsfor-2.png"
                   alt="Finance teams & businesses visual"

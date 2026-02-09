@@ -85,20 +85,20 @@ export default function RegistryMatching() {
             {/* Left Column: Visual Comparison Engine */}
             <FadeIn delay={0.2} direction="right" className="relative">
               {/* Main Card */}
-              <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] p-8 md:p-10 relative overflow-hidden">
-                <div className="flex md:absolute top-0 right-0 p-6 md:p-10 justify-end">
-                   <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-(--landing-primary-blue) text-[10px] font-bold uppercase tracking-widest animate-pulse">
-                     <Clock className="w-3 h-3" /> Coming Soon
-                   </div>
-                </div>
-
-                <div className="flex items-center gap-4 mb-10">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center">
-                    <Search className="w-6 h-6 text-blue-400" />
+              <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] p-4 pt-6 md:pt-8 relative overflow-hidden">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-5 md:mb-10">
+                  <div className="flex items-center gap-4">
+                    <div className="md:w-12 md:h-12 w-10 h-10 rounded-2xl flex items-center justify-center bg-slate-50/50 border border-slate-100">
+                      <Search className="md:w-6 md:h-6 w-4 h-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="md:text-xl font-medium leading-tight">MBR Registry Matching</h3>
+                      <p className="text-slate-500 text-sm font-medium">Auto-validation engine</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-900">MBR Registry Matching</h3>
-                    <p className="text-slate-500 text-sm font-medium">Auto-validation engine</p>
+                  
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-(--landing-primary-blue) text-[10px] font-bold uppercase tracking-widest animate-pulse w-fit">
+                    <Clock className="w-3 h-3" /> Coming Soon
                   </div>
                 </div>
 

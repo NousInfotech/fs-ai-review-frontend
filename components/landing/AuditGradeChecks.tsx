@@ -371,10 +371,10 @@ export default function AuditGradeChecks() {
             >
               <div className="flex items-center justify-between">
                 <div className="inline-flex items-center gap-3 text-(--landing-primary-blue)">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
-                    <CheckCircle2 className="w-6 h-6 text-green-500" />
+                  <div className="md:w-12 md:h-12 h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                    <CheckCircle2 className="md:w-6 md:h-6 h-4 w-4 text-green-500" />
                   </div>
-                  <h3 className="text-xl md:text-2xl font-medium tracking-tight text-(--landing-text-heading)">
+                  <h3 className="md:text-2xl font-medium tracking-tight text-(--landing-text-heading) pr-2">
                     GAPSME
                   </h3>
                 </div>
@@ -382,7 +382,7 @@ export default function AuditGradeChecks() {
                   Available now
                 </span>
               </div>
-              <p className="text-base md:text-lg text-(--landing-text-gray) leading-relaxed">
+              <p className="text-xs md:text-lg text-(--landing-text-gray) leading-relaxed">
                 FS AI Review currently supports Malta GAPSME Financial Statements with full automated validation.
               </p>
             </motion.div>
@@ -396,10 +396,10 @@ export default function AuditGradeChecks() {
             >
               <div className="flex items-center justify-between">
                 <div className="inline-flex items-center gap-3 text-(--landing-primary-blue)">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
-                    <Clock className="w-6 h-6 text-blue-500" />
+                  <div className="md:w-12 md:h-12 h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                    <Clock className="md:w-6 md:h-6 h-4 w-4 text-blue-500" />
                   </div>
-                  <h3 className="text-xl md:text-2xl font-medium tracking-tight text-(--landing-text-heading)">
+                  <h3 className="md:text-2xl font-medium tracking-tight text-(--landing-text-heading) pr-2">
                     IFRS
                   </h3>
                 </div>
@@ -407,7 +407,7 @@ export default function AuditGradeChecks() {
                   Coming soon
                 </span>
               </div>
-              <p className="text-base md:text-lg text-(--landing-text-gray) leading-relaxed">
+              <p className="text-xs md:text-lg text-(--landing-text-gray) leading-relaxed">
                 IFRS checks are in active development and will be released shortly to support international reporting.
               </p>
             </motion.div>

@@ -27,7 +27,7 @@ const CategoryVisual = ({ category, index }: { category: any, index: number }) =
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="relative w-full aspect-square md:aspect-video rounded-[10px] overflow-hidden shadow-2xl border border-slate-100 group/visual"
+      className="relative w-full h-full min-h-[250px] md:min-h-full rounded-[10px] overflow-hidden md:shadow-2xl border border-slate-100 group/visual"
     >
       <Image 
         src={category.image}
@@ -83,8 +83,8 @@ export default function WhatWeCheck() {
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-slate-200 to-transparent" />
       
-      <div className="container mx-auto px-5 md:px-20 relative z-10">
-        <div className="mx-auto text-center mb-10 space-y-3">
+      <div className="container mx-auto px-5 lg:px-20 relative z-10">
+        <div className="mx-auto text-center mb-5 md:mb-10 space-y-3">
           <FadeIn>
             <h2 className="text-xs md:text-sm font-semibold text-(--landing-primary-blue) uppercase tracking-[0.2em]">Digital Audit Scope</h2>
           </FadeIn>
@@ -102,22 +102,22 @@ export default function WhatWeCheck() {
 
         <div className="md:space-y-25">
           {categories.map((cat, idx) => (
-            <div key={idx} className={`flex flex-col gap-12 md:gap-24 items-center ${idx % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
+            <div key={idx} className={`flex flex-col gap-5 md:gap-24 md:items-stretch ${idx % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
               
               {/* Content Side */}
-              <div className="w-full md:w-1/2 space-y-8">
+              <div className="w-full md:w-1/2 space-y-8 flex flex-col justify-center py-4">
                 <FadeIn direction={idx % 2 === 1 ? "right" : "left"}>
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <div className="inline-flex items-center gap-3 px-4 py-1 rounded-2xl bg-blue-50 text-(--landing-primary-blue) border border-blue-100/50">
                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                      <span className="text-sm font-medium uppercase tracking-widest">{cat.title}</span>
+                      <span className="text-xs font-medium uppercase tracking-widest">{cat.title}</span>
                     </div>
                     
-                    <h3 className="text-3xl md:text-5xl font-medium text-(--landing-text-heading) tracking-tight">
+                    <h3 className="text-xl md:text-4xl font-medium text-(--landing-text-heading) tracking-tight">
                       {cat.title}
                     </h3>
                     
-                    <p className="text-lg text-(--landing-text-gray) leading-relaxed">
+                    <p className="text-sm md:text-lg text-(--landing-text-gray) leading-relaxed">
                       {cat.description}
                     </p>
                     
@@ -127,7 +127,7 @@ export default function WhatWeCheck() {
                           <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 ">
                              <CheckCircle2 className="w-3.5 h-3.5 text-(--landing-primary-blue)" />
                           </div>
-                          <span className="text-lg text-slate-600 font-medium group-hover:text-slate-900 transition-colors">
+                          <span className="text-sm md:text-lg text-slate-600 font-medium group-hover:text-slate-900 transition-colors">
                             {item}
                           </span>
                         </li>
@@ -138,7 +138,7 @@ export default function WhatWeCheck() {
               </div>
 
               {/* Visual Side */}
-              <div className="w-full md:w-1/2">
+              <div className="w-full md:w-1/2 flex flex-col">
                 <CategoryVisual category={cat} index={idx} />
               </div>
 
