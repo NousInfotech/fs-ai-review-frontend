@@ -119,6 +119,10 @@ export default function Pricing() {
             </div>
 
             <LandingButton 
+              onClick={() => {
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                window.history.pushState(null, '', '#contact');
+              }}
               href="#contact"
               variant="outline" 
             >

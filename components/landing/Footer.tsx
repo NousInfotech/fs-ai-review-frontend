@@ -82,13 +82,13 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-sm text-gray-500 font-medium">
+          <p className="text-sm text-gray-500 font-medium text-center md:text-left">
             &copy; {currentYear} Financial Review AI. All rights reserved.
           </p>
-          <div className="flex items-center gap-8 whitespace-nowrap">
-            <Link href="#" className="text-sm text-gray-500 hover:text-white transition-colors font-medium">Privacy Policy</Link>
-            <Link href="#" className="text-sm text-gray-500 hover:text-white transition-colors font-medium">Terms of Service</Link>
-            <Link href="#" className="text-sm text-gray-500 hover:text-white transition-colors font-medium">Cookie Policy</Link>
+          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
+            <Link href="#" className="text-sm text-gray-500 hover:text-white transition-colors font-medium whitespace-nowrap">Privacy Policy</Link>
+            <Link href="#" className="text-sm text-gray-500 hover:text-white transition-colors font-medium whitespace-nowrap">Terms of Service</Link>
+            <Link href="#" className="text-sm text-gray-500 hover:text-white transition-colors font-medium whitespace-nowrap">Cookie Policy</Link>
           </div>
         </div>
       </div>

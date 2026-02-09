@@ -63,7 +63,7 @@ export default function LandingCard({
       distance={distance}
       className={`${className} group h-full`}
     >
-      <div className="relative h-full bg-white border border-slate-100 rounded-3xl p-6 md:p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+      <div className="relative h-full bg-white border border-slate-100 rounded-3xl p-5 md:p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
         <div className="relative z-10">
           {renderIcon()}
           

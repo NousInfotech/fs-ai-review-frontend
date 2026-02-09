@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { 
   ShieldCheck, 
   Search, 
@@ -13,7 +13,7 @@ import {
 import FadeIn from "./animations/FadeIn";
 import TextReveal from "./animations/TextReveal";
 import LandingCard from "./LandingCard";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimationFrame, useMotionValue } from "framer-motion";
 import { Button } from "../ui/Button";
 import LandingButton from "./LandingButton";
 
@@ -74,6 +74,126 @@ const features = [
   },
 ];
 
+// Set this to true to use the scrolling marquee UI, false for the bento grid UI
+const USE_SCROLL_UI = true;
+const AutoscrollCarousel = ({ onSelectFeature }: { onSelectFeature: (f: any) => void }) => {
+  const [isPaused, setIsPaused] = useState(false);
+  const [baseWidth, setBaseWidth] = useState(0);
+  const isDragging = useRef(false);
+  const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  
+  // Use 3 sets of items for a better buffer during dragging
+  const scrollItems = [...features, ...features, ...features];
+  const velocity = -0.5;
+
+  // Calculate baseWidth on mount and resize
+  React.useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.scrollWidth / 3;
+        setBaseWidth(width);
+        // Initialize x to the start of the second set
+        x.set(-width);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, [x]);
+
+  useAnimationFrame(() => {
+    if (isPaused || isDragging.current || baseWidth === 0) return;
+    
+    let currentX = x.get();
+    currentX += velocity;
+
+    // Wrap precisely
+    if (currentX <= -baseWidth * 2) {
+        currentX += baseWidth;
+    }
+    
+    x.set(currentX);
+  });
+
+  const handleInteraction = () => {
+    setIsPaused(true);
+    if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
+    
+    pauseTimeoutRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, 8000);
+  };
+
+  const onDragStart = () => {
+    isDragging.current = true;
+    handleInteraction();
+  };
+
+  const onDragEnd = () => {
+    isDragging.current = false;
+    
+    if (baseWidth > 0) {
+        let currentX = x.get();
+        // Ensure we're in the middle set's range after dragging
+        while (currentX <= -baseWidth * 2) currentX += baseWidth;
+        while (currentX >= -baseWidth) currentX -= baseWidth;
+        x.set(currentX);
+    }
+  };
+
+  return (
+    <div className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing">
+      <motion.div 
+        ref={containerRef}
+        className="flex gap-6 w-fit"
+        style={{ x }}
+        drag="x"
+        dragConstraints={{
+            left: -baseWidth * 2,
+            right: 0
+        }}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onPointerDown={handleInteraction}
+      >
+        {scrollItems.map((feature, idx) => (
+          <div 
+            key={`${feature.id}-${idx}`}
+            className="w-[280px] md:w-[450px] shrink-0 select-none"
+          >
+            <LandingCard
+              icon={feature.icon}
+              title={feature.name}
+              description={feature.description}
+              delay={0}
+              className="h-full pointer-events-none" // Disable events on card so drag works smoothly
+              footer={
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectFeature(feature);
+                  }}
+                  className="flex items-center gap-2 text-(--landing-primary-blue) font-semibold hover:gap-3 transition-all group/btn relative z-30 py-2 cursor-pointer touch-manipulation active:scale-95 pointer-events-auto"
+                >
+                  Learn more 
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                </button>
+              }
+            />
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Gradient Fades for the edges */}
+      <div className="absolute inset-y-0 left-0 w-32 bg-linear-to-r from-(--landing-background)/50 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-linear-to-l from-(--landing-background)/50 to-transparent z-10 pointer-events-none" />
+    </div>
+  );
+};
+
 export default function Features() {
   const [selectedFeature, setSelectedFeature] = useState<typeof features[0] | null>(null);
 
@@ -94,39 +214,45 @@ export default function Features() {
             className="text-2xl md:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
           />
           <FadeIn delay={0.2}>
-            <p className="md:text-xl text-(--landing-text-gray) leading-relaxed mx-auto">
+            <p className="md:text-xl text-(--landing-text-gray) leading-relaxed mx-auto max-w-3xl">
               Stop manually ticking and bashing. Let our AI handle the tedious verification so you can focus on strategic judgment.
             </p>
           </FadeIn>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:grid-rows-6 gap-6">
-          {features.map((feature) => (
-            <LandingCard
-              key={feature.id}
-              icon={feature.icon}
-              title={feature.name}
-              description={feature.description}
-              delay={feature.delay}
-              className={feature.span}
-              footer={
-                  <button 
-                    onClick={() => setSelectedFeature(feature)}
-                    className="flex items-center gap-2 text-(--landing-primary-blue) font-semibold hover:gap-3 transition-all group/btn relative z-20 py-2 cursor-pointer touch-manipulation active:scale-95"
-                  >
-                    Learn more 
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                  </button>
-              }
-            />
-          ))}
-        </div>
       </div>
+
+      {USE_SCROLL_UI ? (
+        <AutoscrollCarousel onSelectFeature={setSelectedFeature} />
+      ) : (
+        <div className="mx-auto px-5 lg:px-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:grid-rows-6 gap-6">
+            {features.map((feature) => (
+              <LandingCard
+                key={feature.id}
+                icon={feature.icon}
+                title={feature.name}
+                description={feature.description}
+                delay={feature.delay}
+                className={feature.span}
+                footer={
+                    <button 
+                      onClick={() => setSelectedFeature(feature)}
+                      className="flex items-center gap-2 text-(--landing-primary-blue) font-semibold hover:gap-3 transition-all group/btn relative z-20 py-2 cursor-pointer touch-manipulation active:scale-95"
+                    >
+                      Learn more 
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                    </button>
+                }
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Modal Implementation */}
       <AnimatePresence>
         {selectedFeature && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-5">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-5">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}

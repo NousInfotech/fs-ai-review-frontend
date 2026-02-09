@@ -11,6 +11,7 @@ import AuditGradeChecks from './AuditGradeChecks'
 import WhatWeCheck from './WhatWeCheck'
 import WhoItIsFor from './WhoItIsFor'
 import Pricing from './Pricing'
+import Contact from './Contact'
 import StandardsSupported from './StandardsSupported'
 import RegistryMatching from './RegistryMatching'
 import FAQ from './FAQ'
@@ -58,6 +59,7 @@ const Landing = () => {
                 <Pricing />
                 {/* <StandardsSupported /> */}
                 <FAQ />
+                <Contact />
                 <CTA />
               </main>
 

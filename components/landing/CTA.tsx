@@ -6,7 +6,7 @@ import TextReveal from "./animations/TextReveal";
 
 export default function CTA() {
   return (
-    <section className="py-10 px-4 sm:px-6 lg:px-8 bg-(--landing-background)">
+    <section className="py-10 px-4 sm:px-6 lg:px-20 bg-white">
       <div className="mx-auto">
         <div className="relative overflow-hidden rounded-[2.5rem] bg-(--landing-footer-hero-bg) p-10 shadow-2xl">
           {/* Decorative background elements */}

@@ -72,8 +72,8 @@ export default function RegistryMatching() {
                     "Direct comparison against Financial Statements"
                   ].map((item, idx) => (
                     <li key={idx} className="flex items-start gap-3 group">
-                       <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-(--landing-primary-blue) transition-colors duration-300">
-                         <div className="w-1.5 h-1.5 rounded-full bg-(--landing-primary-blue) group-hover:bg-white" />
+                       <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5 ">
+                         <div className="w-1.5 h-1.5 rounded-full bg-(--landing-primary-blue)" />
                        </div>
                        <span className="text-base md:text-lg text-slate-700 font-medium">{item}</span>
                     </li>
