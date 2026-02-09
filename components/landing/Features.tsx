@@ -86,15 +86,15 @@ export default function Features() {
       <div className="mx-auto px-5 lg:px-20">
         <div className="text-center mx-auto mb-10">
           <FadeIn>
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Powerful Capabilities</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Powerful Capabilities</h2>
           </FadeIn>
           <TextReveal
             text="Everything you need for a flawless audit"
             as="h2"
-            className="text-4xl md:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
+            className="text-2xl md:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
           />
           <FadeIn delay={0.2}>
-            <p className="text-xl text-(--landing-text-gray) leading-relaxed mx-auto">
+            <p className="md:text-xl text-(--landing-text-gray) leading-relaxed mx-auto">
               Stop manually ticking and bashing. Let our AI handle the tedious verification so you can focus on strategic judgment.
             </p>
           </FadeIn>

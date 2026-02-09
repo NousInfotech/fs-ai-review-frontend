@@ -73,15 +73,15 @@ export default function HowItWorks() {
       <div className="mx-auto px-5 lg:px-8">
         <div className="text-center mb-10">
           <FadeIn>
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Our Process</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Our Process</h2>
           </FadeIn>
           <TextReveal
             text="Audit in five simple steps"
             as="h2"
-            className="text-4xl md:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
+            className="text-2xl md:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
           />
           <FadeIn delay={0.2}>
-            <p className="mx-auto text-xl text-(--landing-text-gray) leading-relaxed">
+            <p className="mx-auto md:text-xl text-(--landing-text-gray) leading-relaxed">
               From upload to final report in less than 2 minutes. Our automated pipeline handles the heavy lifting.
             </p>
           </FadeIn>
@@ -96,7 +96,7 @@ export default function HowItWorks() {
             />
           </div>
 
-          <div className="space-y-24 lg:space-y-32">
+          <div className="space-y-20 lg:space-y-25">
             {steps.map((step, index) => (
               <TimelineStep 
                 key={step.id} 
@@ -163,14 +163,14 @@ function TimelineStep({ step, index, scrollYProgress }: { step: typeof steps[0],
         style={{ opacity, x: xTranslate }}
         className={`w-full lg:w-1/2 pl-24 lg:pl-0 ${isEven ? 'lg:pr-24 lg:text-right' : 'lg:pl-24 lg:text-left'}`}
       >
-        <div className="space-y-4">
+        <div className="space-y-2 md:space-y-4">
           <TextReveal
             text={step.title}
             as="h3"
             animate={isActive ? "visible" : "hidden"}
-            className="text-2xl md:text-3xl font-medium text-(--landing-text-heading) tracking-tight"
+            className="text-xl md:text-3xl font-medium text-(--landing-text-heading) tracking-tight"
           />
-          <p className="text-lg text-(--landing-text-gray) leading-relaxed max-w-lg lg:ml-auto lg:mr-0 inline-block">
+          <p className="md:text-lg text-(--landing-text-gray) leading-relaxed max-w-lg lg:ml-auto lg:mr-0 inline-block">
             {step.description}
           </p>
         </div>

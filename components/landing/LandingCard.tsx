@@ -68,13 +68,13 @@ export default function LandingCard({
           {renderIcon()}
           
           {title && (
-            <h3 className="text-2xl font-medium text-(--landing-text-heading) mb-3 tracking-tight group-hover:text-(--landing-primary-blue) transition-colors">
+            <h3 className="text-xl md:text-2xl font-medium text-(--landing-text-heading) mb-3 tracking-tight group-hover:text-(--landing-primary-blue) transition-colors">
               {title}
             </h3>
           )}
           
           {description && (
-            <p className="text-(--landing-text-gray) leading-relaxed text-lg mb-4">
+            <p className="text-(--landing-text-gray) leading-relaxed  md:text-lg mb-4">
               {description}
             </p>
           )}

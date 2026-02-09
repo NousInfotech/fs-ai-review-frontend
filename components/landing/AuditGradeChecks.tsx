@@ -1,8 +1,20 @@
 "use client";
 
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Calculator, RefreshCw, BarChart3, ArrowRight } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { 
+  CheckCircle2, 
+  Calculator, 
+  RefreshCw, 
+  BarChart3, 
+  ArrowRight,
+  ShieldCheck,
+  Clock,
+  Briefcase,
+  AlertCircle,
+  Sparkles
+} from "lucide-react";
+import FadeIn from "./animations/FadeIn";
 
 const FeatureItem = ({ text }: { text: string }) => (
   <motion.div 
@@ -22,6 +34,8 @@ const TotalsLoopAnimation = () => {
   const [isRunning, setIsRunning] = React.useState(false);
   const [isComplete, setIsComplete] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.5 });
 
   const auditSteps = [
     "Scanning Balance Sheet items...",
@@ -50,9 +64,15 @@ const TotalsLoopAnimation = () => {
       setCurrentStep(auditSteps.length - 1);
     }, 4000);
   };
+  
+  useEffect(() => {
+    if (isInView && !isRunning && !isComplete) {
+      startAudit();
+    }
+  }, [isInView]);
 
   return (
-    <div className="relative w-full mx-auto aspect-4/3 bg-linear-to-br from-slate-50 to-blue-50/20 rounded-[2.5rem] border border-slate-200/50 overflow-hidden shadow-2xl group">
+    <div ref={containerRef} className="relative w-full mx-auto aspect-auto md:aspect-4/3 bg-linear-to-br from-slate-50 to-blue-50/20 rounded-[2.5rem] border border-slate-200/50 overflow-hidden shadow-2xl group">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.1),transparent)] pointer-events-none" />
       <motion.div 
@@ -64,7 +84,7 @@ const TotalsLoopAnimation = () => {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-(--landing-primary-blue) rounded-full blur-[120px] -z-10" 
       />
       
-      <div className="absolute inset-0 flex flex-col items-center justify-center p-6 md:p-8">
+      <div className="relative md:absolute inset-0 flex flex-col items-center justify-center p-6 md:p-8">
         {!isRunning && !isComplete && (
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
@@ -80,11 +100,11 @@ const TotalsLoopAnimation = () => {
         )}
 
         {/* Main Card Container */}
-        <div className="w-full flex gap-4 h-full pt-4">
+        <div className="w-full flex flex-col md:flex-row gap-4 h-auto md:h-full pt-4">
           <motion.div 
             animate={isRunning || isComplete ? { opacity: 1, scale: 1, x: 0 } : { opacity: 0.4, scale: 0.95, x: 20, filter: "blur(2px)" }}
             transition={{ duration: 0.5 }}
-            className="w-2/3 bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white p-4 md:p-6 space-y-3 relative overflow-hidden"
+            className="w-full md:w-2/3 bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white p-4 md:p-6 space-y-3 relative overflow-hidden"
           >
             {/* Scanning Effect */}
             {isRunning && (
@@ -169,7 +189,7 @@ const TotalsLoopAnimation = () => {
           {/* Audit Verification Log - Right Side Panel */}
           <motion.div 
             animate={isRunning || isComplete ? { opacity: 1, scale: 1, x: 0 } : { opacity: 0, scale: 0.95, x: -20 }}
-            className="w-1/3 bg-slate-900 rounded-2xl md:rounded-3xl p-4 shadow-2xl border border-slate-800 space-y-4 overflow-hidden"
+            className="w-full md:w-1/3 bg-slate-900 rounded-2xl md:rounded-3xl p-4 shadow-2xl border border-slate-800 space-y-4 overflow-hidden"
           >
             <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -248,10 +268,10 @@ export default function AuditGradeChecks() {
       <div className="absolute -left-20 top-20 w-64 h-64 bg-blue-50 rounded-full blur-[100px] opacity-50" />
       
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 xl:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 xl:gap-24">
           
           {/* Left Content */}
-          <div className="space-y-5 order-2 lg:order-1">
+          <div className="space-y-5">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -259,14 +279,14 @@ export default function AuditGradeChecks() {
               transition={{ duration: 0.8 }}
               className="space-y-3"
             >
-              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-xs font-medium uppercase tracking-widest border border-blue-100">
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-xs font-semibold uppercase tracking-widest border border-blue-100">
                 <BarChart3 className="w-3.5 h-3.5 mr-2" />
                 Audit-Grade Analysis
               </div>
-              <h2 className="text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]">
+              <h2 className="text-2xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]">
                 What FS AI Review does
               </h2>
-              <p className="text-lg md:text-xl text-(--landing-text-gray) leading-relaxed">
+              <p className="text-base md:text-xl text-(--landing-text-gray) leading-relaxed">
                 FS AI Review runs deterministic, audit-grade checks on Financial Statements to catch issues 
                 that slip through manual reviews.
               </p>
@@ -311,7 +331,7 @@ export default function AuditGradeChecks() {
           </div>
 
           {/* Right Animation */}
-          <div className="w-full order-1 lg:order-2">
+          <div className="w-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -322,6 +342,87 @@ export default function AuditGradeChecks() {
             </motion.div>
           </div>
 
+        </div>
+
+        {/* Standards Supported Section - Integrated from StandardsSupported.tsx */}
+        {/* Standards Supported Motion Section */}
+        <div className="mt-10">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          >
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] } }
+              }}
+              className="bg-white p-8 rounded-4xl border border-slate-100 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_32px_64px_-16px_rgba(59,130,246,0.08)] transition-all duration-500 space-y-4 group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-3 text-(--landing-primary-blue)">
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                    <CheckCircle2 className="w-6 h-6 text-green-500" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-medium tracking-tight text-(--landing-text-heading)">
+                    GAPSME
+                  </h3>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 text-[10px] font-bold uppercase tracking-widest">
+                  Available now
+                </span>
+              </div>
+              <p className="text-base md:text-lg text-(--landing-text-gray) leading-relaxed">
+                FS AI Review currently supports Malta GAPSME Financial Statements with full automated validation.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] } }
+              }}
+              className="bg-white p-8 rounded-4xl border border-slate-100 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_32px_64px_-16px_rgba(59,130,246,0.08)] transition-all duration-500 space-y-4 group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-3 text-(--landing-primary-blue)">
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                    <Clock className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-medium tracking-tight text-(--landing-text-heading)">
+                    IFRS
+                  </h3>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-bold uppercase tracking-widest">
+                  Coming soon
+                </span>
+              </div>
+              <p className="text-base md:text-lg text-(--landing-text-gray) leading-relaxed">
+                IFRS checks are in active development and will be released shortly to support international reporting.
+              </p>
+            </motion.div>
+          </motion.div>
+
+          {/* Professional Disclaimer */}
+          <FadeIn delay={0.4} className="flex flex-col items-center justify-center gap-2 md:gap-3 mt-5 opacity-60">
+            <div className="flex items-center gap-2 text-slate-400">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Disclaimer</span>
+            </div>
+            <p className="text-[10px] md:text-xs text-slate-500 font-medium italic text-center">
+              "FS AI Review operates as a verification tool and does not replace professional judgement or traditional audit work."
+            </p>
+          </FadeIn>
         </div>
       </div>
     </section>

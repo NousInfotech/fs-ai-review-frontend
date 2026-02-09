@@ -6,7 +6,7 @@ import TextReveal from "./animations/TextReveal";
 
 export default function CTA() {
   return (
-    <section className="py-10 px-4 sm:px-6 lg:px-8">
+    <section className="py-10 px-4 sm:px-6 lg:px-8 bg-(--landing-background)">
       <div className="max-w-7xl mx-auto">
         <div className="relative overflow-hidden rounded-[2.5rem] bg-(--landing-footer-hero-bg) p-10 shadow-2xl">
           {/* Decorative background elements */}
@@ -18,7 +18,7 @@ export default function CTA() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-white/80 text-xs font-semibold uppercase tracking-widest mb-8"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-white/80 text-[10px] md:text-xs font-semibold uppercase tracking-widest mb-5 md:mb-8"
             >
               <Sparkles className="w-3.5 h-3.5 text-blue-400" />
               Join 500+ forward-thinking firms
@@ -27,10 +27,10 @@ export default function CTA() {
             <TextReveal
               text="Run a final check before you sign or send your Financial Statements."
               as="h2"
-              className="text-4xl font-medium text-white tracking-tight mb-3 max-w-4xl"
+              className="md:text-4xl text-lg font-medium text-white tracking-tight mb-3 max-w-4xl"
             />
             
-            <p className="text-gray-400 text-lg mb-10">
+            <p className="text-gray-400 text-xs md:text-lg mb-10">
               Start your 14-day free trial today. No credit card required. Experience the power of AI-driven compliance reviews.
             </p>
 
@@ -38,7 +38,7 @@ export default function CTA() {
               <LandingButton
                 href="/dashboard"
                 variant="primary"
-                className="px-10! py-4! text-lg! shadow-blue-500/20"
+                className=" shadow-blue-500/20"
                 icon={<ArrowRight className="w-5 h-5" />}
               >
                 Get Started for Free
@@ -46,7 +46,7 @@ export default function CTA() {
               <LandingButton
                 href="#pricing"
                 variant="outline"
-                className="px-10! py-4! text-lg! border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-white/10"
               >
                 View Plans
               </LandingButton>

@@ -34,7 +34,7 @@ export default function RegistryMatching() {
   ];
 
   return (
-    <section className="relative py-10 px-20 overflow-hidden bg-slate-50/50" id="registry">
+    <section className="relative py-10 md:px-10 overflow-hidden bg-(--landing-background)" id="registry">
       {/* Decorative Ornaments */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-50/30 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-indigo-50/20 rounded-full blur-[100px] -z-10" />
@@ -54,11 +54,11 @@ export default function RegistryMatching() {
                 <TextReveal
                   text="Malta Business Registry Matching Engine."
                   as="h2"
-                  className="text-4xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]"
+                  className="text-2xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]"
                 />
                 
                 <FadeIn delay={0.2}>
-                  <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
+                  <p className="md:text-xl text-slate-600 leading-relaxed">
                      FS AI Review is building a direct integration with the MBR to perform 
                      real-time validations of statutory data against your Financial Statements.
                   </p>
@@ -86,7 +86,7 @@ export default function RegistryMatching() {
             <FadeIn delay={0.2} direction="right" className="relative">
               {/* Main Card */}
               <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] p-8 md:p-10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-6">
+                <div className="flex md:absolute top-0 right-0 p-6 md:p-10 justify-end">
                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-(--landing-primary-blue) text-[10px] font-bold uppercase tracking-widest animate-pulse">
                      <Clock className="w-3 h-3" /> Coming Soon
                    </div>
