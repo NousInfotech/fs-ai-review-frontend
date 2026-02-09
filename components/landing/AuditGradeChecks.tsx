@@ -248,10 +248,10 @@ export default function AuditGradeChecks() {
       <div className="absolute -left-20 top-20 w-64 h-64 bg-blue-50 rounded-full blur-[100px] opacity-50" />
       
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 xl:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 xl:gap-24">
           
           {/* Left Content */}
-          <div className="space-y-5 order-2 lg:order-1">
+          <div className="space-y-5">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -259,14 +259,14 @@ export default function AuditGradeChecks() {
               transition={{ duration: 0.8 }}
               className="space-y-3"
             >
-              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-xs font-medium uppercase tracking-widest border border-blue-100">
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-xs font-semibold uppercase tracking-widest border border-blue-100">
                 <BarChart3 className="w-3.5 h-3.5 mr-2" />
                 Audit-Grade Analysis
               </div>
-              <h2 className="text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]">
+              <h2 className="text-2xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading) leading-[1.1]">
                 What FS AI Review does
               </h2>
-              <p className="text-lg md:text-xl text-(--landing-text-gray) leading-relaxed">
+              <p className="text-base md:text-xl text-(--landing-text-gray) leading-relaxed">
                 FS AI Review runs deterministic, audit-grade checks on Financial Statements to catch issues 
                 that slip through manual reviews.
               </p>
@@ -311,7 +311,7 @@ export default function AuditGradeChecks() {
           </div>
 
           {/* Right Animation */}
-          <div className="w-full order-1 lg:order-2">
+          <div className="w-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}

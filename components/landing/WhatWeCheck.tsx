@@ -54,15 +54,15 @@ export default function WhatWeCheck() {
       <div className="container mx-auto px-5 md:px-20 relative z-10">
         <div className="text-center mx-auto mb-10 space-y-3">
           <FadeIn>
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest">Digital Audit Scope</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest">Digital Audit Scope</h2>
           </FadeIn>
           <TextReveal
             text="What we check"
             as="h2"
-            className="text-4xl md:text-6xl font-medium tracking-tight text-(--landing-text-heading)"
+            className="text-2xl md:text-6xl font-medium tracking-tight text-(--landing-text-heading)"
           />
           <FadeIn delay={0.2}>
-            <p className="text-lg md:text-xl text-(--landing-text-gray) leading-relaxed">
+            <p className=" md:text-xl text-(--landing-text-gray) leading-relaxed">
               Our engine performs 1,000+ deterministic checks designed specifically for 
               complex financial disclosures.
             </p>
@@ -98,7 +98,7 @@ export default function WhatWeCheck() {
           <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
             <Camera className="w-4 h-4 text-(--landing-primary-blue)" />
           </div>
-          <p className="text-base text-slate-500 font-medium">
+          <p className="md:text-base text-xs text-slate-500 font-medium">
             Every issue includes <span className="text-slate-900 font-semibold italic">screenshot evidence.</span>
           </p>
         </FadeIn>

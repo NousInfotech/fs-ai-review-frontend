@@ -19,13 +19,13 @@ export default function Pricing() {
       <div className="relative max-w-7xl mx-auto px-5 md:px-10 z-10">
         <FadeIn direction="up" distance={30} duration={0.8}>
           <div className="text-center mb-10">
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Pricing</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Pricing</h2>
             <TextReveal
               text="Simple, Transparent Models."
               as="h2"
-              className="text-4xl md:text-5xl lg:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
+              className="text-2xl md:text-5xl lg:text-6xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
             />
-            <p className="text-(--landing-text-gray) text-xl mx-auto leading-relaxed">
+            <p className="text-(--landing-text-gray) md:text-xl mx-auto leading-relaxed">
               €6.50 per Financial Statements review. No subscriptions. No contracts.
             </p>
           </div>
@@ -43,13 +43,13 @@ export default function Pricing() {
               <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-6">
                 <Zap className="w-6 h-6 text-(--landing-primary-blue)" />
               </div>
-              <h3 className="text-2xl font-bold text-(--landing-text-heading) mb-2">Standard Review</h3>
+              <h3 className="text-xl md:text-2xl font-medium text-(--landing-text-heading) mb-2">Standard Review</h3>
               <p className="text-(--landing-text-gray) text-base">Professional Digital Audit</p>
             </div>
 
             <div className="mb-10">
               <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-5xl font-extrabold text-slate-900 tracking-tighter">€6.50</span>
+                <span className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tighter">€6.50</span>
                 <span className="text-slate-400 font-medium">/ review</span>
               </div>
               <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-[10px] font-bold uppercase tracking-widest border border-blue-100">
@@ -90,13 +90,13 @@ export default function Pricing() {
               <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center mb-6">
                 <BarChart3 className="w-6 h-6 text-indigo-600" />
               </div>
-              <h3 className="text-2xl font-bold text-(--landing-text-heading) mb-2">Volume Pricing</h3>
+              <h3 className="text-xl md:text-2xl font-medium text-(--landing-text-heading) mb-2">Volume Pricing</h3>
               <p className="text-(--landing-text-gray) text-base">For firms & high-volume</p>
             </div>
 
             <div className="mb-10">
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-4xl font-bold text-slate-900 tracking-tight">Custom</span>
+                <span className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Custom</span>
               </div>
               <p className="text-sm text-slate-400 font-medium">Rates for 100+ files/year</p>
             </div>

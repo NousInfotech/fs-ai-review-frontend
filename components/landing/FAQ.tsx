@@ -34,16 +34,16 @@ export default function FAQ() {
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-(--landing-purple-logo)/5 rounded-full blur-3xl -z-10" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <FadeIn>
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Support & FAQ</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Support & FAQ</h2>
           </FadeIn>
           <TextReveal
             text="Common Questions."
             as="h2"
-            className="text-4xl md:text-5xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
+            className="text-2xl md:text-5xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
           />
-          <p className="text-lg text-(--landing-text-gray)">
+          <p className="md:text-lg text-(--landing-text-gray)">
             Everything you need to know about our AI-powered compliance platform.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function FAQ() {
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
               >
-                <span className="text-lg font-medium text-(--landing-text-heading)">
+                <span className="md:text-lg font-medium text-(--landing-text-heading)">
                   {faq.question}
                 </span>
                 <ChevronDown 

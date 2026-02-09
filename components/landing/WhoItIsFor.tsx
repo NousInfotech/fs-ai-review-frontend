@@ -40,11 +40,11 @@ const AudienceCard = ({ title, icon, description, highlight }: AudienceCardProps
         {icon}
       </div>
       
-      <h3 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight leading-tight">
+      <h3 className="text-xl md:text-3xl font-medium mb-4 tracking-tight leading-tight">
         {title}
       </h3>
       
-      <p className={`text-lg md:text-xl leading-relaxed mb-8 grow ${
+      <p className={`md:text-xl leading-relaxed mb-8 grow ${
         highlight ? "text-white/80" : "text-slate-600"
       }`}>
         {description}
@@ -56,7 +56,7 @@ const AudienceCard = ({ title, icon, description, highlight }: AudienceCardProps
         }`}>
           <ShieldCheck className="w-5 h-5" />
         </div>
-        <span className={`text-xs font-bold uppercase tracking-widest ${
+        <span className={`text-xs font-medium uppercase tracking-widest ${
           highlight ? "text-white/50" : "text-slate-400"
         }`}>
           Confidence Layer
@@ -76,15 +76,15 @@ export default function WhoItIsFor() {
       <div className="container mx-auto px-5 md:px-20 relative z-10">
         <div className="text-center mx-auto mb-10 space-y-3">
           <FadeIn>
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest">Audience & Use Case</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest">Audience & Use Case</h2>
           </FadeIn>
           <TextReveal
             text="Who it’s for"
             as="h2"
-            className="text-4xl md:text-6xl font-medium tracking-tight text-(--landing-text-heading)"
+            className="text-2xl md:text-6xl font-medium tracking-tight text-(--landing-text-heading)"
           />
           <FadeIn delay={0.2}>
-            <p className="text-lg md:text-xl text-(--landing-text-gray) leading-relaxed">
+            <p className="md:text-xl text-(--landing-text-gray) leading-relaxed">
               Providing a deterministic verification layer for those who need 
               audit-grade certainty in their financial reporting.
             </p>
@@ -110,12 +110,12 @@ export default function WhoItIsFor() {
         </div>
 
         {/* Professional Disclaimer */}
-        <FadeIn delay={0.3} className="mx-auto text-center flex flex-col items-center gap-4">
+        <FadeIn delay={0.3} className="mx-auto text-center flex flex-col items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2 text-slate-400">
             <AlertCircle className="w-4 h-4" />
             <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">Disclaimer</span>
           </div>
-          <p className="text-sm md:text-base text-slate-500 font-medium italic leading-relaxed">
+          <p className="text-xs md:text-base text-slate-500 font-medium italic leading-relaxed">
             "FS AI Review operates as a verification tool and does not replace professional judgement or traditional audit work."
           </p>
         </FadeIn>

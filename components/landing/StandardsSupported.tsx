@@ -34,14 +34,14 @@ export default function StandardsSupported() {
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-(--landing-purple-logo)/5 rounded-full blur-3xl -z-10" />
 
       <div className="container mx-auto px-5 md:px-10 relative z-10">
-        <div className="text-center mx-auto mb-12 space-y-3">
+        <div className="text-center mx-auto mb-8 space-y-3">
           <FadeIn>
-            <h2 className="text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest">Digital Compliance</h2>
+            <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest">Digital Compliance</h2>
           </FadeIn>
           <TextReveal
             text="Standards supported"
             as="h2"
-            className="text-4xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading)"
+            className="text-2xl md:text-5xl font-medium tracking-tight text-(--landing-text-heading)"
           />
         </div>
 
@@ -79,8 +79,8 @@ export default function StandardsSupported() {
                   </div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 relative z-10">{standard.title}</h3>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8 grow relative z-10">
+                <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-4 relative z-10">{standard.title}</h3>
+                <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8 grow relative z-10">
                   {standard.description}
                 </p>
 
