@@ -96,7 +96,7 @@ export default function HowItWorks() {
             />
           </div>
 
-          <div className="space-y-20 lg:space-y-32">
+          <div className="space-y-20 lg:space-y-25">
             {steps.map((step, index) => (
               <TimelineStep 
                 key={step.id} 

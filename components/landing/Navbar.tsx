@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Menu, X } from "lucide-react";
 import LandingButton from "./LandingButton";
+import StaggeredMenu from "./StaggeredMenu";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,8 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-9999">
-      <div className="bg-white/60 backdrop-blur-xl border-b border-white/20">
+      {/* Desktop Navbar */}
+      <div className="hidden md:block bg-white/60 backdrop-blur-xl border-b border-white/20">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 w-full">
             {/* Left: Logo and Name */}
@@ -51,7 +53,7 @@ export default function Navbar() {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-xl font-medium text-(--landing-text-heading) tracking-tight group-hover:text-(--landing-primary-blue) transition-colors">
+                <span className="md:text-xl font-normal text-(--landing-text-heading) tracking-tight group-hover:text-(--landing-primary-blue) transition-colors">
                   Financial Review AI
                 </span>
               </Link>
@@ -64,7 +66,7 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href} 
                   onClick={(e) => scrollToSection(e, link.href)}
-                  className="text-sm font-medium text-(--landing-text-gray) hover:text-(--landing-primary-blue) transition-colors relative group py-2"
+                  className="text-sm font-normal text-(--landing-text-gray) hover:text-(--landing-primary-blue) transition-colors relative group py-2"
                 >
                   {link.name}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-(--landing-primary-blue) transition-all duration-300 group-hover:w-full" />
@@ -74,79 +76,45 @@ export default function Navbar() {
 
             {/* Right: Actions (Desktop) */}
             <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
-              <div className="hidden md:flex items-center gap-3">
+              <div className="flex items-center gap-3">
                 <LandingButton 
                   href="/login"
                   variant="outline"
-                  className="px-6! py-2.5! text-sm! font-medium rounded-xl!"
+                  className="px-6! py-2.5! text-sm! font-normal rounded-xl!"
                 >
                   Sign In
                 </LandingButton>
                 <LandingButton 
                   href="/dashboard"
                   variant="primary"
-                  className="px-6! py-2.5! text-sm! font-medium rounded-xl! shadow-blue-500/10"
+                  className="px-6! py-2.5! text-sm! font-normal rounded-xl! shadow-blue-500/10"
                   icon={<ArrowRight className="w-4 h-4" />}
                 >
                   Get Started
                 </LandingButton>
               </div>
-
-              {/* Mobile Menu Toggle */}
-              <button 
-                onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden p-2 text-(--landing-text-gray) hover:text-(--landing-primary-blue) transition-colors"
-                aria-label="Toggle menu"
-              >
-                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden bg-white/95 backdrop-blur-2xl border-b border-white/20 overflow-hidden shadow-2xl"
-          >
-            <div className="px-4 pt-2 pb-6 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => scrollToSection(e, link.href)}
-                  className="block px-3 py-4 text-base font-medium text-(--landing-text-gray) hover:text-(--landing-primary-blue) active:bg-blue-50/50 rounded-xl transition-all"
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <div className="pt-4 flex flex-col gap-3 px-3">
-                <LandingButton 
-                  href="/login"
-                  variant="outline"
-                  className="w-full justify-center py-3.5!"
-                >
-                  Sign In
-                </LandingButton>
-                <LandingButton 
-                  href="/dashboard"
-                  variant="primary"
-                  className="w-full justify-center py-3.5!"
-                  icon={<ArrowRight className="w-5 h-5" />}
-                >
-                  Get Started
-                </LandingButton>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Navbar with Staggered Menu */}
+      <div className="md:hidden bg-white/60 backdrop-blur-xl border-b border-white/20 h-16">
+        <StaggeredMenu 
+          title="Financial Review AI"
+          items={[
+            ...navLinks.map(link => ({ label: link.name, ariaLabel: link.name, link: link.href })),
+            { label: "Sign In", ariaLabel: "Sign In", link: "/login", variant: 'button-outline' },
+            { label: "Get Started", ariaLabel: "Get Started", link: "/dashboard", variant: 'button-primary' }
+          ]}
+          logoUrl="/images/Logo.png"
+          isFixed={true}
+          colors={['var(--landing-primary-blue)', 'var(--landing-navbar-btn-bg)']}
+          accentColor="var(--landing-primary-blue)"
+          displaySocials={false}
+          displayItemNumbering={false}
+        />
+      </div>
     </nav>
   );
 }

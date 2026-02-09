@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CheckCircle2, Calculator, RefreshCw, BarChart3, ArrowRight } from "lucide-react";
 
 const FeatureItem = ({ text }: { text: string }) => (
@@ -22,6 +22,8 @@ const TotalsLoopAnimation = () => {
   const [isRunning, setIsRunning] = React.useState(false);
   const [isComplete, setIsComplete] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.5 });
 
   const auditSteps = [
     "Scanning Balance Sheet items...",
@@ -50,9 +52,15 @@ const TotalsLoopAnimation = () => {
       setCurrentStep(auditSteps.length - 1);
     }, 4000);
   };
+  
+  useEffect(() => {
+    if (isInView && !isRunning && !isComplete) {
+      startAudit();
+    }
+  }, [isInView]);
 
   return (
-    <div className="relative w-full mx-auto aspect-4/3 bg-linear-to-br from-slate-50 to-blue-50/20 rounded-[2.5rem] border border-slate-200/50 overflow-hidden shadow-2xl group">
+    <div ref={containerRef} className="relative w-full mx-auto aspect-auto md:aspect-4/3 bg-linear-to-br from-slate-50 to-blue-50/20 rounded-[2.5rem] border border-slate-200/50 overflow-hidden shadow-2xl group">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.1),transparent)] pointer-events-none" />
       <motion.div 
@@ -64,7 +72,7 @@ const TotalsLoopAnimation = () => {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-(--landing-primary-blue) rounded-full blur-[120px] -z-10" 
       />
       
-      <div className="absolute inset-0 flex flex-col items-center justify-center p-6 md:p-8">
+      <div className="relative md:absolute inset-0 flex flex-col items-center justify-center p-6 md:p-8">
         {!isRunning && !isComplete && (
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
@@ -80,11 +88,11 @@ const TotalsLoopAnimation = () => {
         )}
 
         {/* Main Card Container */}
-        <div className="w-full flex gap-4 h-full pt-4">
+        <div className="w-full flex flex-col md:flex-row gap-4 h-auto md:h-full pt-4">
           <motion.div 
             animate={isRunning || isComplete ? { opacity: 1, scale: 1, x: 0 } : { opacity: 0.4, scale: 0.95, x: 20, filter: "blur(2px)" }}
             transition={{ duration: 0.5 }}
-            className="w-2/3 bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white p-4 md:p-6 space-y-3 relative overflow-hidden"
+            className="w-full md:w-2/3 bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white p-4 md:p-6 space-y-3 relative overflow-hidden"
           >
             {/* Scanning Effect */}
             {isRunning && (
@@ -169,7 +177,7 @@ const TotalsLoopAnimation = () => {
           {/* Audit Verification Log - Right Side Panel */}
           <motion.div 
             animate={isRunning || isComplete ? { opacity: 1, scale: 1, x: 0 } : { opacity: 0, scale: 0.95, x: -20 }}
-            className="w-1/3 bg-slate-900 rounded-2xl md:rounded-3xl p-4 shadow-2xl border border-slate-800 space-y-4 overflow-hidden"
+            className="w-full md:w-1/3 bg-slate-900 rounded-2xl md:rounded-3xl p-4 shadow-2xl border border-slate-800 space-y-4 overflow-hidden"
           >
             <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
