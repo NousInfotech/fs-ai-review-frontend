@@ -27,6 +27,7 @@ export interface HistoryDocument {
   fileUrl: string;
   status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
   totalPages: number;
+  error?: string;
 }
 
 export interface CreditStats {

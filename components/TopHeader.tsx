@@ -50,12 +50,17 @@ export default function TopHeader({
     // Generate breadcrumbs from pathname
     const breadcrumbs = useMemo(() => {
         const paths = pathname.split('/').filter(Boolean);
-        if (paths.length === 0) return [{ label: 'Dashboard', href: '/dashboard' }];
+        if (paths.length === 0) return [{ label: 'Analytics', href: '/dashboard' }];
         
         return paths.map((path, index) => {
             const href = `/${paths.slice(0, index + 1).join('/')}`;
             let label = path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' ');
             
+            // Map dashboard to Analytics
+            if (path === 'dashboard') {
+                label = 'Analytics';
+            }
+
             // Replace ID with Display ID if metadata is available
             if (uploadId && path === uploadId) {
                 label = metadata?.displayId || generateDisplayId(path);

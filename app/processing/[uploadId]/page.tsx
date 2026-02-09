@@ -29,11 +29,11 @@ export default function ProcessingPage() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   // Poll for status
-  const { data: statusData, isError } = useQuery({
+  const { data: statusData, isError, error } = useQuery({
     queryKey: ['processingStatus', uploadId],
     queryFn: async () => {
       // Use the main review endpoint which returns the document status
-      const response = await api.get<{ status: string }>(`/api/v1/reviews/${uploadId}`);
+      const response = await api.get<{ status: string; error?: string }>(`/api/v1/reviews/${uploadId}`);
       return response.data;
     },
     refetchInterval: (query) => {
@@ -61,7 +61,7 @@ export default function ProcessingPage() {
         });
       }, 100); // Fast transition
       return () => clearInterval(interval);
-    } else if (statusData?.status === 'FAILED') {
+    } else if (statusData?.status === 'FAILED' || isError) {
       // Failure handled in render
     } else {
       // Simulate steady progress if still processing
@@ -84,7 +84,7 @@ export default function ProcessingPage() {
       <div className="max-w-3xl mx-auto py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {/* Header Section */}
-          {statusData?.status === 'FAILED' ? (
+          {statusData?.status === 'FAILED' || isError ? (
             <div className="p-12 flex flex-col items-center justify-center text-center space-y-6">
               <motion.div 
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -95,11 +95,16 @@ export default function ProcessingPage() {
               </motion.div>
               <h2 className="text-2xl font-bold text-gray-900">Processing Failed</h2>
               <p className="text-gray-500 max-w-md">
-                We encountered an error while processing your document. This could be due to file corruption or an unsupported format.
+                {statusData?.error || (isError ? "Unable to connect to the server." : "We encountered an error while processing your document. This could be due to file corruption or an unsupported format.")}
               </p>
+              {isError && error && (
+                 <p className="text-xs text-red-400 bg-red-50 p-2 rounded">
+                    Technical details: {String(error)}
+                 </p>
+              )}
               <div className="flex gap-4 pt-4">
                 <Button variant="outline" onClick={() => router.push('/dashboard')}>
-                  Return to Dashboard
+                  Return to Analytics
                 </Button>
                 <Button onClick={() => router.push('/upload')}>
                   Try Again

@@ -63,7 +63,8 @@ export interface ReconciliationSection {
 
 export interface SectionA {
   title: string;
-  items: CorrectItem[];
+  items?: CorrectItem[];
+  content?: string;
 }
 
 export interface SectionB {
@@ -78,7 +79,8 @@ export interface SectionC {
 
 export interface SectionD {
   title: string;
-  tables: Record<string, ReconciliationTable>;
+  tables?: Record<string, ReconciliationTable>;
+  content?: string;
 }
 
 export interface SectionE {
