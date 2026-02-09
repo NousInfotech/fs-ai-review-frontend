@@ -65,18 +65,14 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const preLayersRef = useRef<HTMLDivElement | null>(null);
   const preLayerElsRef = useRef<HTMLElement[]>([]);
 
-  const plusHRef = useRef<HTMLSpanElement | null>(null);
-  const plusVRef = useRef<HTMLSpanElement | null>(null);
+  const lineTopRef = useRef<HTMLSpanElement | null>(null);
+  const lineMidRef = useRef<HTMLSpanElement | null>(null);
+  const lineBotRef = useRef<HTMLSpanElement | null>(null);
   const iconRef = useRef<HTMLSpanElement | null>(null);
-
-  const textInnerRef = useRef<HTMLSpanElement | null>(null);
-  // const textWrapRef = useRef<HTMLSpanElement | null>(null); // Unused in original but kept if needed
-  const [textLines, setTextLines] = useState<string[]>(['Menu', 'Close']);
 
   const openTlRef = useRef<gsap.core.Timeline | null>(null);
   const closeTweenRef = useRef<gsap.core.Tween | null>(null);
   const spinTweenRef = useRef<gsap.core.Timeline | null>(null);
-  const textCycleAnimRef = useRef<gsap.core.Tween | null>(null);
   const colorTweenRef = useRef<gsap.core.Tween | null>(null);
 
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -89,12 +85,12 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       const panel = panelRef.current;
       const preContainer = preLayersRef.current;
 
-      const plusH = plusHRef.current;
-      const plusV = plusVRef.current;
+      const lineTop = lineTopRef.current;
+      const lineMid = lineMidRef.current;
+      const lineBot = lineBotRef.current;
       const icon = iconRef.current;
-      const textInner = textInnerRef.current;
 
-      if (!panel || !plusH || !plusV || !icon || !textInner) return;
+      if (!panel || !lineTop || !lineMid || !lineBot || !icon) return;
 
       let preLayers: HTMLElement[] = [];
       if (preContainer) {
@@ -105,11 +101,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen });
 
-      gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
-      gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
+      gsap.set(lineTop, { y: -5, rotate: 0 });
+      gsap.set(lineMid, { opacity: 1, scaleX: 1 });
+      gsap.set(lineBot, { y: 5, rotate: 0 });
       gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
-
-      gsap.set(textInner, { yPercent: 0 });
 
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
@@ -259,24 +254,25 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
   const animateIcon = useCallback((opening: boolean) => {
     const icon = iconRef.current;
-    const h = plusHRef.current;
-    const v = plusVRef.current;
-    if (!icon || !h || !v) return;
+    const top = lineTopRef.current;
+    const mid = lineMidRef.current;
+    const bot = lineBotRef.current;
+    if (!icon || !top || !mid || !bot) return;
 
     spinTweenRef.current?.kill();
 
     if (opening) {
-      gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
       spinTweenRef.current = gsap
-        .timeline({ defaults: { ease: 'power4.out' } })
-        .to(h, { rotate: 45, duration: 0.5 }, 0)
-        .to(v, { rotate: -45, duration: 0.5 }, 0);
+        .timeline({ defaults: { ease: 'power4.out', duration: 0.5 } })
+        .to(top, { y: 0, rotate: 45 }, 0)
+        .to(mid, { opacity: 0, scaleX: 0 }, 0)
+        .to(bot, { y: 0, rotate: -45 }, 0);
     } else {
       spinTweenRef.current = gsap
-        .timeline({ defaults: { ease: 'power3.inOut' } })
-        .to(h, { rotate: 0, duration: 0.35 }, 0)
-        .to(v, { rotate: 90, duration: 0.35 }, 0)
-        .to(icon, { rotate: 0, duration: 0.001 }, 0);
+        .timeline({ defaults: { ease: 'power3.inOut', duration: 0.35 } })
+        .to(top, { y: -5, rotate: 0 }, 0)
+        .to(mid, { opacity: 1, scaleX: 1 }, 0)
+        .to(bot, { y: 5, rotate: 0 }, 0);
     }
   }, []);
 
@@ -306,38 +302,6 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     }
   }, [changeMenuColorOnOpen, menuButtonColor, openMenuButtonColor]);
 
-  const animateText = useCallback((opening: boolean) => {
-    const inner = textInnerRef.current;
-    if (!inner) return;
-
-    textCycleAnimRef.current?.kill();
-
-    const currentLabel = opening ? 'Menu' : 'Close';
-    const targetLabel = opening ? 'Close' : 'Menu';
-    const cycles = 3;
-
-    const seq: string[] = [currentLabel];
-    let last = currentLabel;
-    for (let i = 0; i < cycles; i++) {
-      last = last === 'Menu' ? 'Close' : 'Menu';
-      seq.push(last);
-    }
-    if (last !== targetLabel) seq.push(targetLabel);
-    seq.push(targetLabel);
-
-    setTextLines(seq);
-    gsap.set(inner, { yPercent: 0 });
-
-    const lineCount = seq.length;
-    const finalShift = ((lineCount - 1) / lineCount) * 100;
-
-    textCycleAnimRef.current = gsap.to(inner, {
-      yPercent: -finalShift,
-      duration: 0.5 + lineCount * 0.07,
-      ease: 'power4.out'
-    });
-  }, []);
-
   const toggleMenu = useCallback(() => {
     const target = !openRef.current;
     openRef.current = target;
@@ -353,8 +317,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
     animateIcon(target);
     animateColor(target);
-    animateText(target);
-  }, [playOpen, playClose, animateIcon, animateColor, animateText, onMenuOpen, onMenuClose]);
+  }, [playOpen, playClose, animateIcon, animateColor, onMenuOpen, onMenuClose]);
 
   const closeMenu = useCallback(() => {
     if (openRef.current) {
@@ -364,9 +327,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       playClose();
       animateIcon(false);
       animateColor(false);
-      animateText(false);
     }
-  }, [playClose, animateIcon, animateColor, animateText, onMenuClose]);
+  }, [playClose, animateIcon, animateColor, onMenuClose]);
 
   React.useEffect(() => {
     if (!closeOnClickAway || !open) return;
@@ -446,8 +408,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
           <button
             ref={toggleBtnRef}
-            className={`sm-toggle relative inline-flex items-center gap-[0.3rem] bg-transparent border-0 cursor-pointer font-medium leading-none overflow-visible pointer-events-auto ${
-              open ? 'text-black' : 'text-slate-600'
+            className={`sm-toggle relative inline-flex items-center justify-center bg-transparent border-0 cursor-pointer pointer-events-auto transition-colors p-2 ${
+              open ? 'text-black' : 'text-slate-600 hover:text-black'
             }`}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
@@ -456,30 +418,21 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             type="button"
           >
             <span
-              className="sm-toggle-textWrap relative inline-block h-[1em] overflow-hidden whitespace-nowrap w-(--sm-toggle-width,auto) min-w-(--sm-toggle-width,auto)"
-              aria-hidden="true"
-            >
-              <span ref={textInnerRef} className="sm-toggle-textInner flex flex-col leading-none">
-                {textLines.map((l, i) => (
-                  <span className="sm-toggle-line block h-[1em] leading-none" key={i}>
-                    {l}
-                  </span>
-                ))}
-              </span>
-            </span>
-
-            <span
               ref={iconRef}
-              className="sm-icon relative w-[14px] h-[14px] shrink-0 inline-flex items-center justify-center will-change-transform"
+              className="sm-icon relative w-6 h-6 shrink-0 inline-flex items-center justify-center will-change-transform"
               aria-hidden="true"
             >
               <span
-                ref={plusHRef}
-                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-[2px] -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                ref={lineTopRef}
+                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform"
               />
               <span
-                ref={plusVRef}
-                className="sm-icon-line sm-icon-line-v absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-[2px] -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                ref={lineMidRef}
+                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform"
+              />
+              <span
+                ref={lineBotRef}
+                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform"
               />
             </span>
           </button>
@@ -488,7 +441,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         <aside
           id="staggered-menu-panel"
           ref={panelRef}
-          className="staggered-menu-panel absolute top-0 right-0 h-full bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-[12px] pointer-events-auto"
+          className="staggered-menu-panel absolute top-0 right-0 h-full bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-md pointer-events-auto"
           style={{ WebkitBackdropFilter: 'blur(12px)' }}
           aria-hidden={!open}
         >

@@ -9,7 +9,7 @@ import { MessageSquare, Check, Zap, Clock, BarChart3 } from "lucide-react";
 
 export default function Pricing() {
   return (
-    <section className="relative py-10 overflow-hidden bg-(--landing-background-secondary)" id="pricing">
+    <section className="relative py-10 overflow-hidden bg-(--landing-background)" id="pricing">
       {/* Background Decor - consistent with other sections */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-(--landing-primary-blue)/5 rounded-full blur-[100px]" />
@@ -32,39 +32,40 @@ export default function Pricing() {
         </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Standard Review Card */}
+          {/* Standard Review Card - Highlighted */}
           <motion.div
             whileHover={{ y: -8, transition: { duration: 0.3 } }}
-            className="group relative p-8 rounded-[2.5rem] border bg-white/80 border-white shadow-xl shadow-blue-100/40 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 backdrop-blur-md flex flex-col"
+            className="group relative p-8 rounded-[2.5rem] border bg-(--landing-footer-hero-bg) border-white/10 shadow-2xl shadow-indigo-500/10 transition-all duration-500 flex flex-col overflow-hidden"
           >
-            <div className="absolute inset-0 rounded-[2.5rem] border-2 border-(--landing-primary-blue)/10 pointer-events-none" />
+            {/* Glossy Overlay Effect */}
+            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
             
-            <div className="mb-8">
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-6">
-                <Zap className="w-6 h-6 text-(--landing-primary-blue)" />
+            <div className="mb-8 relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-6 border border-white/10">
+                <Zap className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl md:text-2xl font-medium text-(--landing-text-heading) mb-2">Standard Review</h3>
-              <p className="text-(--landing-text-gray) text-base">Professional Digital Audit</p>
+              <h3 className="text-xl md:text-2xl font-medium text-white mb-2">Standard Review</h3>
+              <p className="text-blue-100 text-base">Professional Digital Audit</p>
             </div>
 
-            <div className="mb-10">
+            <div className="mb-10 relative z-10">
               <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tighter">€6.50</span>
-                <span className="text-slate-400 font-medium">/ review</span>
+                <span className="text-3xl md:text-5xl font-extrabold text-white tracking-tighter">€6.50</span>
+                <span className="text-blue-200 font-medium">/ review</span>
               </div>
-              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-50 text-(--landing-primary-blue) text-[10px] font-bold uppercase tracking-widest border border-blue-100">
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest border border-white/20">
                 Pay on demand
               </div>
             </div>
 
-            <div className="grow space-y-4 mb-10">
+            <div className="grow space-y-4 mb-10 relative z-10">
               {[
                 "No subscriptions.",
                 "No contracts.",
                 "Checks never expire."
               ].map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-3 text-base text-(--landing-text-heading) font-medium opacity-90">
-                  <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-(--landing-primary-blue)/10 text-(--landing-primary-blue)">
+                <div key={idx} className="flex items-center gap-3 text-base text-white/90 font-medium">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-white/20 text-white">
                     <Check className="w-3.5 h-3.5" strokeWidth={3} />
                   </div>
                   {feature}
@@ -74,8 +75,8 @@ export default function Pricing() {
 
             <LandingButton 
               href="/auth/register"
-              variant="primary" 
-              className="w-full justify-center py-4! text-base!"
+              variant="secondary" 
+              className="w-full justify-center py-4! text-base! relative z-10"
             >
               Get 3 free checks
             </LandingButton>

@@ -34,7 +34,7 @@ export default function RegistryMatching() {
   ];
 
   return (
-    <section className="relative py-10  md:px-20 overflow-hidden bg-slate-50/50" id="registry">
+    <section className="relative py-10 md:px-10 overflow-hidden bg-(--landing-background)" id="registry">
       {/* Decorative Ornaments */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-50/30 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-indigo-50/20 rounded-full blur-[100px] -z-10" />

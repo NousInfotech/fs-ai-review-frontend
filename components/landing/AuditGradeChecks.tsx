@@ -2,7 +2,19 @@
 
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { CheckCircle2, Calculator, RefreshCw, BarChart3, ArrowRight } from "lucide-react";
+import { 
+  CheckCircle2, 
+  Calculator, 
+  RefreshCw, 
+  BarChart3, 
+  ArrowRight,
+  ShieldCheck,
+  Clock,
+  Briefcase,
+  AlertCircle,
+  Sparkles
+} from "lucide-react";
+import FadeIn from "./animations/FadeIn";
 
 const FeatureItem = ({ text }: { text: string }) => (
   <motion.div 
@@ -330,6 +342,87 @@ export default function AuditGradeChecks() {
             </motion.div>
           </div>
 
+        </div>
+
+        {/* Standards Supported Section - Integrated from StandardsSupported.tsx */}
+        {/* Standards Supported Motion Section */}
+        <div className="mt-10">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          >
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] } }
+              }}
+              className="bg-white p-8 rounded-4xl border border-slate-100 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_32px_64px_-16px_rgba(59,130,246,0.08)] transition-all duration-500 space-y-4 group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-3 text-(--landing-primary-blue)">
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                    <CheckCircle2 className="w-6 h-6 text-green-500" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-medium tracking-tight text-(--landing-text-heading)">
+                    GAPSME
+                  </h3>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 text-[10px] font-bold uppercase tracking-widest">
+                  Available now
+                </span>
+              </div>
+              <p className="text-base md:text-lg text-(--landing-text-gray) leading-relaxed">
+                FS AI Review currently supports Malta GAPSME Financial Statements with full automated validation.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] } }
+              }}
+              className="bg-white p-8 rounded-4xl border border-slate-100 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_32px_64px_-16px_rgba(59,130,246,0.08)] transition-all duration-500 space-y-4 group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-3 text-(--landing-primary-blue)">
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                    <Clock className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-medium tracking-tight text-(--landing-text-heading)">
+                    IFRS
+                  </h3>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-bold uppercase tracking-widest">
+                  Coming soon
+                </span>
+              </div>
+              <p className="text-base md:text-lg text-(--landing-text-gray) leading-relaxed">
+                IFRS checks are in active development and will be released shortly to support international reporting.
+              </p>
+            </motion.div>
+          </motion.div>
+
+          {/* Professional Disclaimer */}
+          <FadeIn delay={0.4} className="flex flex-col items-center justify-center gap-2 md:gap-3 mt-5 opacity-60">
+            <div className="flex items-center gap-2 text-slate-400">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Disclaimer</span>
+            </div>
+            <p className="text-[10px] md:text-xs text-slate-500 font-medium italic text-center">
+              "FS AI Review operates as a verification tool and does not replace professional judgement or traditional audit work."
+            </p>
+          </FadeIn>
         </div>
       </div>
     </section>

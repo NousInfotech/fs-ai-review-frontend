@@ -28,7 +28,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-10 bg-(--landing-background) relative overflow-hidden" id="faq">
+    <section className="py-10 bg-(--landing-background-secondary) relative overflow-hidden" id="faq">
       {/* Decorative Background Elements - matching Features section */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-(--landing-primary-blue)/5 rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-(--landing-purple-logo)/5 rounded-full blur-3xl -z-10" />
