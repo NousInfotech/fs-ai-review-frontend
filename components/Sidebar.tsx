@@ -79,7 +79,7 @@ export default function Sidebar({
         },
         {
             slug: "dashboard",
-            label: "Dashboard",
+            label: "Analytics",
             icon: LayoutDashboard,
             href: "/dashboard",
             description: "Overview and insights",

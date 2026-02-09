@@ -1,12 +1,30 @@
 import { SectionD } from "@/types/review";
 import { Table, TableProperties } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface ReconciliationTablesProps {
   data: SectionD;
 }
 
 export default function ReconciliationTables({ data }: ReconciliationTablesProps) {
-  const tableKeys = Object.keys(data.tables);
+  if (data.content) {
+    return (
+      <div className="mb-10">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <TableProperties className="h-6 w-6 text-indigo-600 mr-2" />
+          {data.title}
+        </h3>
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 prose prose-sm max-w-none text-gray-700">
+          <ReactMarkdown>{data.content}</ReactMarkdown>
+        </div>
+      </div>
+    );
+  }
+
+  const tables = data.tables;
+  if (!tables) return null;
+
+  const tableKeys = Object.keys(tables);
   if (tableKeys.length === 0) return null;
 
   return (
@@ -18,7 +36,7 @@ export default function ReconciliationTables({ data }: ReconciliationTablesProps
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {tableKeys.map((key) => {
-          const table = data.tables[key];
+          const table = tables[key];
           return (
             <div key={key} className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 font-semibold text-gray-700 uppercase text-sm tracking-wide">

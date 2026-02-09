@@ -137,7 +137,7 @@ export default function DashboardPage() {
 
   return (
     <PortalLayout 
-      title="Dashboard" 
+      title="Analytics" 
       description="Overview of your financial review activities"
     >
       {/* Stats Row */}

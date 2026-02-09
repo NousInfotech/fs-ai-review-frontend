@@ -24,10 +24,7 @@ const fetchTestCases = async (): Promise<TestCase[]> => {
 
 const SEVERITY_OPTIONS = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
 const CATEGORY_OPTIONS = ['Financial', 'Compliance', 'Arithmetic'];
-const COUNTRY_OPTIONS = ["US", "IN", "GB"];
-const COMPANY_TYPE_OPTIONS = ["LISTED", "PRIVATE", "BANKING", "INSURANCE"];
 const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "GAPSME"];
-const REGULATOR_OPTIONS = ["SEC", "SEBI", "MCA"];
 
 export default function TestCasesPage() {
   const { role } = useAdminAuth();
@@ -44,9 +41,9 @@ export default function TestCasesPage() {
     severity: 'MEDIUM',
     category: 'Financial',
     enabled: true,
+    accountingStandard: 'IFRS',
     countryCode: 'US',
     companyType: 'LISTED',
-    accountingStandard: 'IFRS',
     regulator: 'SEC'
   });
 
@@ -96,10 +93,10 @@ export default function TestCasesPage() {
       severity: 'MEDIUM',
       category: 'Financial',
       enabled: true,
+      accountingStandard: 'IFRS',
       countryCode: 'US',
-    companyType: 'LISTED',
-    accountingStandard: 'IFRS',
-    regulator: 'SEC'
+      companyType: 'LISTED',
+      regulator: 'SEC'
     });
     setIsModalOpen(true);
   };
@@ -112,9 +109,9 @@ export default function TestCasesPage() {
       severity: tc.severity,
       category: tc.category,
       enabled: tc.enabled,
+      accountingStandard: tc.accountingStandard || 'IFRS',
       countryCode: tc.countryCode || 'US',
       companyType: tc.companyType || 'LISTED',
-      accountingStandard: tc.accountingStandard || 'IFRS',
       regulator: tc.regulator || 'SEC'
     });
     setIsModalOpen(true);
@@ -349,34 +346,6 @@ export default function TestCasesPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="countryCode" className="block text-sm font-medium text-gray-700">Country</label>
-                      <select
-                        id="countryCode"
-                        value={formData.countryCode}
-                        onChange={(e) => setFormData({...formData, countryCode: e.target.value as any})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        {COUNTRY_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="companyType" className="block text-sm font-medium text-gray-700">Company Type</label>
-                      <select
-                        id="companyType"
-                        value={formData.companyType}
-                        onChange={(e) => setFormData({...formData, companyType: e.target.value as any})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        {COMPANY_TYPE_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
                       <label htmlFor="accountingStandard" className="block text-sm font-medium text-gray-700">Accounting Standard</label>
                       <select
                         id="accountingStandard"
@@ -385,20 +354,6 @@ export default function TestCasesPage() {
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         {ACCOUNTING_STANDARD_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="regulator" className="block text-sm font-medium text-gray-700">Regulator</label>
-                      <select
-                        id="regulator"
-                        value={formData.regulator}
-                        onChange={(e) => setFormData({...formData, regulator: e.target.value as any})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        {REGULATOR_OPTIONS.map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>

@@ -17,6 +17,7 @@ import { StandardizedResultResponse, HistoryDocument } from "@/lib/types";
 import { clsx } from "clsx";
 import TestList from "@/components/results/TestList";
 import { generateDisplayId } from "@/lib/utils";
+import { downloadAuditReport } from "@/lib/pdfGenerator";
 
 const fetchResults = async (uploadId: string): Promise<StandardizedResultResponse> => {
   try {
@@ -65,19 +66,19 @@ export default function ResultsPage() {
 
   const handleDownload = async () => {
     try {
+      if (!metadata) {
+        throw new Error("Metadata not available");
+      }
+
       setIsDownloading(true);
-      const response = await api.get(`/api/v1/reviews/${uploadId}/pdf`, {
-        responseType: 'blob',
-      });
       
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `audit-report-${uploadId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      const safeCompanyName = (metadata.companyName || 'Company').replace(/\s+/g, '_');
+      const safeDate = (metadata.documentDate || 'Date').replace(/\//g, '-');
+      const filename = `Audit_Report_${safeCompanyName}_${safeDate}.pdf`;
+
+      // Download PDF
+      await downloadAuditReport(uploadId, filename);
+      
     } catch (error) {
       console.error("Failed to download PDF", error);
       alert("Failed to download the report. Please try again.");
@@ -135,7 +136,7 @@ export default function ResultsPage() {
           className="flex items-center text-sm text-gray-500 hover:text-indigo-600 transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Dashboard
+          Back to Analytics
         </button>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
@@ -153,8 +154,9 @@ export default function ResultsPage() {
 
             <button
               onClick={handleDownload}
-              disabled={isDownloading}
-              className="flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-indigo-200"
+              disabled={true} // Temporarily disabled as requested
+              title="Download is currently unavailable"
+              className="flex items-center gap-2 px-3 py-1 bg-gray-50 text-gray-400 rounded-lg text-sm font-medium transition-colors cursor-not-allowed border border-gray-200"
             >
               {isDownloading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

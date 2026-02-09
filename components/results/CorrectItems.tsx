@@ -1,12 +1,28 @@
 import { SectionA } from "@/types/review";
 import { CheckCircle2, ShieldCheck } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface CorrectItemsProps {
   data: SectionA;
 }
 
 export default function CorrectItems({ data }: CorrectItemsProps) {
-  if (data.items.length === 0) return null;
+  if (data.content) {
+    return (
+      <div className="mb-10">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <ShieldCheck className="h-6 w-6 text-green-600 mr-2" />
+          {data.title}
+        </h3>
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 prose prose-sm max-w-none text-gray-700">
+          <ReactMarkdown>{data.content}</ReactMarkdown>
+        </div>
+      </div>
+    );
+  }
+
+  const items = data.items;
+  if (!items || items.length === 0) return null;
 
   return (
     <div className="mb-10">
@@ -14,13 +30,13 @@ export default function CorrectItems({ data }: CorrectItemsProps) {
         <ShieldCheck className="h-6 w-6 text-green-600 mr-2" />
         {data.title}
         <span className="ml-3 px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-bold uppercase">
-          {data.items.length} Verified
+          {items.length} Verified
         </span>
       </h3>
 
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="divide-y divide-gray-100">
-          {data.items.map((item, index) => (
+          {items.map((item, index) => (
             <div key={index} className="p-4 hover:bg-gray-50 transition-colors flex items-start">
               <div className="flex-shrink-0 mr-4 mt-1">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
