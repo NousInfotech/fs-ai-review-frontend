@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, Dispatch, SetStateAction } from "react";
 import { User, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter, usePathname } from "next/navigation";
@@ -10,6 +10,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   credits: number;
+  setCredits: Dispatch<SetStateAction<number>>;
   deductCredit: () => void;
   signOut: () => Promise<void>;
 }
@@ -71,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, credits, deductCredit, signOut }}>
+    <AuthContext.Provider value={{ user, loading, credits, setCredits, deductCredit, signOut }}>
       {children}
     </AuthContext.Provider>
   );

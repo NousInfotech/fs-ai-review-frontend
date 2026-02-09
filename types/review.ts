@@ -19,7 +19,7 @@ export interface CriticalError {
   type?: string;
   severity?: string;
   description: string;
-  location: Location;
+  location?: Location;
   reported_value?: number | null;
   expected_value?: number | null;
   difference?: number | null;

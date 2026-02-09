@@ -1,22 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Plus, UploadCloud, FileText, CheckCircle, AlertTriangle, Bell, Loader2, Target } from "lucide-react";
+import { Plus, UploadCloud, FileText, CheckCircle, AlertTriangle, Bell, Loader2, Target, CreditCard, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import PortalLayout from "@/components/PortalLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import Dropzone from "@/components/upload/Dropzone";
 import api from "@/lib/api";
+import { DashboardStats, HistoryDocument } from "@/lib/types";
+import { clsx } from "clsx";
+import { toast } from "react-hot-toast";
+import HistoryList from "@/components/history/HistoryList";
+import { generateDisplayId } from "@/lib/utils";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
-  const { credits, deductCredit } = useAuth();
+  const { credits, setCredits, deductCredit } = useAuth();
 
   // Fetch real dashboard stats
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboardStats'],
     queryFn: async () => {
       try {
@@ -24,60 +30,114 @@ export default function DashboardPage() {
         return response.data;
       } catch (error) {
         console.error("Failed to fetch dashboard stats", error);
-        // Return zeroed stats on error to prevent UI crash
-        return {
-          totalDocuments: 0,
-          completedReviews: 0,
-          issuesFound: 0,
-          accuracy: "0%"
-        };
+        throw error;
       }
     },
     // Refresh stats every minute
     refetchInterval: 60000,
   });
 
+  // Fetch recent reviews
+  const { data: recentReviews, isLoading: reviewsLoading } = useQuery<HistoryDocument[]>({
+    queryKey: ['recentReviews'],
+    queryFn: async () => {
+      try {
+        const response = await api.get('/api/v1/reviews/');
+        // Transform and slice top 5
+        const allReviews = (response.data as any[]).map(item => {
+          const id = item.id || item._id;
+          
+          // Robust extraction of company name and date from various possible fields
+          const companyName = 
+            item.companyName || 
+            item.company_name || 
+            item.metadata?.companyName || 
+            item.metadata?.company_name || 
+            "Unknown Company";
+
+          const documentDate = 
+            item.documentDate || 
+            item.document_date || 
+            item.metadata?.documentDate || 
+            item.metadata?.document_date || 
+            "Date Not Found";
+
+          return {
+            id: id,
+            displayId: item.displayId || generateDisplayId(id),
+            companyName: companyName,
+            documentDate: documentDate,
+            uploadDate: item.createdAt || new Date().toISOString(),
+            fileUrl: item.fileUrl,
+            status: item.status,
+            totalPages: item.totalPages || 0
+          } as HistoryDocument;
+        });
+        return allReviews.slice(0, 5);
+      } catch (error) {
+        console.error("Failed to fetch recent reviews", error);
+        return [];
+      }
+    },
+  });
+
+  // Sync credits with stats
+  useEffect(() => {
+    if (stats?.credits) {
+      setCredits(stats.credits.remaining);
+    }
+  }, [stats, setCredits]);
+
   const uploadMutation = useMutation({
     mutationFn: async (fileToUpload: File) => {
       const formData = new FormData();
       formData.append("file", fileToUpload);
       
-      const response = await api.post("/api/v1/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await api.post("/api/v1/upload", formData);
+      console.log("Upload response full data:", response.data);
       return response.data;
     },
     onSuccess: (data) => {
       // Deduct credit on successful upload
       deductCredit();
       
+      console.log("Upload onSuccess data:", data);
+
       // Ensure we capture the ID correctly from backend response
       // Backend returns { id: "..." }
-      const uploadId = data.id;
+      const uploadId = data.id || data._id || data.upload_id;
       
       if (!uploadId) {
         console.error("Upload ID missing in response:", data);
+        // Alert user if in dev, or show UI error
         return;
       }
       
       router.push(`/processing/${uploadId}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Upload failed", error);
+      if (error.response?.status === 402) {
+        toast.error("Insufficient credits. Please contact support or upgrade.");
+      } else {
+        toast.error("Upload failed. Please try again.");
+      }
     },
   });
 
   const handleUpload = () => {
-    if (file && credits > 0) {
+    if (credits <= 0) {
+      toast.error("You have used all your free credits.");
+      return;
+    }
+    if (file) {
       uploadMutation.mutate(file);
     }
   };
 
   return (
     <PortalLayout 
-      title="Main Dashboard" 
+      title="Dashboard" 
       description="Overview of your financial review activities"
     >
       {/* Stats Row */}
@@ -120,13 +180,37 @@ export default function DashboardPage() {
 
          <div className="audit-card p-6 flex items-center justify-between">
            <div>
-             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Accuracy</div>
-             <div className="text-3xl font-bold text-[var(--color-text-primary)] mt-1">
-               {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.accuracy || "0%")}
+             <div className="text-[var(--color-text-secondary)] text-sm font-medium uppercase tracking-wide">Credits Left</div>
+             <div className="flex items-baseline gap-2 mt-1">
+               <div className={clsx(
+                 "text-3xl font-bold",
+                 (stats?.credits?.remaining || 0) < 1 ? "text-red-600" : "text-[var(--color-text-primary)]"
+               )}>
+                 {statsLoading ? <Loader2 className="h-8 w-8 animate-spin text-gray-300" /> : (stats?.credits?.remaining ?? credits)}
+               </div>
+               {!statsLoading && stats?.credits && (
+                 <div className="text-sm text-gray-500 font-medium">
+                   / {stats.credits.total}
+                 </div>
+               )}
              </div>
+             {!statsLoading && stats?.credits && (
+               <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2">
+                 <div 
+                   className={clsx(
+                     "h-1.5 rounded-full transition-all duration-500",
+                     stats.credits.remaining < 1 ? "bg-red-500" : "bg-blue-500"
+                   )}
+                   style={{ width: `${(stats.credits.remaining / stats.credits.total) * 100}%` }}
+                 />
+               </div>
+             )}
            </div>
-           <div className="p-3 rounded-xl bg-white border border-gray-100 shadow-sm text-blue-600">
-             <Target className="h-6 w-6" />
+           <div className={clsx(
+             "p-3 rounded-xl bg-white border border-gray-100 shadow-sm",
+             (stats?.credits?.remaining || 0) < 1 ? "text-red-600" : "text-blue-600"
+           )}>
+             <CreditCard className="h-6 w-6" />
            </div>
          </div>
       </div>
@@ -168,7 +252,7 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleUpload}
-                  disabled={uploadMutation.isPending}
+                  disabled={uploadMutation.isPending || credits <= 0}
                   className="w-full max-w-sm flex justify-center items-center py-3 px-6 rounded-xl shadow-lg text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {uploadMutation.isPending ? (
@@ -194,6 +278,22 @@ export default function DashboardPage() {
           )}
         </div>
       </motion.div>
+
+      {/* Recent Activity Section */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Recent Activity</h2>
+          <Link 
+            href="/history" 
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors"
+          >
+            View all history
+            <Target className="h-4 w-4" />
+          </Link>
+        </div>
+        
+        <HistoryList documents={recentReviews || []} isLoading={reviewsLoading} />
+      </div>
     </PortalLayout>
   );
 }

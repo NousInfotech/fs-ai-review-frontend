@@ -5,6 +5,11 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
 });
 
+// Debug logging to help troubleshoot deployment issues
+if (typeof window !== 'undefined') {
+  console.log('API Base URL configured as:', process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000 (fallback)');
+}
+
 api.interceptors.request.use(async (config) => {
   const user = auth.currentUser;
   if (user) {
