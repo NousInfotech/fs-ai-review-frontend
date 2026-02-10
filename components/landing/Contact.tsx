@@ -5,7 +5,9 @@ import { motion } from "framer-motion";
 import FadeIn from "./animations/FadeIn";
 import TextReveal from "./animations/TextReveal";
 import LandingButton from "./LandingButton";
-import { Mail, MessageCircle, Globe, Send, Phone } from "lucide-react";
+import { Mail, MessageCircle, Globe, Send, Loader2 } from "lucide-react";
+import { sendFormData } from "@/lib/api/contact";
+import toast from "react-hot-toast";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -14,16 +16,32 @@ export default function Contact() {
     phone: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
-    alert("Thank you for your message. We will get back to you soon!");
+    setIsSubmitting(true);
+    
+    try {
+      await sendFormData(formData);
+      toast.success("Thank you for your message. We will get back to you soon!");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+      console.log(formData);
+    } catch (error) {
+      console.error("Form submission failed:", error);
+      toast.error("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -151,10 +169,20 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full bg-(--landing-primary-blue) text-white font-semibold py-4 rounded-2xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-blue-500/20 active:scale-95"
+                  disabled={isSubmitting}
+                  className="w-full bg-(--landing-primary-blue) text-white font-semibold py-4 rounded-2xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-blue-500/20 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Send Message
-                  <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  {isSubmitting ? (
+                    <>
+                      Sending...
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </>
+                  )}
                 </button>
               </form>
             </div>
