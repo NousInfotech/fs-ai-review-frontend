@@ -45,12 +45,6 @@ function CriticalErrorItem({ item }: { item: CriticalError; index: number }) {
             <span className="font-bold text-gray-700">Location {item.location!.length > 1 ? lIdx + 1 : ""}:</span>
             <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-gray-600">
               {loc.page_no && <span>Page {loc.page_no}</span>}
-              {loc.line_no && loc.line_no.length > 0 && (
-                <span>Line No: {loc.line_no.join(", ")}</span>
-              )}
-              {loc.bounding_box && loc.bounding_box.length > 0 && (
-                <span className="text-[10px] text-gray-400 font-mono">Box: [{loc.bounding_box.join(", ")}]</span>
-              )}
             </div>
           </div>
         ))}

@@ -53,12 +53,6 @@ export default function DisclosureBreaches({ data }: DisclosureBreachesProps) {
                     <MapPin className="h-3 w-3 mr-1.5 text-gray-400" />
                     <span>Page {loc.page_no}</span>
                   </div>
-                  {loc.line_no && loc.line_no.length > 0 && (
-                    <div className="flex items-center">
-                      <Info className="h-3 w-3 mr-1.5 text-gray-400" />
-                      <span>Lines: {loc.line_no.join(", ")}</span>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
