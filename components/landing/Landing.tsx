@@ -6,7 +6,6 @@ import Navbar from './Navbar'
 import Hero from './Hero'
 import TrustedBy from './TrustedBy'
 import HowItWorks from './HowItWorks'
-import Features from './Features'
 import AuditGradeChecks from './AuditGradeChecks'
 import WhatWeCheck from './WhatWeCheck'
 import WhoItIsFor from './WhoItIsFor'
@@ -20,6 +19,7 @@ import Footer from './Footer'
 import './landing.css'
 import SmoothScroll from './animations/SmoothScroll'
 import Preloader from './animations/Preloader'
+import Features from './Features';
 
 const Landing = () => {
   const [isLoading, setIsLoading] = useState(true);

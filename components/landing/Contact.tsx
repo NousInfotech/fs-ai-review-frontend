@@ -54,29 +54,29 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-start">
           
           {/* Left Side: Contact Information */}
-          <div className="space-y-10">
+          <div className="space-y-6 md:space-y-10">
             <FadeIn direction="left">
               <div>
                 <h2 className="text-xs md:text-base font-semibold text-(--landing-primary-blue) uppercase tracking-widest mb-3">Get in Touch</h2>
                 <TextReveal
                   text="Let's discuss how we can help."
                   as="h2"
-                  className="text-2xl md:text-5xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
+                  className="text-xl md:text-4xl font-medium text-(--landing-text-heading) tracking-tight mb-3"
                 />
-                <p className="text-(--landing-text-gray) md:text-xl leading-relaxed">
+                <p className="text-(--landing-text-gray) text-sm md:text-xl leading-relaxed">
                   Have questions about our volume pricing or need a custom demonstration? Our team is here to help you automate your audit workflow.
                 </p>
               </div>
             </FadeIn>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <FadeIn direction="left" delay={0.2}>
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 text-(--landing-primary-blue)">
-                    <Mail className="w-6 h-6" />
+                  <div className="md:w-12 md:h-12 w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 text-(--landing-primary-blue)">
+                    <Mail className="md:w-6 md:h-6 w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-slate-900">Email Us</h4>
+                    <h4 className="md:text-lg font-semibold">Email Us</h4>
                     <p className="text-slate-600">hello@financialreview.ai</p>
                   </div>
                 </div>
@@ -84,11 +84,11 @@ export default function Contact() {
 
               <FadeIn direction="left" delay={0.3}>
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 text-indigo-600">
-                    <MessageCircle className="w-6 h-6" />
+                  <div className="md:w-12 md:h-12 w-8 h-8 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 text-indigo-600">
+                    <MessageCircle className="md:w-6 md:h-6 w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-slate-900">Support Chat</h4>
+                    <h4 className="md:text-lg font-semibold">Support Chat</h4>
                     <p className="text-slate-600">Available Mon-Fri, 9am - 6pm CET</p>
                   </div>
                 </div>
@@ -96,11 +96,11 @@ export default function Contact() {
 
               <FadeIn direction="left" delay={0.4}>
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 text-(--landing-primary-blue)">
-                    <Globe className="w-6 h-6" />
+                  <div className="md:w-12 md:h-12 w-8 h-8 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 text-(--landing-primary-blue)">
+                    <Globe className="md:w-6 md:h-6 w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-slate-900">Global Offices</h4>
+                    <h4 className="md:text-lg font-semibold">Global Offices</h4>
                     <p className="text-slate-600">Remote-first team with hubs in London & Paris</p>
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export default function Contact() {
 
           {/* Right Side: Contact Form */}
           <FadeIn direction="right">
-            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-slate-200/50">
+            <div className="bg-white border border-slate-100 rounded-2xl p-8 md:p-10 shadow-2xl shadow-slate-200/50">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">

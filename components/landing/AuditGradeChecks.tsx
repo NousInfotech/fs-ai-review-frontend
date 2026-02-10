@@ -310,7 +310,7 @@ export default function AuditGradeChecks() {
                     transition={{ delay: 0.3 + (idx * 0.15) }}
                     className="flex items-center gap-4 group"
                   >
-                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-(--landing-primary-blue) group-hover:text-white transition-all duration-300">
+                    <div className="w-6 h-6 rounded-full bg-(--landing-primary-blue) flex items-center justify-center shrink-0 text-white transition-all duration-300">
                       <CheckCircle2 className="w-4 h-4" />
                     </div>
                     <span className="text-base md:text-lg text-(--landing-text-gray) font-medium group-hover:text-(--landing-text-heading) transition-colors">{text}</span>

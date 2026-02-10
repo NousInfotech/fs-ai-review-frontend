@@ -47,7 +47,7 @@ export default function WhatWeCheck() {
       title: "Totals & arithmetic",
       description: "We verify every calculation across your financial statements to ensure absolute precision.",
       icon: <Calculator className="w-7 h-7" />,
-      image: "/images/landing/financial-precision-and-verification-tools.png",
+      image: "/images/landing/new/financial-calculations-and-accuracy-in-focus.png",
       items: [
         "Column totals and subtotals",
         "Cross-casts and roll-forwards",
@@ -58,7 +58,7 @@ export default function WhatWeCheck() {
       title: "Notes & statements",
       description: "Automatic cross-referencing between primary statements and detailed disclosure notes.",
       icon: <FileText className="w-7 h-7" />,
-      image: "/images/landing/notes-and-statements.png",
+      image: "/images/landing/new/automated-cross-referencing-of financial-data.png",
       items: [
         "Statement line items vs related notes",
         "Closing balances vs disclosures",
@@ -69,7 +69,7 @@ export default function WhatWeCheck() {
       title: "Formatting & presentation",
       description: "Catching visual and formatting errors that undermine professional credibility.",
       icon: <Layout className="w-7 h-7" />,
-      image: "/images/landing/formatting-errors-in-financial-documents.png",
+      image: "/images/landing/new/spreadsheet-formatting-mistakes-in-focus.png",
       items: [
         "Misaligned columns and margins",
         "Broken numbers and digit spillovers",
@@ -100,7 +100,7 @@ export default function WhatWeCheck() {
           </FadeIn>
         </div>
 
-        <div className="md:space-y-25">
+        <div className="space-y-5 md:space-y-25">
           {categories.map((cat, idx) => (
             <div key={idx} className={`flex flex-col gap-5 md:gap-24 md:items-stretch ${idx % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
               

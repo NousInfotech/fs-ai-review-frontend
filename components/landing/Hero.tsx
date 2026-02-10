@@ -176,9 +176,9 @@ export default function Hero() {
                   <source src="/video/Vacei_Ai_Review.mp4" type="video/mp4" />
                 </video>
                 
-                {/* Open View Overlay Button */}
+                {/* LAPTOP VIEW: Open View Overlay Button (Hover) */}
                 {!isLoading && (
-                  <div className="absolute inset-0 z-20 flex items-start justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="hidden lg:flex absolute inset-0 z-20 items-start justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -193,6 +193,24 @@ export default function Hero() {
                   </div>
                 )}
               </div>
+
+              {/* MOBILE & TABLET VIEW: Bottom Title Bar (Non-overlay) */}
+              {!isLoading && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onClick={() => setShowVideoModal(true)}
+                  className="lg:hidden mt-4 px-5 py-4 bg-white/90 backdrop-blur-md rounded-2xl border border-white/50 shadow-lg flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-(--landing-primary-blue) flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                      <Play className="w-3 h-3 fill-current ml-0.5" />
+                    </div>
+                    <span className="text-sm md:text-base font-medium tracking-tight">See how FS AI Review works</span>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-slate-400" />
+                </motion.div>
+              )}
             </motion.div>
           </div>
         </div>
@@ -212,27 +230,42 @@ export default function Hero() {
               initial={{ scale: 0.9, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              className="relative w-full max-w-6xl aspect-video rounded-4xl overflow-hidden bg-black shadow-[0_0_100px_rgba(59,130,246,0.2)]"
+              className="relative w-full max-w-6xl flex flex-col rounded-4xl overflow-hidden bg-black shadow-[0_0_100px_rgba(59,130,246,0.2)]"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
-              <button 
-                onClick={() => setShowVideoModal(false)}
-                className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-primary hover:bg-primary/80 text-white backdrop-blur-md flex items-center justify-center transition-colors"
-                aria-label="Close modal"
-              >
-                <X className="w-6 h-6" />
-              </button>
+              {/* Modal Header/Title (Bottom for mobile, Top for desktop) */}
+              <div className="absolute top-0 left-0 w-full p-6 md:p-8 flex items-center justify-between z-50 bg-linear-to-b from-black/80 to-transparent">
+                <h3 className="hidden md:block text-xl font-medium text-white tracking-tight">
+                  See how FS AI Review works
+                </h3>
+                <div className="md:hidden" /> {/* Spacer for mobile close button alignment */}
+                <button 
+                  onClick={() => setShowVideoModal(false)}
+                  className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md flex items-center justify-center transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
 
-              <video
-                autoPlay
-                playsInline
-                controls
-                muted={false}
-                className="w-full h-full object-contain"
-              >
-                <source src="/video/Vacei_Ai_Review.mp4" type="video/mp4" />
-              </video>
+              <div className="relative aspect-video w-full h-full">
+                <video
+                  autoPlay
+                  playsInline
+                  controls
+                  muted={false}
+                  className="w-full h-full object-contain"
+                >
+                  <source src="/video/Vacei_Ai_Review.mp4" type="video/mp4" />
+                </video>
+              </div>
+
+              {/* Mobile Bottom Title - Modal */}
+              <div className="md:hidden p-6 bg-slate-900/80 backdrop-blur-md border-t border-white/10">
+                <h3 className="text-lg font-medium text-white text-center">
+                  See how FS AI Review works
+                </h3>
+              </div>
 
               {/* Decorative Glow */}
               <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-500/20 rounded-full blur-[120px] pointer-events-none" />
