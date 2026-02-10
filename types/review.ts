@@ -1,91 +1,80 @@
+export interface BBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface AnnotationData {
+  note: string;
+  bbox: BBox;
+}
+
 export interface Location {
-  page: number;
-  section: string;
-  note?: string | null;
-  line_hint?: string;
+  page_no: number;
+  annotation_data: AnnotationData[];
+  url?: string;
 }
 
 export interface CorrectItem {
   test_id: string;
   category: string;
-  area: string;
-  details: string;
+  name: string;
+  description: string;
 }
 
 export interface CriticalError {
-  id: string;
   test_id: string;
   category: string;
-  type?: string;
-  severity?: string;
+  name: string;
   description: string;
-  location?: Location;
-  reported_value?: number | null;
-  expected_value?: number | null;
-  difference?: number | null;
-  reason?: string;
-  financial_impact?: string;
-  suggested_fix?: string;
-  annotated_image_url?: string | null;
-  extractedValues?: {
-    section?: string;
-    error_id?: string;
-    reported_value?: any;
-    expected_value?: any;
-    [key: string]: any;
-  };
+  result?: string;
+  location?: Location[];
 }
 
 export interface DisclosureBreach {
-  id?: string; // Prompt implies ID like C1, but example doesn't show it explicitly in items array, assuming it might be there or generated.
-  test_id?: string;
-  category?: string;
+  test_id: string;
+  category: string;
+  name: string;
   description: string;
-  location?: Location;
-  impact?: string;
-  suggested_fix?: string;
-}
-
-export interface ReconciliationRow {
-  description: string;
-  values: (number | string)[];
+  result?: string;
+  location?: Location[];
 }
 
 export interface ReconciliationTable {
+  title?: string;
   columns: string[];
-  rows: ReconciliationRow[];
-}
-
-export interface ReconciliationSection {
-  title: string;
-  tables: Record<string, ReconciliationTable>;
+  rows: (string | number)[][];
 }
 
 export interface SectionA {
   title: string;
-  items?: CorrectItem[];
   content?: string;
+  items: CorrectItem[];
 }
 
 export interface SectionB {
   title: string;
+  content?: string;
   items: CriticalError[];
 }
 
 export interface SectionC {
   title: string;
+  content?: string;
   items: DisclosureBreach[];
 }
 
 export interface SectionD {
   title: string;
-  tables?: Record<string, ReconciliationTable>;
   content?: string;
+  tables: Record<string, ReconciliationTable>;
 }
 
 export interface SectionE {
-  title: string;
   verdict: string;
+  executive_summary?: string;
+  document_url?: string;
 }
 
 export interface ReviewResult {
@@ -108,6 +97,6 @@ export interface TestResult {
 export interface ReviewResponse {
   id: string;
   status: string;
-  review_result: TestResult[]; // Updated to array of TestResult
+  review_result: TestResult[];
   created_at: string;
 }

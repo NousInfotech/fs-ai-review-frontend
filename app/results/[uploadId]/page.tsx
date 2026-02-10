@@ -17,7 +17,7 @@ import { StandardizedResultResponse, HistoryDocument } from "@/lib/types";
 import { clsx } from "clsx";
 import TestList from "@/components/results/TestList";
 import { generateDisplayId } from "@/lib/utils";
-import { downloadAuditReport } from "@/lib/pdfGenerator";
+// import { downloadAuditReport } from "@/lib/pdfGenerator";
 
 const fetchResults = async (uploadId: string): Promise<StandardizedResultResponse> => {
   try {
@@ -49,7 +49,7 @@ export default function ResultsPage() {
   const params = useParams();
   const router = useRouter();
   const uploadId = params.uploadId as string;
-  const [isDownloading, setIsDownloading] = useState(false);
+  // const [isDownloading, setIsDownloading] = useState(false);
   
   const { data: results, isLoading: isLoadingResults, error: resultsError } = useQuery({
     queryKey: ['reviewResults', uploadId],
@@ -64,28 +64,28 @@ export default function ResultsPage() {
   const isLoading = isLoadingResults || isLoadingMetadata;
   const error = resultsError;
 
-  const handleDownload = async () => {
-    try {
-      if (!metadata) {
-        throw new Error("Metadata not available");
-      }
+  // const handleDownload = async () => {
+  //   try {
+  //     if (!metadata) {
+  //       throw new Error("Metadata not available");
+  //     }
 
-      setIsDownloading(true);
+  //     setIsDownloading(true);
       
-      const safeCompanyName = (metadata.companyName || 'Company').replace(/\s+/g, '_');
-      const safeDate = (metadata.documentDate || 'Date').replace(/\//g, '-');
-      const filename = `Audit_Report_${safeCompanyName}_${safeDate}.pdf`;
+  //     const safeCompanyName = (metadata.companyName || 'Company').replace(/\s+/g, '_');
+  //     const safeDate = (metadata.documentDate || 'Date').replace(/\//g, '-');
+  //     const filename = `Audit_Report_${safeCompanyName}_${safeDate}.pdf`;
 
-      // Download PDF
-      await downloadAuditReport(uploadId, filename);
+  //     // Download PDF
+  //     await downloadAuditReport(uploadId, filename);
       
-    } catch (error) {
-      console.error("Failed to download PDF", error);
-      alert("Failed to download the report. Please try again.");
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  //   } catch (error) {
+  //     console.error("Failed to download PDF", error);
+  //     alert("Failed to download the report. Please try again.");
+  //   } finally {
+  //     setIsDownloading(false);
+  //   }
+  // };
 
   if (isLoading) {
     return (
@@ -130,16 +130,8 @@ export default function ResultsPage() {
       description={`Analysis Report ID: ${displayId}`}
     >
       {/* Header Actions */}
-      <div className="mb-8">
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="flex items-center text-sm text-gray-500 hover:text-indigo-600 transition-colors mb-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Analytics
-        </button>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-5">
           <div className="flex items-center gap-3">
             <div className={clsx(
               "px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-2",
@@ -152,7 +144,7 @@ export default function ResultsPage() {
               {results.status}
             </div>
 
-            <button
+            {/* <button
               onClick={handleDownload}
               disabled={true} // Temporarily disabled as requested
               title="Download is currently unavailable"
@@ -164,15 +156,14 @@ export default function ResultsPage() {
                 <Download className="h-4 w-4" />
               )}
               Download Report
-            </button>
+            </button> */}
           </div>
           
           <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
             <Clock className="w-4 h-4 mr-2 text-gray-400" />
             Processed in <span className="font-bold ml-1">{results.processingTimeSeconds}s</span>
           </div>
-        </div>
-      </div>
+         </div>
 
       {/* Results Groups */}
       <TestList uploadId={uploadId} />

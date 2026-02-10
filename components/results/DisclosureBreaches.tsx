@@ -27,7 +27,7 @@ export default function DisclosureBreaches({ data }: DisclosureBreachesProps) {
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center space-x-2">
                 <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded">
-                  {item.id || `C${index + 1}`}
+                  {item.test_id}
                 </span>
                 {item.category && (
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -37,33 +37,31 @@ export default function DisclosureBreaches({ data }: DisclosureBreachesProps) {
               </div>
             </div>
 
-            <h4 className="text-base font-bold text-gray-900 mb-2">{item.description}</h4>
+            <h4 className="text-base font-bold text-gray-900 mb-2">{item.name}</h4>
+            <p className="text-sm text-gray-600 mb-3">{item.description}</p>
 
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600 mt-3">
-              {item.location && (
-                <div className="flex items-center bg-gray-50 px-2 py-1 rounded">
-                  <MapPin className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
-                  <span>
-                    Page {item.location.page}
-                    {item.location.section && `, ${item.location.section}`}
-                  </span>
-                </div>
-              )}
-              
-              {item.impact && (
-                <div className="flex items-center bg-orange-50 px-2 py-1 rounded text-orange-800">
-                  <Info className="h-3.5 w-3.5 mr-1.5" />
-                  <span>Impact: {item.impact}</span>
-                </div>
-              )}
-            </div>
-
-            {item.suggested_fix && (
-              <div className="mt-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
-                <span className="font-semibold text-gray-700">Suggestion: </span>
-                {item.suggested_fix}
-              </div>
+            {item.result && (
+              <p className="text-sm text-yellow-800 bg-yellow-50 px-3 py-2 rounded border border-yellow-100 mb-3 font-medium">
+                {item.result}
+              </p>
             )}
+
+            <div className="flex flex-col gap-2 mt-3">
+              {item.location && item.location.length > 0 && item.location.map((loc, lIdx) => (
+                <div key={lIdx} className="flex items-center gap-4 text-xs text-gray-500 bg-gray-50 px-2 py-1.5 rounded">
+                  <div className="flex items-center">
+                    <MapPin className="h-3 w-3 mr-1.5 text-gray-400" />
+                    <span>Page {loc.page_no}</span>
+                  </div>
+                  {loc.line_no && loc.line_no.length > 0 && (
+                    <div className="flex items-center">
+                      <Info className="h-3 w-3 mr-1.5 text-gray-400" />
+                      <span>Lines: {loc.line_no.join(", ")}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>

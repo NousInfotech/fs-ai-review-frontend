@@ -77,22 +77,22 @@ export default function Sidebar({
             description: "Past reviews",
             section: "primary"
         },
-        {
-            slug: "dashboard",
-            label: "Analytics",
-            icon: LayoutDashboard,
-            href: "/dashboard",
-            description: "Overview and insights",
-            section: "primary"
-        },
-        {
-            slug: "settings",
-            label: "Settings",
-            icon: Settings,
-            href: "/settings",
-            description: "Account and app settings",
-            section: "settings"
-        }
+        // {
+        //     slug: "dashboard",
+        //     label: "Analytics",
+        //     icon: LayoutDashboard,
+        //     href: "/dashboard",
+        //     description: "Overview and insights",
+        //     section: "primary"
+        // },
+        // {
+        //     slug: "settings",
+        //     label: "Settings",
+        //     icon: Settings,
+        //     href: "/settings",
+        //     description: "Account and app settings",
+        //     section: "settings"
+        // }
     ];
 
     const toggleItem = (slug: string) => {

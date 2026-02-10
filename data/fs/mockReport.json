@@ -1,0 +1,157 @@
+{
+  "A": {
+    "title": "Confirmed Correct Items",
+    "content": "The following test cases passed without any exceptions.",
+    "items": [
+      {
+        "test_id": "T1",
+        "name": "Visual Layout Integrity",
+        "description": "Primary statements, notes and schedules appear consistently formatted.",
+        "category": "GENERAL"
+      },
+      {
+        "test_id": "T6",
+        "name": "Accounting Policies Relevance",
+        "description": "Policies do not reference non-existent asset classes.",
+        "category": "NOTES_AND_POLICY"
+      },
+      {
+        "test_id": "T9",
+        "name": "Comparatives Integrity",
+        "description": "Comparative figures are consistently presented.",
+        "category": "GENERAL"
+      },
+      {
+        "test_id": "T24",
+        "name": "Currency and Rounding Statement",
+        "description": "Reporting currency and rounding are correctly disclosed.",
+        "category": "PRESENTATION"
+      }
+    ]
+  },
+
+  "B": {
+    "title": "Critical Errors",
+    "content": "Critical failures that materially impact the reliability or statutory compliance of the financial statements.",
+    "items": [
+      {
+        "test_id": "T3",
+        "name": "Arithmetical FS Internal",
+        "description": "Balance Sheet totals do not reconcile.",
+        "category": "BALANCE_SHEET",
+        "result": "Total Assets do not equal Total Equity + Liabilities (difference: 12,450).",
+        "location": [
+          {
+            "page_no": 6,
+            "line_no": [22, 23, 24],
+            "bounding_box": [110, 420, 980, 510]
+          }
+        ]
+      },
+      {
+        "test_id": "T21",
+        "name": "Equity Movements Internal",
+        "description": "Equity movements do not reconcile to reported loss.",
+        "category": "BALANCE_SHEET",
+        "result": "Closing equity does not reconcile with opening equity plus loss for the year.",
+        "location": [
+          {
+            "page_no": 8,
+            "line_no": [10, 11],
+            "bounding_box": [120, 300, 960, 360]
+          }
+        ]
+      },
+      {
+        "test_id": "T27",
+        "name": "Audit Letter - DD1 vs DD2",
+        "description": "Incorrect statutory declaration form used.",
+        "category": "AUDIT_REPORT",
+        "result": "DD1 used instead of DD2 for first-year financial statements.",
+        "location": [
+          {
+            "page_no": 2,
+            "line_no": [5, 6],
+            "bounding_box": [100, 150, 900, 220]
+          }
+        ]
+      }
+    ]
+  },
+
+  "C": {
+    "title": "Disclosure Breaches",
+    "content": "Non-critical issues that require correction or clarification but do not invalidate the statements.",
+    "items": [
+      {
+        "test_id": "T5",
+        "name": "Notes Reconciliation",
+        "description": "Notes do not agree with primary statements.",
+        "category": "NOTES_AND_POLICY",
+        "result": "Administrative expenses note differs from Income Statement by 1,200.",
+        "location": [
+          {
+            "page_no": 14,
+            "line_no": [18, 19],
+            "bounding_box": [140, 500, 970, 560]
+          }
+        ]
+      },
+      {
+        "test_id": "T12",
+        "name": "Going Concern Trigger",
+        "description": "Going concern disclosure missing despite losses.",
+        "category": "AUDIT_REPORT",
+        "result": "Loss reported but no material uncertainty paragraph found.",
+        "location": [
+          {
+            "page_no": 3,
+            "line_no": [30, 31, 32],
+            "bounding_box": [130, 600, 940, 670]
+          }
+        ]
+      },
+      {
+        "test_id": "T29",
+        "name": "Missing Accounting Policies",
+        "description": "Material balances missing accounting policies.",
+        "category": "NOTES_AND_POLICY",
+        "result": "Revenue recognised in FS but no revenue recognition policy disclosed.",
+        "location": [
+          {
+            "page_no": 12,
+            "line_no": [4, 5, 6],
+            "bounding_box": [150, 220, 960, 290]
+          }
+        ]
+      }
+    ]
+  },
+
+  "D": {
+    "title": "Reconciliation Tables",
+    "content": "Breakdown of numeric mismatches identified during validation.",
+    "tables": {
+      "equity_reconciliation": {
+        "title": "Equity Movement Reconciliation",
+        "columns": [
+          "Description",
+          "Amount"
+        ],
+        "rows": [
+          ["Opening Equity", 85000],
+          ["Loss for the Year", -42000],
+          ["Expected Closing Equity", 43000],
+          ["Reported Closing Equity", 55450],
+          ["Unexplained Difference", 12450]
+        ]
+      }
+    }
+  },
+
+  "E": {
+    "verdict": "PARTIALLY PASSED",
+    "executive_summary": "The financial statements contain critical arithmetic and regulatory issues that must be resolved before approval. Several disclosure and reconciliation issues were also identified. While presentation and comparative consistency are satisfactory, the statements cannot be relied upon in their current form.",
+    "document_url": "https://example.com/fs-review/report-001.pdf"
+  }
+}

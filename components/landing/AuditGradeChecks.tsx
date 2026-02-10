@@ -324,7 +324,7 @@ export default function AuditGradeChecks() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.8 }}
-              className="mt-6 pl-4 border-l-2 border-(--landing-primary-blue) text-sm text-slate-600 font-medium italic leading-relaxed"
+              className="mt-6 border-(--landing-primary-blue) text-sm text-slate-600 font-medium italic leading-relaxed"
             >
               "This is not black-box AI. Figures are recalculated. Issues are shown visually."
             </motion.p>

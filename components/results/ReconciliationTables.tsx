@@ -60,9 +60,9 @@ export default function ReconciliationTables({ data }: ReconciliationTablesProps
                     {table.rows.map((row, rowIdx) => (
                       <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {row.description}
+                          {Array.isArray(row) ? row[0] : row}
                         </td>
-                        {row.values.map((val, valIdx) => (
+                        {Array.isArray(row) && row.slice(1).map((val, valIdx) => (
                           <td key={valIdx} className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-right font-mono">
                             {typeof val === 'number' ? val.toLocaleString() : val}
                           </td>

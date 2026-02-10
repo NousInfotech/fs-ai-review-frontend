@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelLeft, PanelLeftClose, ChevronRight, Calendar, User, LogOut } from "lucide-react";
+import { PanelLeft, PanelLeftClose, ChevronRight, LogOut, Zap } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -70,13 +70,6 @@ export default function TopHeader({
         });
     }, [pathname, uploadId, metadata]);
 
-    // Current date
-    const currentDate = new Date().toLocaleDateString('en-US', { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric' 
-    });
-
     return (
         <header 
             className="h-16 flex items-center justify-between px-6 sticky top-4 z-40 mx-4 my-4 border border-white/10 rounded-2xl shadow-xl"
@@ -115,18 +108,16 @@ export default function TopHeader({
 
             {/* Right Section: Date & Status & Logout */}
             <div className="flex items-center gap-6">
-                {/* Date Display */}
-                <div className="hidden md:flex items-center gap-2 text-sm text-white/60">
-                    <Calendar className="h-4 w-4 text-white/40" />
-                    <span>{currentDate}</span>
+                {/* Credits Display */}
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full">
+                    <Zap className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+                    <span className="text-xs font-medium text-white/90">
+                        Credits Left: <span className="text-white font-bold ml-1">25</span>
+                    </span>
                 </div>
 
-                {/* User Status (Minimal) */}
-                <div className="flex items-center gap-2 pl-6 border-l border-white/10">
-                    <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center border border-white/5">
-                        <User className="h-4 w-4 text-white/80" />
-                    </div>
-                </div>
+                {/* Divider */}
+                <div className="h-4 w-px bg-white/10"></div>
 
                 {/* Logout Button */}
                 <button

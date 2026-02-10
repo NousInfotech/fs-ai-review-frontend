@@ -1,0 +1,762 @@
+{
+  "A": {
+    "title": "Confirmed Correct Items",
+    "content": "No test cases passed.",
+    "items": []
+  },
+  "B": {
+    "title": "Critical Errors",
+    "content": "All critical validations failed.",
+    "items": [
+      {
+        "test_id": "T2",
+        "name": "T2 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 1,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T2)",
+                "bbox": {
+                  "x": 80,
+                  "y": 250,
+                  "width": 320,
+                  "height": 48
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0001.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T3",
+        "name": "T3 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T3)",
+                "bbox": {
+                  "x": 250,
+                  "y": 324,
+                  "width": 280,
+                  "height": 36
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          },
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Additional failure on different page (T3)",
+                "bbox": {
+                  "x": 100,
+                  "y": 100,
+                  "width": 200,
+                  "height": 100
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T4",
+        "name": "T4 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T4)",
+                "bbox": {
+                  "x": 400,
+                  "y": 348,
+                  "width": 360,
+                  "height": 52
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T10",
+        "name": "T10 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 1,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T10)",
+                "bbox": {
+                  "x": 560,
+                  "y": 322,
+                  "width": 300,
+                  "height": 44
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0001.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T21",
+        "name": "T21 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T21)",
+                "bbox": {
+                  "x": 600,
+                  "y": 396,
+                  "width": 340,
+                  "height": 40
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T27",
+        "name": "T27 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T27)",
+                "bbox": {
+                  "x": 170,
+                  "y": 540,
+                  "width": 290,
+                  "height": 56
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T28",
+        "name": "T28 Critical Failure",
+        "description": "Critical compliance or numeric failure.",
+        "category": "CRITICAL",
+        "result": "Critical failure detected.",
+        "location": [
+          {
+            "page_no": 1,
+            "annotation_data": [
+              {
+                "note": "Critical failure detected. (T28)",
+                "bbox": {
+                  "x": 260,
+                  "y": 514,
+                  "width": 310,
+                  "height": 32
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0001.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  "C": {
+    "title": "Disclosure Breaches",
+    "content": "All remaining non-critical tests failed.",
+    "items": [
+      {
+        "test_id": "T1",
+        "name": "T1 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T1 Disclosure Failure",
+                "bbox": {
+                  "x": 80,
+                  "y": 924,
+                  "width": 320,
+                  "height": 48
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T5",
+        "name": "T5 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T5 Disclosure Failure",
+                "bbox": {
+                  "x": 250,
+                  "y": 780,
+                  "width": 280,
+                  "height": 36
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T6",
+        "name": "T6 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 4,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T6 Disclosure Failure",
+                "bbox": {
+                  "x": 400,
+                  "y": 804,
+                  "width": 360,
+                  "height": 52
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0004.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T7",
+        "name": "T7 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 5,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T7 Disclosure Failure",
+                "bbox": {
+                  "x": 560,
+                  "y": 828,
+                  "width": 300,
+                  "height": 44
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0005.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T8",
+        "name": "T8 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T8 Disclosure Failure",
+                "bbox": {
+                  "x": 600,
+                  "y": 852,
+                  "width": 340,
+                  "height": 40
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T9",
+        "name": "T9 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T9 Disclosure Failure",
+                "bbox": {
+                  "x": 170,
+                  "y": 996,
+                  "width": 290,
+                  "height": 56
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T11",
+        "name": "T11 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 4,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T11 Disclosure Failure",
+                "bbox": {
+                  "x": 260,
+                  "y": 1020,
+                  "width": 310,
+                  "height": 32
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0004.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T12",
+        "name": "T12 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 5,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T12 Disclosure Failure",
+                "bbox": {
+                  "x": 430,
+                  "y": 1044,
+                  "width": 350,
+                  "height": 42
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0005.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T13",
+        "name": "T13 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T13 Disclosure Failure",
+                "bbox": {
+                  "x": 475,
+                  "y": 900,
+                  "width": 270,
+                  "height": 38
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T14",
+        "name": "T14 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T14 Disclosure Failure",
+                "bbox": {
+                  "x": 630,
+                  "y": 924,
+                  "width": 330,
+                  "height": 50
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T15",
+        "name": "T15 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 4,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T15 Disclosure Failure",
+                "bbox": {
+                  "x": 80,
+                  "y": 1068,
+                  "width": 320,
+                  "height": 48
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0004.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T16",
+        "name": "T16 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 5,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T16 Disclosure Failure",
+                "bbox": {
+                  "x": 250,
+                  "y": 1092,
+                  "width": 280,
+                  "height": 36
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0005.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T17",
+        "name": "T17 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T17 Disclosure Failure",
+                "bbox": {
+                  "x": 400,
+                  "y": 1116,
+                  "width": 360,
+                  "height": 52
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T18",
+        "name": "T18 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T18 Disclosure Failure",
+                "bbox": {
+                  "x": 560,
+                  "y": 1140,
+                  "width": 300,
+                  "height": 44
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T19",
+        "name": "T19 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 4,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T19 Disclosure Failure",
+                "bbox": {
+                  "x": 600,
+                  "y": 1164,
+                  "width": 340,
+                  "height": 40
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0004.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T20",
+        "name": "T20 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 5,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T20 Disclosure Failure",
+                "bbox": {
+                  "x": 170,
+                  "y": 1140,
+                  "width": 290,
+                  "height": 56
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0005.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T22",
+        "name": "T22 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T22 Disclosure Failure",
+                "bbox": {
+                  "x": 260,
+                  "y": 1164,
+                  "width": 310,
+                  "height": 32
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T23",
+        "name": "T23 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T23 Disclosure Failure",
+                "bbox": {
+                  "x": 430,
+                  "y": 1188,
+                  "width": 350,
+                  "height": 42
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T24",
+        "name": "T24 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 4,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T24 Disclosure Failure",
+                "bbox": {
+                  "x": 475,
+                  "y": 1212,
+                  "width": 270,
+                  "height": 38
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0004.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T25",
+        "name": "T25 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 5,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T25 Disclosure Failure",
+                "bbox": {
+                  "x": 630,
+                  "y": 1236,
+                  "width": 330,
+                  "height": 50
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0005.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T26",
+        "name": "T26 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 2,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T26 Disclosure Failure",
+                "bbox": {
+                  "x": 80,
+                  "y": 1380,
+                  "width": 320,
+                  "height": 48
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0002.jpg"
+          }
+        ]
+      },
+      {
+        "test_id": "T29",
+        "name": "T29 Disclosure Failure",
+        "description": "Disclosure or presentation issue detected.",
+        "category": "GENERAL",
+        "result": "Non-critical failure.",
+        "location": [
+          {
+            "page_no": 3,
+            "annotation_data": [
+              {
+                "note": "Non-critical failure. - T29 Disclosure Failure",
+                "bbox": {
+                  "x": 250,
+                  "y": 1404,
+                  "width": 280,
+                  "height": 36
+                }
+              }
+            ],
+            "url": "/images/test-images/FS White Investments 2023_page-0003.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  "D": {
+    "title": "Reconciliation Tables",
+    "content": "Multiple unreconciled balances detected.",
+    "tables": {
+      "summary": {
+        "title": "Overall Failure Summary",
+        "columns": [
+          "Metric",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Total Tests",
+            29
+          ],
+          [
+            "Passed",
+            0
+          ],
+          [
+            "Failed",
+            29
+          ]
+        ]
+      }
+    }
+  },
+  "E": {
+    "verdict": "FULLY FAILED",
+    "executive_summary": "All validation tests failed. The financial statements are materially misstated and non-compliant.",
+    "document_url": "https://example.com/fs-review/fully-failed.pdf"
+  }
+}

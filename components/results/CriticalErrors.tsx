@@ -7,20 +7,15 @@ interface CriticalErrorsProps {
   data: SectionB;
 }
 
-function CriticalErrorItem({ item, index }: { item: CriticalError, index: number }) {
-  const [showEvidence, setShowEvidence] = useState(false);
-  const evidenceUrl = item.annotated_image_url || item.extractedValues?.annotated_image_url;
-
+function CriticalErrorItem({ item }: { item: CriticalError; index: number }) {
   return (
     <div className="p-6 hover:bg-gray-50/50 transition-colors">
-      {/* 1. Issue Title */}
       <div className="flex justify-between items-start gap-4 mb-2">
         <h4 className="text-lg font-bold text-gray-900 leading-snug">
-          {item.description}
+          {item.name}
         </h4>
       </div>
 
-      {/* 2. Type & Severity */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700 uppercase tracking-wide">
           {item.category}
@@ -29,130 +24,36 @@ function CriticalErrorItem({ item, index }: { item: CriticalError, index: number
           Critical
         </span>
         <span className="text-xs text-gray-400 font-mono">
-          {item.id || `B${index + 1}`}
+          {item.test_id}
         </span>
       </div>
 
       <div className="space-y-3 text-sm">
-        {/* 3. Reported / Expected / Difference */}
-        {(item.reported_value !== null && item.reported_value !== undefined) && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-2 gap-x-4 py-2 border-t border-b border-gray-50">
-            <div className="flex flex-col sm:block">
-              <span className="font-bold text-gray-700 mr-2">Reported Value:</span>
-              <span className="font-mono text-red-600 font-medium">
-                {item.reported_value.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex flex-col sm:block">
-              <span className="font-bold text-gray-700 mr-2">Expected Value:</span>
-              <span className="font-mono text-green-600 font-medium">
-                {item.expected_value?.toLocaleString() ?? "N/A"}
-              </span>
-            </div>
-            <div className="flex flex-col sm:block">
-              <span className="font-bold text-gray-700 mr-2">Difference:</span>
-              <span className="font-mono text-red-700 font-bold">
-                {item.difference?.toLocaleString() ?? "N/A"}
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* 4. Location */}
-        <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1">
-          <span className="font-bold text-gray-700">Location:</span>
-          <div className="flex items-center flex-wrap gap-2">
-            <span className="text-gray-600">
-              {item.location ? (
-                <>
-                  Page {item.location.page}
-                  {item.location.section && `, Section ${item.location.section}`}
-                </>
-              ) : "Not specified"}
-            </span>
-            {/* Button next to Location */}
-            {evidenceUrl && (
-              <button
-                onClick={() => setShowEvidence(!showEvidence)}
-                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium transition-colors border ${
-                  showEvidence 
-                    ? "bg-indigo-100 text-indigo-800 border-indigo-200" 
-                    : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-100"
-                }`}
-              >
-                {showEvidence ? (
-                  <>
-                    <ChevronUp className="h-3 w-3 mr-1.5" />
-                    Hide Evidence
-                  </>
-                ) : (
-                  <>
-                    <Eye className="h-3 w-3 mr-1.5" />
-                    Show Evidence
-                  </>
-                )}
-              </button>
-            )}
-          </div>
+        <div className="bg-red-50/30 p-3 rounded-lg border border-red-50">
+          <p className="text-gray-700 leading-relaxed">{item.description}</p>
         </div>
 
-        {/* Evidence Image Viewer */}
-        <AnimatePresence>
-          {showEvidence && evidenceUrl && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <div className="mt-2 border border-gray-200 rounded-lg bg-gray-50 p-2">
-                <div className="flex justify-between items-center mb-2 px-1">
-                  <span className="text-xs font-bold text-gray-500 uppercase">Evidence Screenshot</span>
-                  <a 
-                    href={evidenceUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center"
-                  >
-                    Open Full Image <ArrowRight className="h-3 w-3 ml-1" />
-                  </a>
-                </div>
-                <div className="relative rounded overflow-hidden border border-gray-200">
-                  <img 
-                    src={evidenceUrl} 
-                    alt="Evidence of error" 
-                    className="w-full h-auto object-contain max-h-[400px] bg-white"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* 5. Affected Line Item */}
-        {item.location?.line_hint && (
+        {item.result && (
           <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1">
-            <span className="font-bold text-gray-700">Affected Line Item:</span>
-            <span className="text-gray-600 italic">"{item.location.line_hint}"</span>
+            <span className="font-bold text-gray-700">Result:</span>
+            <span className="text-red-700 font-medium">{item.result}</span>
           </div>
         )}
 
-        {/* 6. Financial Impact */}
-        {item.financial_impact && (
-          <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1">
-            <span className="font-bold text-gray-700">Financial Impact:</span>
-            <span className="text-gray-600">{item.financial_impact}</span>
+        {item.location && item.location.length > 0 && item.location.map((loc, lIdx) => (
+          <div key={lIdx} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 py-1 border-t border-gray-50 first:border-0">
+            <span className="font-bold text-gray-700">Location {item.location!.length > 1 ? lIdx + 1 : ""}:</span>
+            <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-gray-600">
+              {loc.page_no && <span>Page {loc.page_no}</span>}
+              {loc.line_no && loc.line_no.length > 0 && (
+                <span>Line No: {loc.line_no.join(", ")}</span>
+              )}
+              {loc.bounding_box && loc.bounding_box.length > 0 && (
+                <span className="text-[10px] text-gray-400 font-mono">Box: [{loc.bounding_box.join(", ")}]</span>
+              )}
+            </div>
           </div>
-        )}
-
-        {/* 7. Suggested Fix */}
-        {item.suggested_fix && (
-          <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1">
-            <span className="font-bold text-gray-700">Suggested Fix:</span>
-            <span className="text-indigo-700 font-medium">{item.suggested_fix}</span>
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );

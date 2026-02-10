@@ -27,11 +27,16 @@ export default function VerdictSection({ data, criticalErrors }: VerdictSectionP
         </div>
         <div>
           <h2 className="text-lg font-bold uppercase tracking-wide opacity-80 mb-1">
-            {data.title}
+            VERDICT
           </h2>
           <p className="text-2xl font-bold leading-tight">
             {data.verdict}
           </p>
+          {data.executive_summary && (
+            <p className="mt-3 text-sm opacity-90 leading-relaxed italic">
+              {data.executive_summary}
+            </p>
+          )}
           {hasErrors && (
             <p className="mt-2 text-red-700 font-medium">
               Action Required: Please resolve the {criticalErrors.items.length} critical error(s) below before approval.

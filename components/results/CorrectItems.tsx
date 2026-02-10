@@ -44,14 +44,14 @@ export default function CorrectItems({ data }: CorrectItemsProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center mb-1">
                   <span className="text-sm font-bold text-gray-900 mr-2">
-                    {item.area}
+                    {item.name}
                   </span>
                   <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                     {item.test_id}
                   </span>
                 </div>
                 <p className="text-sm text-gray-500">
-                  {item.details}
+                  {item.description}
                 </p>
               </div>
             </div>
