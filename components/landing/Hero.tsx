@@ -80,8 +80,8 @@ export default function Hero() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent,white)]" />
         </div>
 
-        <div className="relative z-10 flex flex-col lg:flex-row items-stretch px-5 md:px-20 gap-12">
-          <div className="w-full lg:w-[75%] flex flex-col justify-center">
+        <div className="relative z-10 flex flex-col lg:flex-row items-center px-5 md:px-20 gap-12">
+          <div className="w-full lg:w-1/2 flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, x: -40, scale: 0.98 }}
               animate={!isLoading ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -144,14 +144,14 @@ export default function Hero() {
             </motion.div>
           </div>
           
-          <div className="w-full lg:w-[55%] flex flex-col justify-center">
+          <div className="w-full lg:w-1/2 flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 30 }}
               animate={!isLoading ? { opacity: 1, scale: 1, y: 0 } : {}}
               transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative h-full group"
+              className="relative group"
             >
-              <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl h-full border border-white/50">
+              <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl border border-white/50">
                 <AnimatePresence mode="wait">
                   {isLoading && (
                     <motion.div

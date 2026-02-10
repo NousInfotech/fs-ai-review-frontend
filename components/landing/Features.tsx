@@ -252,7 +252,7 @@ export default function Features() {
       {/* Modal Implementation */}
       <AnimatePresence>
         {selectedFeature && (
-          <div className="fixed inset-0 z-100 flex items-center justify-center p-5">
+          <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4 md:p-10">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -268,40 +268,41 @@ export default function Features() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden"
+              className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
             >
-              <div className="p-8 md:p-12">
+              <div className="p-6 md:p-12 overflow-y-auto">
                 <button 
                   onClick={() => setSelectedFeature(null)}
-                  className="absolute top-8 right-8 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 transition-colors"
+                  className="absolute top-6 right-6 md:top-8 md:right-8 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 transition-colors z-30"
                 >
                   <X className="w-5 h-5 text-slate-500" />
                 </button>
 
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-16 h-16 rounded-2xl bg-(--landing-primary-blue)/10 flex items-center justify-center">
-                    <selectedFeature.icon className="w-8 h-8 text-(--landing-primary-blue)" />
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6 md:mb-8 mt-4 md:mt-0">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-(--landing-primary-blue)/10 flex items-center justify-center shrink-0">
+                    <selectedFeature.icon className="w-6 h-6 md:w-8 md:h-8 text-(--landing-primary-blue)" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-medium text-slate-900 tracking-tight">
+                    <h2 className="text-2xl md:text-3xl font-medium text-slate-900 tracking-tight">
                       {selectedFeature.name}
                     </h2>
-                    <p className="text-(--landing-primary-blue) font-medium">Detailed Feature Overview</p>
+                    <p className="text-sm md:text-base text-(--landing-primary-blue) font-medium italic opacity-80">Detailed Feature Overview</p>
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <p className="text-xl text-slate-700 leading-relaxed font-medium">
+                <div className="space-y-4 md:space-y-6">
+                  <p className="text-lg md:text-xl text-slate-700 leading-relaxed font-semibold">
                     {selectedFeature.description}
                   </p>
-                  <p className="text-lg text-slate-600 leading-relaxed">
+                  <p className="text-base md:text-lg text-slate-600 leading-relaxed font-normal opacity-90">
                     {selectedFeature.expandedDescription}
                   </p>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-slate-100 flex justify-end">
+                <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-slate-100 flex justify-end">
                   <LandingButton 
                     onClick={() => setSelectedFeature(null)}
+                    className="w-full md:w-auto"
                   >
                     Got it, thanks
                   </LandingButton>

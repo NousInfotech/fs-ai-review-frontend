@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Features", href: "#features" },
-    { name: "How it Works", href: "#how-it-works" },
+    { name: "How It Works", href: "#how-it-works" },
     { name: "Pricing", href: "#pricing" },
     { name: "Contact", href: "#contact" },
     { name: "FAQ", href: "#faq" },
@@ -39,7 +39,7 @@ export default function Navbar() {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 w-full">
             {/* Left: Logo and Name */}
-            <div className="flex-1 flex justify-start">
+            <div className="flex items-center">
               <Link 
                 href="#hero" 
                 className="flex items-center gap-2 group"
@@ -54,20 +54,20 @@ export default function Navbar() {
                     className="object-contain"
                   />
                 </div>
-                <span className="md:text-xl font-normal text-(--landing-text-heading) tracking-tight group-hover:text-(--landing-primary-blue) transition-colors">
+                <span className="md:text-xl font-normal text-(--landing-text-heading) tracking-tight group-hover:text-(--landing-primary-blue) transition-colors whitespace-nowrap">
                   Financial Review AI
                 </span>
               </Link>
             </div>
 
             {/* Center: Navigation Links (Desktop) */}
-            <div className="hidden md:flex flex-1 justify-center items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link 
                   key={link.name}
                   href={link.href} 
                   onClick={(e) => scrollToSection(e, link.href)}
-                  className="text-sm font-normal text-(--landing-text-gray) hover:text-(--landing-primary-blue) transition-colors relative group py-2"
+                  className="text-sm font-normal text-(--landing-text-gray) hover:text-(--landing-primary-blue) transition-colors relative group py-2 whitespace-nowrap"
                 >
                   {link.name}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-(--landing-primary-blue) transition-all duration-300 group-hover:w-full" />
@@ -76,7 +76,7 @@ export default function Navbar() {
             </div>
 
             {/* Right: Actions (Desktop) */}
-            <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
+            <div className="flex items-center justify-end gap-2 md:gap-4">
               <div className="flex items-center gap-3">
                 <LandingButton 
                   href="/login"
@@ -100,7 +100,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Navbar with Staggered Menu */}
-      <div className="md:hidden bg-white/60 backdrop-blur-xl border-b border-white/20 h-16">
+      <div className="md:hidden bg-white/60 backdrop-blur-xl border-b border-white/20 h-16 pointer-events-none">
         <StaggeredMenu 
           title="Financial Review AI"
           items={[
