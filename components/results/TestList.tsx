@@ -17,7 +17,7 @@ const fetchReport = async (uploadId: string): Promise<ReviewResult> => {
   return response.data;
 };
 
-const SHOW_MOCK_DATA = true;
+const SHOW_MOCK_DATA = false;
 
 export default function TestList({ uploadId }: TestListProps) {
   const { data: realData, isLoading, error } = useQuery({
