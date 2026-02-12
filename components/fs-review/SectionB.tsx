@@ -1,7 +1,7 @@
 "use client";
 
 import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/Accordion";
-import { CriticalError } from "@/types/review";
+import { CriticalError, Location } from "@/types/review";
 import { AlertTriangle } from "lucide-react";
 import ReviewSection from "./ReviewSection";
 import ImageAnnotation from "./ImageAnnotation";

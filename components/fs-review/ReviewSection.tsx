@@ -6,21 +6,21 @@ import { ChevronDown, Minus, Plus } from "lucide-react";
 import { Button } from "../ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface ReviewSectionProps {
+interface ReviewSectionProps<T> {
   title: string;
   titleColorClass: string;
   badgeColorClass: string;
   count: number;
   content?: string;
-  items: any[];
-  renderItem: (item: any, index: number) => React.ReactNode;
+  items: T[];
+  renderItem: (item: T, index: number) => React.ReactNode;
   emptyMessage: string;
   emptyBgClass: string;
   emptyBorderClass: string;
   defaultSectionCollapsed?: boolean;
 }
 
-export default function ReviewSection({
+export default function ReviewSection<T>({
   title,
   titleColorClass,
   badgeColorClass,
@@ -32,7 +32,7 @@ export default function ReviewSection({
   emptyBgClass,
   emptyBorderClass,
   defaultSectionCollapsed = false,
-}: ReviewSectionProps) {
+}: ReviewSectionProps<T>) {
   const [openValues, setOpenValues] = useState<string[]>([]);
   const [isSectionExpanded, setIsSectionExpanded] = useState(!defaultSectionCollapsed);
 

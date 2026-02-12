@@ -1,7 +1,7 @@
 "use client";
 
 import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/Accordion";
-import { DisclosureBreach } from "@/types/review";
+import { DisclosureBreach, Location } from "@/types/review";
 import { Info } from "lucide-react";
 import ReviewSection from "./ReviewSection";
 import ImageAnnotation from "./ImageAnnotation";
