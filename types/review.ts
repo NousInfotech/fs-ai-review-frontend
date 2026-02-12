@@ -29,6 +29,8 @@ export interface CriticalError {
   name: string;
   description: string;
   result?: string;
+  current?: string;
+  expected?: string;
   location?: Location[];
 }
 
@@ -38,6 +40,8 @@ export interface DisclosureBreach {
   name: string;
   description: string;
   result?: string;
+  current?: string;
+  expected?: string;
   location?: Location[];
 }
 

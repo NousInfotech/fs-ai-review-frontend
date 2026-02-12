@@ -63,7 +63,7 @@ export default function LoginPage() {
         : await signInWithEmailAndPassword(auth, email, password);
       
       await syncUserWithBackend(userCredential.user);
-      router.push("/dashboard");
+      router.push("/upload");
     } catch (err: any) {
       console.error("Auth failed", err);
       let errorMessage = "Authentication failed.";

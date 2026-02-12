@@ -122,7 +122,7 @@ export default function Hero() {
               <div className="pt-4">
                 <div className="flex flex-col md:flex-row gap-4 items-center">
                   <LandingButton 
-                    href="/dashboard"
+                    href="/upload"
                     icon={<ArrowRight className="w-5 h-5" />}
                     className="w-full md:w-auto text-white px-8"
                   >

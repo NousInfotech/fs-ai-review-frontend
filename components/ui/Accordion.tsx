@@ -17,27 +17,40 @@ const AccordionContext = React.createContext<{
 
 export function Accordion({
   type = "multiple",
+  value,
+  onValueChange,
   defaultValue,
   children,
   className,
 }: {
   type?: "single" | "multiple";
+  value?: string[];
+  onValueChange?: (value: string[]) => void;
   defaultValue?: string | string[];
   children: React.ReactNode;
   className?: string;
 }) {
-  const [openValues, setOpenValues] = React.useState<string[]>(
+  const [internalOpenValues, setInternalOpenValues] = React.useState<string[]>(
     Array.isArray(defaultValue) ? defaultValue : defaultValue ? [defaultValue] : []
   );
 
-  const toggleValue = (value: string) => {
+  const isControlled = value !== undefined;
+  const openValues = isControlled ? value : internalOpenValues;
+
+  const toggleValue = (val: string) => {
+    let nextValue: string[];
     if (type === "single") {
-      setOpenValues((prev) => (prev.includes(value) ? [] : [value]));
+      nextValue = openValues.includes(val) ? [] : [val];
     } else {
-      setOpenValues((prev) =>
-        prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-      );
+      nextValue = openValues.includes(val)
+        ? openValues.filter((v) => v !== val)
+        : [...openValues, val];
     }
+
+    if (!isControlled) {
+      setInternalOpenValues(nextValue);
+    }
+    onValueChange?.(nextValue);
   };
 
   return (

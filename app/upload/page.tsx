@@ -20,7 +20,7 @@ export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [countryCode, setCountryCode] = useState("US");
   const [companyType, setCompanyType] = useState("LISTED");
-  const [accountingStandard, setAccountingStandard] = useState("IFRS");
+  const [accountingStandard, setAccountingStandard] = useState("GAPSME");
   const [regulator, setRegulator] = useState("SEC");
   
   const router = useRouter();

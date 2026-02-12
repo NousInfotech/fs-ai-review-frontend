@@ -86,8 +86,8 @@ export default function Navbar() {
                   Sign In
                 </LandingButton>
                 <LandingButton 
-                  href="/dashboard"
-                  variant="primary"
+                  href="/upload"
+                  variant="primary" 
                   className="px-6! py-2.5! text-sm! font-normal rounded-xl! shadow-blue-500/10"
                   icon={<ArrowRight className="w-4 h-4" />}
                 >

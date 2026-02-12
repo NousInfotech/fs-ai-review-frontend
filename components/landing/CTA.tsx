@@ -36,7 +36,7 @@ export default function CTA() {
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <LandingButton
-                href="/dashboard"
+                href="/upload"
                 variant="primary"
                 className=" shadow-blue-500/20"
                 icon={<ArrowRight className="w-5 h-5" />}
