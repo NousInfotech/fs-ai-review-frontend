@@ -1,7 +1,7 @@
 "use client";
 
 import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/Accordion";
-import { DisclosureBreach } from "@/types/review";
+import { DisclosureBreach, Location } from "@/types/review";
 import { Info } from "lucide-react";
 import ReviewSection from "./ReviewSection";
 import ImageAnnotation from "./ImageAnnotation";
@@ -63,7 +63,7 @@ export default function SectionC({ items, content }: { items: DisclosureBreach[]
 
             {issue.location && issue.location.length > 0 && (
               <div className="mt-4 space-y-8">
-                {issue.location.map((loc, lIdx) => {
+                {issue.location.map((loc: Location, lIdx: number) => {
                   const isMulti = issue.location!.length > 1;
                   return (
                     <div key={lIdx} className={isMulti ? "space-y-2 bg-gray-50/50 p-3 rounded-xl border border-gray-100 shadow-sm" : "space-y-2"}>

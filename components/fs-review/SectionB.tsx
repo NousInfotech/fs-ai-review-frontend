@@ -1,7 +1,7 @@
 "use client";
 
 import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/Accordion";
-import { CriticalError } from "@/types/review";
+import { CriticalError, Location } from "@/types/review";
 import { AlertTriangle } from "lucide-react";
 import ReviewSection from "./ReviewSection";
 import ImageAnnotation from "./ImageAnnotation";
@@ -63,7 +63,7 @@ export default function SectionB({ items, content }: { items: CriticalError[]; c
 
             {err.location && err.location.length > 0 && (
               <div className="mt-4 space-y-8">
-                {err.location.map((loc, lIdx) => {
+                {err.location.map((loc: Location, lIdx: number) => {
                   const isMulti = err.location!.length > 1;
                   return (
                     <div key={lIdx} className={isMulti ? "space-y-2 bg-gray-50/50 p-3 rounded-xl border border-gray-100 shadow-sm" : "space-y-2"}>
