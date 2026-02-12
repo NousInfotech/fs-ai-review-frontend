@@ -66,14 +66,21 @@ export function AccordionItem({
   value,
   children,
   className,
+  onClick,
 }: {
   value: string;
   children: React.ReactNode;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }) {
   return (
     <AccordionItemContext.Provider value={{ value }}>
-      <div className={cn("border-b last:border-b-0", className)}>{children}</div>
+      <div 
+        className={cn("border-b last:border-b-0", className)}
+        onClick={onClick}
+      >
+        {children}
+      </div>
     </AccordionItemContext.Provider>
   );
 }
@@ -94,7 +101,7 @@ export function AccordionTrigger({
       type="button"
       onClick={() => toggleValue(value)}
       className={cn(
-        "group flex w-full items-center justify-between py-4 font-medium transition-all duration-200 ease-in-out cursor-pointer",
+        "group text-sm flex w-full items-center justify-between py-4 font-medium transition-all duration-200 ease-in-out cursor-pointer",
         className
       )}
     >

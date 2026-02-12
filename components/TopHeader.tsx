@@ -1,13 +1,14 @@
 "use client";
 
-import { PanelLeft, PanelLeftClose, ChevronRight, LogOut, Zap } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { ChevronRight, LogOut, Zap, Upload, History } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
-import { generateDisplayId } from "@/lib/utils";
+import { generateDisplayId, cn } from "@/lib/utils";
 
 interface TopHeaderProps {
     onSidebarToggle: () => void;
@@ -19,6 +20,7 @@ export default function TopHeader({
     isSidebarCollapsed,
 }: TopHeaderProps) {
     const pathname = usePathname();
+    const router = useRouter();
     const { signOut } = useAuth();
     
     // Check if we are in the results or processing page and extract ID
@@ -75,29 +77,49 @@ export default function TopHeader({
             className="h-16 flex items-center justify-between px-6 sticky top-4 z-40 mx-4 my-4 border border-white/10 rounded-2xl shadow-xl"
             style={{ backgroundColor: 'hsl(var(--sidebar-background))' }}
         >
-            {/* Left Section: Toggle & Breadcrumbs */}
-            <div className="flex items-center gap-4">
-                <button
-                    className="p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors group text-white/70 hover:text-white"
-                    onClick={onSidebarToggle}
-                    aria-label="Toggle Sidebar"
-                >
-                    {isSidebarCollapsed ? (
-                        <PanelLeft className="h-5 w-5" />
-                    ) : (
-                        <PanelLeftClose className="h-5 w-5" />
-                    )}
-                </button>
+            {/* Left Section: Breadcrumbs & Nav */}
+            <div className="flex items-center gap-6">
+                <div className="flex items-center text-sm mr-2">
+                    <span className="text-white/60 font-bold text-lg mr-2">FS-AI Review</span>
+                </div>
+
+                {/* Primary Navigation Links */}
+                <div className="flex items-center gap-1">
+                    <Link 
+                        href="/upload" 
+                        className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-xl transition-all font-semibold",
+                            pathname === "/upload" 
+                                ? "bg-white/10 text-white shadow-lg" 
+                                : "text-white/50 hover:text-white hover:bg-white/5"
+                        )}
+                    >
+                        <Upload className="h-4 w-4" />
+                        <span>Upload Statement</span>
+                    </Link>
+
+                    <Link 
+                        href="/history" 
+                        className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-xl transition-all font-semibold",
+                            pathname === "/history" 
+                                ? "bg-white/10 text-white shadow-lg" 
+                                : "text-white/50 hover:text-white hover:bg-white/5"
+                        )}
+                    >
+                        <History className="h-4 w-4" />
+                        <span>History</span>
+                    </Link>
+                </div>
 
                 {/* Divider */}
                 <div className="h-4 w-px bg-white/10 hidden sm:block"></div>
 
                 {/* Breadcrumbs */}
                 <nav className="hidden sm:flex items-center text-sm">
-                    <span className="text-white/40 font-medium">Financial Review</span>
                     {breadcrumbs.map((crumb, index) => (
                         <div key={crumb.href} className="flex items-center">
-                            <ChevronRight className="h-4 w-4 text-white/20 mx-1" />
+                            {index > 0 && <ChevronRight className="h-4 w-4 text-white/20 mx-1" />}
                             <span className={`font-medium ${index === breadcrumbs.length - 1 ? 'text-white' : 'text-white/40'}`}>
                                 {crumb.label}
                             </span>

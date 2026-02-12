@@ -37,7 +37,8 @@ export default function PortalLayout({ children, title, description }: PortalLay
 
   return (
     <div className="flex h-screen bg-[#f5f7ff] relative overflow-hidden">
-      {/* Sidebar for desktop */}
+      {/* Sidebar for desktop - Commented out for full-view layout */}
+      {/* 
       <div className="hidden lg:block h-full">
         <Sidebar 
           isCollapsed={isSidebarCollapsed} 
@@ -45,16 +46,20 @@ export default function PortalLayout({ children, title, description }: PortalLay
           onExpand={handleExpand}
         />
       </div>
+      */}
 
-      {/* Mobile Sidebar Overlay */}
+      {/* Mobile Sidebar Overlay - Commented out for full-view layout */}
+      {/* 
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
+      */}
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar - Commented out for full-view layout */}
+      {/* 
       <div className={cn(
         "lg:hidden fixed inset-0 z-50 transition-transform duration-300",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -65,12 +70,13 @@ export default function PortalLayout({ children, title, description }: PortalLay
           onClose={() => setIsSidebarOpen(false)}
         />
       </div>
+      */}
 
-      {/* Main Content Area */}
+      {/* Main Content Area - Updated to full width */}
       <div
         className={cn(
           "flex-1 flex flex-col transition-all duration-300 min-w-0 pr-2",
-          isSidebarCollapsed ? "lg:ml-28" : "lg:ml-88"
+          "lg:ml-0" // Removed sidebar-dependent margins
         )}
       >
         {/* Header */}
@@ -81,7 +87,7 @@ export default function PortalLayout({ children, title, description }: PortalLay
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-4 lg:p-8">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-400 mx-auto w-full"> {/* Increased max-width for better full-view experience */}
             {(title || description) && (
               <div className="mb-8">
                 <h1 className="text-2xl font-bold text-primary tracking-tight">{title}</h1>

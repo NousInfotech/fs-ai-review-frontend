@@ -6,7 +6,15 @@ import { Info } from "lucide-react";
 import ReviewSection from "./ReviewSection";
 import ImageAnnotation from "./ImageAnnotation";
 
-export default function SectionC({ items, content }: { items: DisclosureBreach[]; content?: string }) {
+export default function SectionC({ 
+  items, 
+  content, 
+  onItemClick 
+}: { 
+  items: DisclosureBreach[]; 
+  content?: string;
+  onItemClick?: (testId: string, location?: any) => void;
+}) {
   return (
     <ReviewSection
       title="Disclosure & Regulatory Breaches"
@@ -19,7 +27,11 @@ export default function SectionC({ items, content }: { items: DisclosureBreach[]
       emptyBgClass="bg-yellow-50/50"
       emptyBorderClass="border-yellow-100"
       renderItem={(issue, idx) => (
-        <AccordionItem key={idx} value={`Disclosure & Regulatory Breaches-${idx}`}>
+        <AccordionItem 
+          key={idx} 
+          value={`Disclosure & Regulatory Breaches-${idx}`}
+          onClick={() => onItemClick?.(issue.test_id, issue.location?.[0])}
+        >
           <AccordionTrigger>
             <div className="flex items-center gap-3">
               <Info className="text-yellow-500" size={18} />
@@ -45,7 +57,7 @@ export default function SectionC({ items, content }: { items: DisclosureBreach[]
               
               {issue.result && (
                 <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                  <p className="text-gray-700 italic">{issue.result}</p>
+                  <p className="text-gray-700">{issue.result}</p>
                 </div>
               )}
 
@@ -62,19 +74,8 @@ export default function SectionC({ items, content }: { items: DisclosureBreach[]
             </div>
 
             {issue.location && issue.location.length > 0 && (
-              <div className="mt-4 space-y-8">
-                {issue.location.map((loc, lIdx) => {
-                  const isMulti = issue.location!.length > 1;
-                  return (
-                    <div key={lIdx} className={isMulti ? "space-y-2 bg-gray-50/50 p-3 rounded-xl border border-gray-100 shadow-sm" : "space-y-2"}>
-                      <p className="font-semibold text-gray-800 flex items-center gap-2">
-                         <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
-                         Location {isMulti ? lIdx + 1 : ""}: Page {loc.page_no}
-                      </p>
-                      <ImageAnnotation location={loc} testId={issue.test_id} color="#eab308" />
-                    </div>
-                  );
-                })}
+              <div className="mt-2 text-xs text-gray-500 italic">
+                Related images are displayed on the right.
               </div>
             )}
           </AccordionContent>

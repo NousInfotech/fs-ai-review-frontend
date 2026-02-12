@@ -68,8 +68,8 @@ export default function ReviewSection({
               <ChevronDown size={24} strokeWidth={2.5} />
             </motion.div>
             
-            <h2 className={`text-xl font-bold ${titleColorClass}`}>{title}</h2>
-            <div className={`flex items-center justify-center w-7 h-7 rounded-full text-white text-sm font-medium ${badgeColorClass}`}>
+            <h2 className={`text-lg font-semibold ${titleColorClass}`}>{title}</h2>
+            <div className={`flex items-center justify-center w-7 h-7 rounded-full text-white text-xs font-medium ${badgeColorClass}`}>
               {count}
             </div>
           </div>
@@ -77,7 +77,7 @@ export default function ReviewSection({
         </div>
 
         {/* Bulk Actions - only visible when section is expanded */}
-        {isSectionExpanded && items && items.length > 0 && (
+        {/* {isSectionExpanded && items && items.length > 0 && (
           <div className="flex items-center gap-2 ml-9 sm:ml-0">
             <Button
               variant="ghost"
@@ -99,7 +99,7 @@ export default function ReviewSection({
               Collapse All
             </Button>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Section Content with Animation */}

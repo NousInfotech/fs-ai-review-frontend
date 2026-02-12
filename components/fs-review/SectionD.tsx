@@ -91,7 +91,7 @@ export default function SectionD({
   return (
     <section className="space-y-4">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-semibold text-blue-700 tracking-tight">
+        <h2 className="text-lg font-semibold text-blue-700 tracking-tight">
           Reconciliation Tables
         </h2>
         {content && <p className="text-xs text-gray-500">{content}</p>}

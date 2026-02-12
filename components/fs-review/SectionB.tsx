@@ -6,7 +6,15 @@ import { AlertTriangle } from "lucide-react";
 import ReviewSection from "./ReviewSection";
 import ImageAnnotation from "./ImageAnnotation";
 
-export default function SectionB({ items, content }: { items: CriticalError[]; content?: string }) {
+export default function SectionB({ 
+  items, 
+  content, 
+  onItemClick 
+}: { 
+  items: CriticalError[]; 
+  content?: string;
+  onItemClick?: (testId: string, location?: any) => void;
+}) {
   return (
     <ReviewSection
       title="Critical Errors"
@@ -19,7 +27,11 @@ export default function SectionB({ items, content }: { items: CriticalError[]; c
       emptyBgClass="bg-red-50/50"
       emptyBorderClass="border-red-100"
       renderItem={(err, idx) => (
-        <AccordionItem key={idx} value={`Critical Errors-${idx}`}>
+        <AccordionItem 
+          key={idx} 
+          value={`Critical Errors-${idx}`}
+          onClick={() => onItemClick?.(err.test_id, err.location?.[0])}
+        >
           <AccordionTrigger>
             <div className="flex gap-3">
               <AlertTriangle className="text-red-500" size={18} />
@@ -45,7 +57,7 @@ export default function SectionB({ items, content }: { items: CriticalError[]; c
               
               {err.result && (
                 <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                  <p className="text-gray-700 italic">{err.result}</p>
+                  <p className="text-gray-700 ">{err.result}</p>
                 </div>
               )}
 
@@ -62,19 +74,8 @@ export default function SectionB({ items, content }: { items: CriticalError[]; c
             </div>
 
             {err.location && err.location.length > 0 && (
-              <div className="mt-4 space-y-8">
-                {err.location.map((loc, lIdx) => {
-                  const isMulti = err.location!.length > 1;
-                  return (
-                    <div key={lIdx} className={isMulti ? "space-y-2 bg-gray-50/50 p-3 rounded-xl border border-gray-100 shadow-sm" : "space-y-2"}>
-                      <p className="font-semibold text-gray-800 flex items-center gap-2">
-                         <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                         Location {isMulti ? lIdx + 1 : ""}: Page {loc.page_no}
-                      </p>
-                      <ImageAnnotation location={loc} testId={err.test_id} />
-                    </div>
-                  );
-                })}
+              <div className="mt-2 text-xs text-gray-500 italic">
+                Related images are displayed on the right.
               </div>
             )}
           </AccordionContent>
