@@ -15,15 +15,18 @@ export interface PlatformUser {
 export interface TestCase {
   _id: string;
   test_id: string;
+  name: string;
   description: string;
-  severity: string;
-  category: string;
+  promptTemplate: string;
+  ruleType: 'COMPLIANCE' | 'ARITHMETIC';
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  category: 'AUDIT_REPORT' | 'BALANCE_SHEET' | 'INCOME_STATEMENT' | 'GENERAL' | 'NOTES_AND_POLICY' | 'CROSS_STATEMENT' | 'PRESENTATION';
   enabled: boolean;
   version: number;
-  countryCode?: "US" | "IN" | "GB";
-  companyType?: "LISTED" | "PRIVATE" | "BANKING" | "INSURANCE";
-  accountingStandard?: "IFRS" | "US_GAAP" | "IND_AS";
-  regulator?: "SEC" | "SEBI" | "MCA";
+  applicableCountries: string[];
+  applicableCompanyTypes: string[];
+  applicableAccountingStandards: string[];
+  regulator?: string;
   created_at: string;
   updated_at: string;
 }

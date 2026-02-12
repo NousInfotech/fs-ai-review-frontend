@@ -23,7 +23,15 @@ const fetchTestCases = async (): Promise<TestCase[]> => {
 };
 
 const SEVERITY_OPTIONS = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
-const CATEGORY_OPTIONS = ['Financial', 'Compliance', 'Arithmetic'];
+const CATEGORY_OPTIONS = [
+  'AUDIT_REPORT', 
+  'BALANCE_SHEET', 
+  'INCOME_STATEMENT', 
+  'GENERAL', 
+  'NOTES_AND_POLICY', 
+  'CROSS_STATEMENT', 
+  'PRESENTATION'
+];
 const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "GAPSME"];
 
 export default function TestCasesPage() {
@@ -35,16 +43,15 @@ export default function TestCasesPage() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCase, setEditingCase] = useState<TestCase | null>(null);
-  const [formData, setFormData] = useState<Partial<TestCase>>({
+  const [formData, setFormData] = useState<any>({
     test_id: '',
+    name: '',
     description: '',
+    promptTemplate: '',
     severity: 'MEDIUM',
-    category: 'Financial',
+    category: 'GENERAL',
     enabled: true,
-    accountingStandard: 'IFRS',
-    countryCode: 'US',
-    companyType: 'LISTED',
-    regulator: 'SEC'
+    accountingStandard: 'GAPSME'
   });
 
   const { data: testCases, isLoading } = useQuery({
@@ -89,14 +96,13 @@ export default function TestCasesPage() {
     setEditingCase(null);
     setFormData({
       test_id: '',
+      name: '',
       description: '',
+      promptTemplate: '',
       severity: 'MEDIUM',
-      category: 'Financial',
+      category: 'GENERAL',
       enabled: true,
-      accountingStandard: 'IFRS',
-      countryCode: 'US',
-      companyType: 'LISTED',
-      regulator: 'SEC'
+      accountingStandard: 'GAPSME'
     });
     setIsModalOpen(true);
   };
@@ -105,14 +111,13 @@ export default function TestCasesPage() {
     setEditingCase(tc);
     setFormData({
       test_id: tc.test_id,
+      name: tc.name || '',
       description: tc.description,
+      promptTemplate: tc.promptTemplate || '',
       severity: tc.severity,
       category: tc.category,
       enabled: tc.enabled,
-      accountingStandard: tc.accountingStandard || 'IFRS',
-      countryCode: tc.countryCode || 'US',
-      companyType: tc.companyType || 'LISTED',
-      regulator: tc.regulator || 'SEC'
+      accountingStandard: tc.applicableAccountingStandards?.[0] || 'GAPSME'
     });
     setIsModalOpen(true);
   };
@@ -124,10 +129,20 @@ export default function TestCasesPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Map singular UI fields to backend array fields
+    const submissionData = {
+      ...formData,
+      applicableAccountingStandards: [formData.accountingStandard],
+    };
+
+    // Remove the temporary singular fields before sending to backend
+    delete (submissionData as any).accountingStandard;
+
     if (editingCase) {
-      updateMutation.mutate({ id: editingCase._id, data: formData });
+      updateMutation.mutate({ id: editingCase._id, data: submissionData });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(submissionData);
     }
   };
 
@@ -301,29 +316,42 @@ export default function TestCasesPage() {
                   </button>
                 </div>
                 
-                <form id="testCaseForm" onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="test_id" className="block text-sm font-medium text-gray-700">Test ID</label>
+                <form id="testCaseForm" onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-1">
+                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700">Test Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
+                      placeholder="e.g. Audit Report Compliance Check"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                    <div className="space-y-1">
+                      <label htmlFor="test_id" className="block text-sm font-semibold text-gray-700">Test ID</label>
                       <input
                         type="text"
                         id="test_id"
                         required
                         value={formData.test_id}
                         onChange={(e) => setFormData({...formData, test_id: e.target.value})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all disabled:bg-gray-50 disabled:text-gray-500"
                         placeholder="e.g. TC-FIN-001"
-                        disabled={!!editingCase} // ID usually immutable after creation
+                        disabled={!!editingCase}
                       />
                     </div>
 
-                    <div>
-                      <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+                    <div className="space-y-1">
+                      <label htmlFor="category" className="block text-sm font-semibold text-gray-700">Category</label>
                       <select
                         id="category"
                         value={formData.category}
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
                       >
                         {CATEGORY_OPTIONS.map(cat => (
                           <option key={cat} value={cat}>{cat}</option>
@@ -331,13 +359,13 @@ export default function TestCasesPage() {
                       </select>
                     </div>
 
-                    <div>
-                      <label htmlFor="severity" className="block text-sm font-medium text-gray-700">Severity</label>
+                    <div className="space-y-1">
+                      <label htmlFor="severity" className="block text-sm font-semibold text-gray-700">Severity</label>
                       <select
                         id="severity"
                         value={formData.severity}
                         onChange={(e) => setFormData({...formData, severity: e.target.value})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
                       >
                         {SEVERITY_OPTIONS.map(sev => (
                           <option key={sev} value={sev}>{sev}</option>
@@ -345,13 +373,13 @@ export default function TestCasesPage() {
                       </select>
                     </div>
 
-                    <div>
-                      <label htmlFor="accountingStandard" className="block text-sm font-medium text-gray-700">Accounting Standard</label>
+                    <div className="space-y-1">
+                      <label htmlFor="accountingStandard" className="block text-sm font-semibold text-gray-700">Accounting Standard</label>
                       <select
                         id="accountingStandard"
                         value={formData.accountingStandard}
                         onChange={(e) => setFormData({...formData, accountingStandard: e.target.value as any})}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
                       >
                         {ACCOUNTING_STANDARD_OPTIONS.map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
@@ -360,15 +388,29 @@ export default function TestCasesPage() {
                     </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                  <div className="space-y-1">
+                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700">Description</label>
                     <textarea
                       id="description"
                       required
-                      rows={3}
+                      rows={2}
                       value={formData.description}
                       onChange={(e) => setFormData({...formData, description: e.target.value})}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
+                      placeholder="Briefly describe what this test case validates..."
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label htmlFor="promptTemplate" className="block text-sm font-semibold text-gray-700">AI Instructions (Prompt Template)</label>
+                    <textarea
+                      id="promptTemplate"
+                      required
+                      rows={5}
+                      value={formData.promptTemplate}
+                      onChange={(e) => setFormData({...formData, promptTemplate: e.target.value})}
+                      className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm font-mono text-xs leading-relaxed transition-all"
+                      placeholder="Enter the AI instructions or prompt template here..."
                     />
                   </div>
 
