@@ -301,7 +301,7 @@ export const generateFinancialStatusPDF = async (data: ReviewResult) => {
       const scaleX = drawWidth / dimensions.width;
       const scaleY = drawHeight / dimensions.height;
 
-      loc.annotation_data.forEach((ann: any) => {
+      loc.annotation_data.filter((ann: any) => ann.bbox).forEach((ann: any) => {
         const { x, y, width, height } = ann.bbox;
 
         // Rectangle
