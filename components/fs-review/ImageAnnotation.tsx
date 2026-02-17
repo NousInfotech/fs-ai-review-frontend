@@ -118,7 +118,7 @@ export default function ImageAnnotation({ location, testId, color = "#ef4444" }:
                   width={naturalSize.width}
                   height={naturalSize.height}
                 />
-                {location.annotation_data && location.annotation_data.map((ann: any, i: number) => (
+                {location.annotation_data && location.annotation_data.filter((ann: any) => ann.bbox).map((ann: any, i: number) => (
                   <React.Fragment key={i}>
                     <Rect
                       x={ann.bbox.x}
