@@ -30,13 +30,13 @@ export default function SectionB({
         <AccordionItem 
           key={idx} 
           value={`Critical Errors-${idx}`}
-          onClick={() => onItemClick?.(err.test_id, err.location?.[0])}
+          onClick={() => onItemClick?.(err.id || err.test_id || "", err.location?.[0])}
         >
           <AccordionTrigger>
             <div className="flex gap-3">
               <AlertTriangle className="text-red-500" size={18} />
               <div className="flex flex-col items-start text-left">
-                <span className="group-hover:underline underline-offset-4">{err.test_id} — {err.name}</span>
+                <span className="group-hover:underline underline-offset-4">{err.name || err.result || err.id}</span>
               </div>
               {err.category && (
                 <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded h-fit uppercase">

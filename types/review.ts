@@ -17,17 +17,19 @@ export interface Location {
 }
 
 export interface CorrectItem {
-  test_id: string;
-  category: string;
-  name: string;
-  description: string;
+  id?: string;       // Canonical MongoDB ObjectId
+  test_id?: string;  // Legacy field
+  category?: string;
+  name?: string;
+  description?: string;
 }
 
 export interface CriticalError {
-  test_id: string;
-  category: string;
-  name: string;
-  description: string;
+  id?: string;       // Canonical MongoDB ObjectId (set by backend sanitize_items)
+  test_id?: string;  // Legacy field; stripped by backend but may appear in raw data
+  category?: string;
+  name?: string;
+  description?: string;
   result?: string;
   current?: string;
   expected?: string;
@@ -35,10 +37,11 @@ export interface CriticalError {
 }
 
 export interface DisclosureBreach {
-  test_id: string;
-  category: string;
-  name: string;
-  description: string;
+  id?: string;       // Canonical MongoDB ObjectId (set by backend sanitize_items)
+  test_id?: string;  // Legacy field; stripped by backend but may appear in raw data
+  category?: string;
+  name?: string;
+  description?: string;
   result?: string;
   current?: string;
   expected?: string;

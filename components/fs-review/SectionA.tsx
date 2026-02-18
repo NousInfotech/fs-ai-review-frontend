@@ -22,7 +22,7 @@ export default function SectionA({ items, content }: { items: CorrectItem[]; con
           <AccordionTrigger>
             <div className="flex items-center gap-3">
               <CheckCircle className="text-green-500" size={18} />
-              <span className="group-hover:underline underline-offset-4 text-left">{item.test_id} — {item.name}</span>
+              <span className="group-hover:underline underline-offset-4 text-left">{item.name || item.id || item.test_id}</span>
               {item.category && (
                 <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded uppercase">
                   {item.category.replace(/_/g, " ")}

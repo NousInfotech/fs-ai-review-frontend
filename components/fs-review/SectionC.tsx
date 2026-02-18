@@ -30,13 +30,13 @@ export default function SectionC({
         <AccordionItem 
           key={idx} 
           value={`Disclosure & Regulatory Breaches-${idx}`}
-          onClick={() => onItemClick?.(issue.test_id, issue.location?.[0])}
+          onClick={() => onItemClick?.(issue.id || issue.test_id || "", issue.location?.[0])}
         >
           <AccordionTrigger>
             <div className="flex items-center gap-3">
               <Info className="text-yellow-500" size={18} />
               <div className="flex flex-col items-start text-left">
-                <span className="group-hover:underline underline-offset-4">{issue.test_id} — {issue.name}</span>
+                <span className="group-hover:underline underline-offset-4">{issue.name || issue.result || issue.id}</span>
               </div>
               {issue.category && (
                 <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded h-fit uppercase">

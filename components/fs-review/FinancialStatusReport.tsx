@@ -112,13 +112,15 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
     [...filteredBItems, ...filteredCItems].forEach(item => {
       if (item.location) {
         item.location.forEach((loc: any) => {
+          // Only show images with real URLs (skip placeholders like "<public image>")
+          if (!loc.url || loc.url.startsWith("<") || loc.url.includes("example.com")) return;
           const imageId = `${loc.url}-${loc.page_no}`;
           if (!seenUrls.has(imageId)) {
             seenUrls.add(imageId);
-            images.push({ 
-              url: loc.url || "", 
-              page_no: loc.page_no, 
-              test_id: item.test_id,
+            images.push({
+              url: loc.url || "",
+              page_no: loc.page_no,
+              test_id: item.id || item.test_id || "",  // id is canonical; test_id is stripped by backend sanitize_items
               location: loc
             });
           }
