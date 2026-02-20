@@ -18,7 +18,7 @@ export interface Location {
 
 export interface CorrectItem {
   id?: string;       // Canonical MongoDB ObjectId
-  test_id?: string;  // Legacy field
+  test_id?: string;  // Friendly label e.g. T1, T2 — enriched from test_cases collection by backend
   category?: string;
   name?: string;
   description?: string;
@@ -26,7 +26,7 @@ export interface CorrectItem {
 
 export interface CriticalError {
   id?: string;       // Canonical MongoDB ObjectId (set by backend sanitize_items)
-  test_id?: string;  // Legacy field; stripped by backend but may appear in raw data
+  test_id?: string;  // Friendly label e.g. T1, T2 — enriched from test_cases collection by backend
   category?: string;
   name?: string;
   description?: string;
@@ -38,7 +38,7 @@ export interface CriticalError {
 
 export interface DisclosureBreach {
   id?: string;       // Canonical MongoDB ObjectId (set by backend sanitize_items)
-  test_id?: string;  // Legacy field; stripped by backend but may appear in raw data
+  test_id?: string;  // Friendly label e.g. T1, T2 — enriched from test_cases collection by backend
   category?: string;
   name?: string;
   description?: string;

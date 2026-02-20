@@ -120,7 +120,7 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
             images.push({
               url: loc.url || "",
               page_no: loc.page_no,
-              test_id: item.id || item.test_id || "",  // id is canonical; test_id is stripped by backend sanitize_items
+              test_id: item.test_id || item.id || "",  // test_id is enriched from DB (T1, T2…); fall back to raw id
               location: loc
             });
           }
@@ -133,7 +133,7 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
 
   const uniqueImages = getAllUniqueImages();
 
-  const handleItemClick = (testId: string, location?: any) => {
+  const handleItemClick = (_testId: string, location?: any) => {
     if (location) {
       const imageId = `${location.url}-${location.page_no}`;
       const element = imageRefs.current[imageId];
@@ -254,7 +254,7 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
           style={{ width: `${100 - leftWidth}%` }}
         >
           {uniqueImages.length > 0 ? (
-            uniqueImages.map((img, idx) => (
+            uniqueImages.map((img) => (
               <div 
                 key={`${img.url}-${img.page_no}`} 
                 ref={el => { imageRefs.current[`${img.url}-${img.page_no}`] = el; }}

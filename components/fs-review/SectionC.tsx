@@ -36,7 +36,11 @@ export default function SectionC({
             <div className="flex items-center gap-3">
               <Info className="text-yellow-500" size={18} />
               <div className="flex flex-col items-start text-left">
-                <span className="group-hover:underline underline-offset-4">{issue.name || issue.result || issue.id}</span>
+                <span className="group-hover:underline underline-offset-4">
+                  {issue.test_id
+                    ? `${issue.test_id} — ${issue.name || issue.result || ""}`
+                    : issue.name || issue.result || `Unknown — ${(issue.id || "").slice(0, 8)}`}
+                </span>
               </div>
               {issue.category && (
                 <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded h-fit uppercase">
