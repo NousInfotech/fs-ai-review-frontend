@@ -112,8 +112,11 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
     [...filteredBItems, ...filteredCItems].forEach(item => {
       if (item.location) {
         item.location.forEach((loc: any) => {
+          // Sanitize URL: strip backticks and whitespace before checking
+          const cleanUrl = (loc.url || "").trim().replace(/^`+|`+$/g, "").trim();
           // Only show images with real URLs (skip placeholders like "<public image>")
-          if (!loc.url || loc.url.startsWith("<") || loc.url.includes("example.com")) return;
+          if (!cleanUrl || cleanUrl.startsWith("<") || cleanUrl.includes("example.com")) return;
+          loc.url = cleanUrl; // Write sanitized URL back
           const imageId = `${loc.url}-${loc.page_no}`;
           if (!seenUrls.has(imageId)) {
             seenUrls.add(imageId);
