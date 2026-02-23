@@ -223,48 +223,6 @@ export const generateFinancialStatusPDF = async (data: ReviewResult) => {
 
   finalY += 8;
 
-  // Section A: Confirmed Correct Items
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(14);
-  doc.setTextColor(22, 163, 74); // Green
-  doc.text(`Confirmed Correct Items (${data.A.items?.length || 0})`, 14, finalY);
-  
-  doc.setDrawColor(22, 163, 74);
-  doc.setLineWidth(0.1);
-  doc.line(14, finalY + 2, 50, finalY + 2);
-
-  finalY += 10;
-
-  if (data.A.items && data.A.items.length > 0) {
-    data.A.items.forEach((item) => {
-      if (finalY > pageHeight - 35) { doc.addPage(); addPageHeader(doc.getNumberOfPages()); finalY = 20; }
-      
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.setTextColor(40, 40, 40);
-      doc.text(`${item.test_id} — ${item.name}`, 14, finalY);
-      
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(80, 80, 80);
-      doc.text("Description:", 14, finalY + 6);
-      
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(60, 60, 60);
-      const splitDesc = doc.splitTextToSize(item.description || "N/A", pageWidth - 35);
-      doc.text(splitDesc, 14, finalY + 10);
-      
-      finalY += 14 + (splitDesc.length * 4);
-    });
-    finalY += 5;
-  } else {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(120, 120, 120);
-    doc.text("No items to display.", 14, finalY);
-    finalY += 18;
-  }
-
   /**
    * Helper to render annotated images below location details
    */
@@ -440,6 +398,50 @@ export const generateFinancialStatusPDF = async (data: ReviewResult) => {
     finalY += 5;
   } else {
     doc.setFont("helvetica", "italic").setFontSize(9).text("No disclosure breaches found.", 14, finalY);
+    finalY += 18;
+  }
+
+  // Section A: Confirmed Correct Items
+  if (finalY > pageHeight - 40) { doc.addPage(); addPageHeader(doc.getNumberOfPages()); finalY = 20; }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(22, 163, 74); // Green
+  doc.text(`Confirmed Correct Items (${data.A.items?.length || 0})`, 14, finalY);
+
+  doc.setDrawColor(22, 163, 74);
+  doc.setLineWidth(0.1);
+  doc.line(14, finalY + 2, 50, finalY + 2);
+
+  finalY += 10;
+
+  if (data.A.items && data.A.items.length > 0) {
+    data.A.items.forEach((item) => {
+      if (finalY > pageHeight - 35) { doc.addPage(); addPageHeader(doc.getNumberOfPages()); finalY = 20; }
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      doc.text(`${item.test_id} — ${item.name}`, 14, finalY);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(80, 80, 80);
+      doc.text("Description:", 14, finalY + 6);
+
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(60, 60, 60);
+      const splitDesc = doc.splitTextToSize(item.description || "N/A", pageWidth - 35);
+      doc.text(splitDesc, 14, finalY + 10);
+
+      finalY += 14 + (splitDesc.length * 4);
+    });
+    finalY += 5;
+  } else {
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text("No items to display.", 14, finalY);
     finalY += 18;
   }
 
