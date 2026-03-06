@@ -106,7 +106,7 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
 
   // Collect all unique images from B and C
   const getAllUniqueImages = () => {
-    const images: { url: string; page_no: number; test_id: string; location: any }[] = [];
+    const images: { url: string; page_no: number; test_id: string; location: any; result: string }[] = [];
     const seenUrls = new Set<string>();
 
     [...filteredBItems, ...filteredCItems].forEach(item => {
@@ -124,7 +124,8 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
               url: loc.url || "",
               page_no: loc.page_no,
               test_id: item.test_id || item.id || "",  // test_id is enriched from DB (T1, T2…); fall back to raw id
-              location: loc
+              location: loc,
+              result: (item as any).result || (item as any).description || ""
             });
           }
         });
@@ -267,7 +268,7 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
                   <h3 className="text-sm font-bold text-gray-800">Page {img.page_no}</h3>
                   <span className="text-[10px] text-gray-500 uppercase font-medium">Linked to {img.test_id}</span>
                 </div>
-                <ImageAnnotation location={img.location} testId={img.test_id} />
+                <ImageAnnotation location={img.location} testId={img.test_id} note={img.result} />
               </div>
             ))
           ) : (

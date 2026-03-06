@@ -8,9 +8,12 @@ interface ImageAnnotationProps {
   location: Location;
   testId: string;
   color?: string;
+  note?: string;
 }
 
-export default function ImageAnnotation({ location, testId, color = "#ef4444" }: ImageAnnotationProps) {
+const ANNOTATION_BOXES_ENABLED = process.env.NEXT_PUBLIC_ENABLE_ANNOTATIONS === "true";
+
+export default function ImageAnnotation({ location, testId, color = "#ef4444", note }: ImageAnnotationProps) {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
   const [displaySize, setDisplaySize] = useState({ width: 0, height: 0 });
@@ -118,31 +121,34 @@ export default function ImageAnnotation({ location, testId, color = "#ef4444" }:
                   width={naturalSize.width}
                   height={naturalSize.height}
                 />
-                {location.annotation_data && location.annotation_data.filter((ann: any) => ann.bbox && (ann.bbox.width > 0 || ann.bbox.height > 0)).map((ann: any, i: number) => (
-                  <React.Fragment key={i}>
-                    <Rect
-                      x={ann.bbox.x}
-                      y={ann.bbox.y}
-                      width={ann.bbox.width}
-                      height={ann.bbox.height}
-                      stroke={color}
-                      strokeWidth={4 / scale} // Adjust stroke to look consistent
-                      fill={color.includes("rgba") ? color : `${color}26`}
-                    />
-                    {ann.note && (
-                      <Text
-                        text={ann.note}
-                        x={10 / scale} // Position relative to actual scale
-                        y={(10 + (i * 20)) / scale}
-                        fontSize={12 / scale}
-                        fill={color}
-                        fontStyle="bold"
-                        shadowColor="white"
-                        shadowBlur={2 / scale}
-                        shadowOpacity={1}
-                      />
-                    )}
-                  </React.Fragment>
+                {/* Finding description — always shown, independent of annotation boxes */}
+                {note && (
+                  <Text
+                    text={note}
+                    x={10 / scale}
+                    y={10 / scale}
+                    fontSize={12 / scale}
+                    fill={color}
+                    fontStyle="bold"
+                    shadowColor="white"
+                    shadowBlur={2 / scale}
+                    shadowOpacity={1}
+                    width={(naturalSize.width - 20)}
+                    wrap="word"
+                  />
+                )}
+                {/* Annotation boxes — only shown when NEXT_PUBLIC_ENABLE_ANNOTATIONS=true */}
+                {ANNOTATION_BOXES_ENABLED && location.annotation_data && location.annotation_data.filter((ann: any) => ann.bbox && (ann.bbox.width > 0 || ann.bbox.height > 0)).map((ann: any, i: number) => (
+                  <Rect
+                    key={i}
+                    x={ann.bbox.x}
+                    y={ann.bbox.y}
+                    width={ann.bbox.width}
+                    height={ann.bbox.height}
+                    stroke={color}
+                    strokeWidth={4 / scale}
+                    fill={color.includes("rgba") ? color : `${color}26`}
+                  />
                 ))}
               </Layer>
             </Stage>
