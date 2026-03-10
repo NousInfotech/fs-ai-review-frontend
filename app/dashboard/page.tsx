@@ -41,9 +41,12 @@ export default function DashboardPage() {
             displayId: item.displayId || generateDisplayId(id),
             companyName: item.companyName || item.metadata?.companyName || "Unknown Company",
             documentDate: item.documentDate || item.metadata?.documentDate || "2024",
+            uploadDate: item.createdAt || new Date().toISOString(),
+            fileUrl: item.fileUrl || "",
             status: item.status,
             riskLevel: item.riskLevel || 'Medium',
-            issues: item.issues || 0
+            issues: item.issues || 0,
+            totalPages: item.totalPages || 0
           } as HistoryDocument;
         });
         return allReviews.slice(0, 4);
