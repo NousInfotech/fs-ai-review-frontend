@@ -7,23 +7,26 @@ export default function RecentStatementsTable({ documents, isLoading }: { docume
   // Use mock data if not provided
   const dummyData = [
     { companyName: "ABC Ltd", documentDate: "2024", status: "Reviewed", riskLevel: "Medium", issues: 5, action: "View Report", id: "1" },
-    { companyName: "Delta Group", documentDate: "2023", status: "Reviewed", riskLevel: "High", issues: 10, action: "Investigate", id: "2" },
+    { companyName: "Delta Group", documentDate: "2023", status: "Investigate", riskLevel: "High", issues: 10, action: "Investigate", id: "2" },
     { companyName: "Nova Ltd", documentDate: "2024", status: "Processing", riskLevel: "-", issues: "-", action: "Loading", id: "3" },
-    { companyName: "Omega Inc", documentDate: "2023", status: "Reviewed", riskLevel: "Low", issues: 0, action: "View Report", id: "4" }
+    { companyName: "Omega Inc", documentDate: "2023", status: "Cleared", riskLevel: "Low", issues: 0, action: "View Report", id: "4" }
   ];
 
   const dataToRender = documents?.length > 0 ? documents : dummyData;
 
   const getStatusPill = (status: string) => {
     switch (status.toLowerCase()) {
+      case "cleared":
+        return <span className="px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-600 text-[11px] font-semibold tracking-wide uppercase border border-emerald-200/50">Cleared</span>;
       case "reviewed":
       case "completed":
-        return <span className="px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-600 text-[11px] font-semibold tracking-wide uppercase border border-emerald-200/50">Reviewed</span>;
+        return <span className="px-3 py-1 rounded-full bg-blue-100/50 text-blue-600 text-[11px] font-semibold tracking-wide uppercase border border-blue-200/50">Reviewed</span>;
       case "processing":
       case "in_progress":
-        return <span className="px-3 py-1 rounded-full bg-blue-100/50 text-blue-600 text-[11px] font-semibold tracking-wide uppercase border border-blue-200/50">In Progress</span>;
+        return <span className="px-3 py-1 rounded-full bg-slate-100/50 text-slate-600 text-[11px] font-semibold tracking-wide uppercase border border-slate-200/50">Processing</span>;
+      case "investigate":
       case "error":
-        return <span className="px-3 py-1 rounded-full bg-red-100/50 text-red-600 text-[11px] font-semibold tracking-wide uppercase border border-red-200/50">Error</span>;
+        return <span className="px-3 py-1 rounded-full bg-red-100/50 text-red-600 text-[11px] font-semibold tracking-wide uppercase border border-red-200/50">Investigate</span>;
       default:
         return <span className="px-3 py-1 rounded-full bg-gray-100/50 text-gray-600 text-[11px] font-semibold tracking-wide uppercase border border-gray-200/50">{status}</span>;
     }

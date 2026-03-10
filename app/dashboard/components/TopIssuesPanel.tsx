@@ -6,7 +6,7 @@ export default function TopIssuesPanel() {
   const issues = [
     { text: "Cash flow mismatch", count: 14, icon: <AlertTriangle className="w-4 h-4 text-orange-400" /> },
     { text: "Inconsistent PPE notes", count: 9, icon: <AlertTriangle className="w-4 h-4 text-orange-400" /> },
-    { text: "Missing Disclosure", count: 6, icon: <AlertTriangle className="w-4 h-4 text-orange-400" /> },
+    { text: "Missing IFRS disclosure", count: 6, icon: <AlertTriangle className="w-4 h-4 text-orange-400" /> },
   ];
 
   return (

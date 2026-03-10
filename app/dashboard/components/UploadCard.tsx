@@ -76,9 +76,10 @@ export default function UploadCard() {
                 <Dropzone onFileSelect={setFile} selectedFile={null} onClear={() => {}} />
              </div>
              
-             <p className="text-sm font-medium text-slate-500">
-               Drag & Drop files here or <span className="text-blue-600 font-bold">Browse</span>
+             <p className="text-sm font-medium text-slate-500 mb-1">
+               Drag & Drop files here or <span className="text-blue-600 font-bold">Browse Files</span>
              </p>
+             <p className="text-xs text-slate-400">Supported formats: PDF, Word, Excel</p>
           </div>
         ) : (
           <div className="max-w-md mx-auto">

@@ -96,7 +96,7 @@ export default function UploadPage() {
                    </div>
                    <h3 className="text-xl font-bold text-slate-800 mb-2">Select Financial Statements</h3>
                    
-                   <div className="absolute inset-0 cursor-pointer">
+                   <div className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full [&>*]:h-full">
                       <Dropzone onFileSelect={setFile} selectedFile={null} onClear={() => {}} />
                    </div>
                    
