@@ -5,23 +5,17 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Dropzone from "@/components/upload/Dropzone";
 import api from "@/lib/api";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { Loader2, AlertTriangle, File, UploadCloud } from "lucide-react";
 import { motion } from "framer-motion";
 import PortalLayout from "@/components/PortalLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-hot-toast";
 
-const COUNTRY_OPTIONS = ["US", "IN", "GB"];
-const COMPANY_TYPE_OPTIONS = ["LISTED", "PRIVATE", "BANKING", "INSURANCE"];
 const ACCOUNTING_STANDARD_OPTIONS = ["IFRS", "GAPSME"];
-const REGULATOR_OPTIONS = ["SEC", "SEBI", "MCA"];
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [countryCode, setCountryCode] = useState("US");
-  const [companyType, setCompanyType] = useState("LISTED");
   const [accountingStandard, setAccountingStandard] = useState("GAPSME");
-  const [regulator, setRegulator] = useState("SEC");
   
   const router = useRouter();
   const { credits, deductCredit } = useAuth();
@@ -32,127 +26,120 @@ export default function UploadPage() {
       formData.append("file", fileToUpload);
       
       const queryParams = new URLSearchParams({
-        countryCode,
-        companyType,
+        countryCode: "US",
+        companyType: "LISTED",
         accountingStandard,
-        regulator
+        regulator: "SEC"
       }).toString();
 
       const response = await api.post(`/api/v1/upload?${queryParams}`, formData);
-      console.log("Upload API Raw Response:", response);
       return response.data;
     },
     onSuccess: (data) => {
-      // Deduct credit removed
-      // Backend returns { id: "..." } or similar
-      console.log("Upload Response Data:", data);
-      
+      deductCredit();
       const uploadId = data.id || data.uploadId || data.upload_id || data._id || (data.data && data.data.id);
 
-      if (!uploadId) {
-        console.error("Upload ID missing in response:", data);
-        // Fallback: Check if response itself is the ID string? Unlikely but possible
-        if (typeof data === 'string' && data.length > 5) {
-             router.push(`/processing/${data}`);
-             return;
-        }
-        return;
+      if (uploadId) {
+        router.push(`/processing/${uploadId}`);
+      } else if (typeof data === 'string' && data.length > 5) {
+        router.push(`/processing/${data}`);
       }
-
-      router.push(`/processing/${uploadId}`);
     },
     onError: (error) => {
       console.error("Upload failed", error);
+      toast.error("Upload failed. Please try again.");
     },
   });
 
   const handleUpload = () => {
+    if (credits <= 0) {
+      toast.error("You have used all your free credits.");
+      return;
+    }
     if (file) {
       uploadMutation.mutate(file);
     }
   };
 
   return (
-    <PortalLayout 
-      title="Upload Financial Statement" 
-      description="Upload a financial document for AI analysis"
-    >
-      <div className="max-w-3xl mx-auto">
+    <PortalLayout title="Upload Statement" description="Upload a financial document for AI analysis">
+      <div className="max-w-2xl mx-auto py-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="audit-card rounded-2xl overflow-hidden"
+          className="audit-card w-full p-8 border-dashed border-2 bg-sky-50/20"
         >
-          <div className="p-8">
-            <div className="max-w-xl mx-auto space-y-8">
-              
-              {/* Metadata Selection Grid */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">Accounting Standard</label>
-                <select 
-                  value={accountingStandard}
-                  onChange={(e) => setAccountingStandard(e.target.value)}
-                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-2 text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
-                >
-                  {ACCOUNTING_STANDARD_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                </select>
-              </div>
+          <div className="max-w-lg mx-auto space-y-8">
+            {/* Metadata Selection */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Accounting Standard</label>
+              <select 
+                value={accountingStandard}
+                onChange={(e) => setAccountingStandard(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              >
+                {ACCOUNTING_STANDARD_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
-                  Document
-                </label>
-                <Dropzone
-                  onFileSelect={setFile}
-                  selectedFile={file}
-                  onClear={() => setFile(null)}
-                />
-              </div>
-
-              {credits <= 0 && (
-                <div className="mb-6 p-3 bg-red-50 border border-red-100 rounded-lg flex items-center justify-center gap-2 text-red-600 text-sm font-medium">
-                  <AlertTriangle className="w-4 h-4" />
-                  You have used all your free credits.
+            {/* Upload Area */}
+            <div className="text-center w-full">
+              {!file ? (
+                <div className="bg-white border-2 border-dashed border-sky-100 rounded-2xl p-10 relative hover:bg-sky-50/50 transition-colors group">
+                   <div className="mb-4 flex justify-center">
+                       <div className="relative">
+                         <UploadCloud className="w-16 h-16 text-blue-300 group-hover:text-blue-400 transition-colors" strokeWidth={1.5} />
+                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 font-bold bg-white rounded-md px-1 mt-1 group-hover:scale-110 transition-transform">
+                           ↑
+                         </div>
+                       </div>
+                   </div>
+                   <h3 className="text-xl font-bold text-slate-800 mb-2">Select Financial Statements</h3>
+                   
+                   <div className="absolute inset-0 cursor-pointer">
+                      <Dropzone onFileSelect={setFile} selectedFile={null} onClear={() => {}} />
+                   </div>
+                   
+                   <p className="text-sm font-medium text-slate-500 mt-2">
+                     Drag & Drop files here or <span className="text-blue-600 font-bold">Browse</span>
+                   </p>
+                </div>
+              ) : (
+                <div className="bg-white border rounded-2xl p-8">
+                   <div className="mb-6 flex flex-col items-center gap-3">
+                       <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center">
+                         <File className="w-8 h-8 text-blue-500" />
+                       </div>
+                       <span className="text-base font-semibold text-slate-700 max-w-full truncate px-4">{file.name}</span>
+                       <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                   </div>
+                   
+                   <div className="flex justify-center gap-3 w-full">
+                       <button 
+                         onClick={() => setFile(null)}
+                         className="flex-1 py-3 text-sm font-semibold text-slate-500 hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors"
+                         disabled={uploadMutation.isPending}
+                       >
+                         Cancel
+                       </button>
+                       <button 
+                         onClick={handleUpload}
+                         disabled={uploadMutation.isPending || credits <= 0}
+                         className="flex-1 py-3 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                       >
+                         {uploadMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Upload Document"}
+                       </button>
+                   </div>
                 </div>
               )}
-
-              {uploadMutation.isError && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="rounded-xl bg-red-500/5 border border-red-200 p-4"
-                >
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-700">
-                        {uploadMutation.error && (uploadMutation.error as any).response?.status === 402 
-                          ? "Insufficient credits. Please contact support or upgrade."
-                          : "Upload failed. Please try again."}
-                      </h3>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              <div className="pt-4">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleUpload}
-                  disabled={!file || uploadMutation.isPending || credits <= 0}
-                  className="w-full flex justify-center items-center py-3 px-4 rounded-xl shadow-md text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {uploadMutation.isPending ? (
-                    <>
-                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                      Uploading...
-                    </>
-                  ) : (
-                    "Start Review Process"
-                  )}
-                </motion.button>
-              </div>
             </div>
+
+            {credits <= 0 && (
+              <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-600 text-sm font-medium">
+                <AlertTriangle className="w-5 h-5 shrink-0" />
+                You have used all your free credits.
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

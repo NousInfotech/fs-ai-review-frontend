@@ -12,10 +12,10 @@ export default function VerdictSection({ data, criticalErrors }: VerdictSectionP
   const isDanger = isNotFit || hasErrors;
 
   return (
-    <div className={`mb-8 p-6 rounded-xl border-l-8 shadow-sm ${
+    <div className={`mb-8 audit-card p-6 border-l-[6px] ${
       isDanger 
-        ? "bg-red-50 border-red-600 text-red-900" 
-        : "bg-green-50 border-green-600 text-green-900"
+        ? "border-l-red-500 bg-red-50/10" 
+        : "border-l-emerald-500 bg-emerald-50/10"
     }`}>
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0 mt-1">

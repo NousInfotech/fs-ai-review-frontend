@@ -44,7 +44,7 @@ export default function TestList({ uploadId }: TestListProps) {
     <div className="space-y-8">
       {activeData && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+          <div className="audit-card p-6 flex items-center gap-4">
             <div className="p-3 bg-blue-50 rounded-xl">
               <ClipboardList className="h-6 w-6 text-blue-600" />
             </div>
@@ -56,8 +56,8 @@ export default function TestList({ uploadId }: TestListProps) {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-            <div className="p-3 bg-green-50 rounded-xl">
+          <div className="audit-card p-6 flex items-center gap-4">
+            <div className="p-3 bg-emerald-50 rounded-xl">
               <CheckCircle className="h-6 w-6 text-green-600" />
             </div>
             <div>
@@ -66,7 +66,7 @@ export default function TestList({ uploadId }: TestListProps) {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+          <div className="audit-card p-6 flex items-center gap-4">
             <div className="p-3 bg-red-50 rounded-xl">
               <AlertCircle className="h-6 w-6 text-red-600" />
             </div>
@@ -76,8 +76,8 @@ export default function TestList({ uploadId }: TestListProps) {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-            <div className="p-3 bg-yellow-50 rounded-xl">
+          <div className="audit-card p-6 flex items-center gap-4">
+            <div className="p-3 bg-orange-50 rounded-xl">
               <AlertTriangle className="h-6 w-6 text-yellow-500" />
             </div>
             <div>

@@ -2,14 +2,11 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { 
-  ArrowLeft, 
   Loader2, 
   CheckCircle, 
   XCircle, 
-  Clock, 
-  Download
+  Clock 
 } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 import api from "@/lib/api";
@@ -17,16 +14,10 @@ import { StandardizedResultResponse, HistoryDocument } from "@/lib/types";
 import { clsx } from "clsx";
 import TestList from "@/components/results/TestList";
 import { generateDisplayId } from "@/lib/utils";
-// import { downloadAuditReport } from "@/lib/pdfGenerator";
 
 const fetchResults = async (uploadId: string): Promise<StandardizedResultResponse> => {
-  try {
-    const response = await api.get(`/api/v1/reviews/${uploadId}/result`);
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch results", error);
-    throw error;
-  }
+  const response = await api.get(`/api/v1/reviews/${uploadId}/result`);
+  return response.data;
 };
 
 const fetchReviewMetadata = async (uploadId: string): Promise<HistoryDocument> => {
@@ -49,7 +40,6 @@ export default function ResultsPage() {
   const params = useParams();
   const router = useRouter();
   const uploadId = params.uploadId as string;
-  // const [isDownloading, setIsDownloading] = useState(false);
   
   const { data: results, isLoading: isLoadingResults, error: resultsError } = useQuery({
     queryKey: ['reviewResults', uploadId],
@@ -64,36 +54,14 @@ export default function ResultsPage() {
   const isLoading = isLoadingResults || isLoadingMetadata;
   const error = resultsError;
 
-  // const handleDownload = async () => {
-  //   try {
-  //     if (!metadata) {
-  //       throw new Error("Metadata not available");
-  //     }
-
-  //     setIsDownloading(true);
-      
-  //     const safeCompanyName = (metadata.companyName || 'Company').replace(/\s+/g, '_');
-  //     const safeDate = (metadata.documentDate || 'Date').replace(/\//g, '-');
-  //     const filename = `Audit_Report_${safeCompanyName}_${safeDate}.pdf`;
-
-  //     // Download PDF
-  //     await downloadAuditReport(uploadId, filename);
-      
-  //   } catch (error) {
-  //     console.error("Failed to download PDF", error);
-  //     alert("Failed to download the report. Please try again.");
-  //   } finally {
-  //     setIsDownloading(false);
-  //   }
-  // };
-
   if (isLoading) {
     return (
       <PortalLayout>
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-indigo-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">Loading Results...</h3>
+        <div className="flex items-center justify-center h-[60vh] w-full">
+          <div className="audit-card w-full max-w-md p-12 text-center flex flex-col items-center">
+            <Loader2 className="h-10 w-10 animate-spin text-blue-600 mb-4" />
+            <h3 className="text-lg font-bold text-slate-800">Loading Results...</h3>
+            <p className="text-sm text-slate-500 mt-2">Compiling the analysis and generating reports.</p>
           </div>
         </div>
       </PortalLayout>
@@ -103,69 +71,50 @@ export default function ResultsPage() {
   if (error || !results) {
     return (
       <PortalLayout>
-        <div className="text-center py-12">
-          <h3 className="text-lg font-medium text-red-600">Error Loading Results</h3>
-          <p className="text-gray-500 mb-4">Could not retrieve the analysis data.</p>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="text-indigo-600 hover:text-indigo-500 font-medium"
-          >
-            Return to Dashboard
-          </button>
+        <div className="flex items-center justify-center h-[60vh] w-full">
+          <div className="audit-card w-full max-w-md p-12 text-center flex flex-col items-center">
+            <XCircle className="h-12 w-12 text-red-500 mb-4" />
+            <h3 className="text-lg font-bold text-slate-800">Error Loading Results</h3>
+            <p className="text-sm text-slate-500 mt-2 mb-6">Could not retrieve the analysis data.</p>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors"
+            >
+              Return to Dashboard
+            </button>
+          </div>
         </div>
       </PortalLayout>
     );
   }
 
-  // Use metadata if available, otherwise fallback to basic info
   const displayTitle = metadata?.companyName && metadata.companyName !== "Unknown Company" 
     ? `${metadata.companyName} - Audit Results` 
     : "Audit Results";
-    
   const displayId = metadata?.displayId || generateDisplayId(uploadId);
 
   return (
-    <PortalLayout 
-      title={displayTitle}
-      description={`Analysis Report ID: ${displayId}`}
-    >
-      {/* Header Actions */}
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-5">
+    <PortalLayout title={displayTitle} description={`Analysis Report ID: ${displayId}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 audit-card p-4 mb-6 relative">
           <div className="flex items-center gap-3">
             <div className={clsx(
-              "px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-2",
-              results.status === 'COMPLETED' ? "bg-green-100 text-green-700" : 
-              results.status === 'FAILED' ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
+              "px-4 py-1.5 rounded-xl text-sm font-semibold flex items-center gap-2 border shadow-sm",
+              results.status === 'COMPLETED' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : 
+              results.status === 'FAILED' ? "bg-red-50 text-red-700 border-red-200" : "bg-blue-50 text-blue-700 border-blue-200"
             )}>
               {results.status === 'COMPLETED' && <CheckCircle className="h-4 w-4" />}
               {results.status === 'FAILED' && <XCircle className="h-4 w-4" />}
               {results.status === 'PROCESSING' && <Loader2 className="h-4 w-4 animate-spin" />}
               {results.status}
             </div>
-
-            {/* <button
-              onClick={handleDownload}
-              disabled={true} // Temporarily disabled as requested
-              title="Download is currently unavailable"
-              className="flex items-center gap-2 px-3 py-1 bg-gray-50 text-gray-400 rounded-lg text-sm font-medium transition-colors cursor-not-allowed border border-gray-200"
-            >
-              {isDownloading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Download Report
-            </button> */}
           </div>
           
-          <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
-            <Clock className="w-4 h-4 mr-2 text-gray-400" />
-            Processed in <span className="font-bold ml-1">{results.processingTimeSeconds}s</span>
+          <div className="flex items-center text-sm text-slate-500 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 shadow-sm">
+            <Clock className="w-4 h-4 mr-2.5 text-slate-400" />
+            Processed in <span className="font-bold text-slate-700 ml-1.5">{results.processingTimeSeconds}s</span>
           </div>
-         </div>
+        </div>
 
-      {/* Results Groups */}
       <TestList uploadId={uploadId} />
     </PortalLayout>
   );

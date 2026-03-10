@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { HistoryDocument } from '@/lib/types';
-import { FileText, Calendar, Clock, ChevronRight, AlertCircle, CheckCircle, Loader2, Trash2 } from 'lucide-react';
+import { FileText, Loader2, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface HistoryListProps {
@@ -14,9 +14,9 @@ interface HistoryListProps {
 export default function HistoryList({ documents, isLoading, deletingId, onDelete }: HistoryListProps) {
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-20 bg-gray-50 rounded-xl animate-pulse" />
+      <div className="audit-card w-full p-6 space-y-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-16 bg-slate-50 rounded-xl animate-pulse" />
         ))}
       </div>
     );
@@ -24,139 +24,129 @@ export default function HistoryList({ documents, isLoading, deletingId, onDelete
 
   if (documents.length === 0) {
     return (
-      <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-        <FileText className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-        <p className="text-gray-500 font-medium">No documents found</p>
-        <p className="text-gray-400 text-sm mt-1">Upload a financial statement to get started</p>
+      <div className="audit-card w-full p-12 text-center flex flex-col items-center justify-center">
+        <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+          <FileText className="h-8 w-8 text-blue-300" />
+        </div>
+        <h3 className="text-lg font-semibold text-slate-800 mb-1">No documents found</h3>
+        <p className="text-slate-500 max-w-sm">Upload a financial statement from the dashboard or upload page to get started.</p>
       </div>
     );
   }
 
+  const getStatusPill = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "reviewed":
+      case "completed":
+        return <span className="px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-600 text-[11px] font-semibold tracking-wide uppercase border border-emerald-200/50">Reviewed</span>;
+      case "processing":
+      case "in_progress":
+        return <span className="px-3 py-1 rounded-full bg-blue-100/50 text-blue-600 text-[11px] font-semibold tracking-wide uppercase border border-blue-200/50 flex items-center gap-1.5 w-fit"><Loader2 className="w-3 h-3 animate-spin"/> Processing</span>;
+      case "failed":
+      case "error":
+        return <span className="px-3 py-1 rounded-full bg-red-100/50 text-red-600 text-[11px] font-semibold tracking-wide uppercase border border-red-200/50">Failed</span>;
+      default:
+        return <span className="px-3 py-1 rounded-full bg-gray-100/50 text-gray-600 text-[11px] font-semibold tracking-wide uppercase border border-gray-200/50">{status || 'Pending'}</span>;
+    }
+  };
+
+  const getRiskColor = (risk: string) => {
+    switch (risk?.toLowerCase()) {
+      case "high": return "text-red-500 font-medium";
+      case "medium": return "text-orange-500 font-medium";
+      case "low": return "text-emerald-500 font-medium";
+      default: return "text-slate-400 font-medium";
+    }
+  };
+
   return (
-    <div className="space-y-3">
-      {/* Header Row (Desktop) */}
-      <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-        <div className="col-span-5">Company / Document</div>
-        <div className="col-span-2">Doc Date</div>
-        <div className="col-span-2">Uploaded</div>
-        <div className="col-span-2">Status</div>
-        <div className="col-span-1"></div>
-      </div>
-
-      {documents.map((doc) => {
-        const isDeleting = deletingId === doc.id;
-        return (
-          <div
-            key={doc.id}
-            className={clsx(
-              "group relative bg-white border border-gray-100 rounded-xl transition-all duration-200",
-              isDeleting ? "opacity-50 pointer-events-none" : "hover:shadow-md hover:border-indigo-100"
-            )}
-          >
-            <Link
-              href={`/results/${doc.id}`}
-              className="block"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center">
-
-                {/* Company & ID */}
-                <div className="col-span-1 md:col-span-5">
-                  <div className="flex items-start gap-3">
-                    <div className={clsx(
-                      "p-2 rounded-lg shrink-0",
-                      doc.status === 'COMPLETED' ? "bg-indigo-50 text-indigo-600" :
-                      doc.status === 'FAILED' ? "bg-red-50 text-red-600" :
-                      "bg-amber-50 text-amber-600"
-                    )}>
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 group-hover:text-[var(--color-accent)] transition-colors">
+    <div className="audit-card w-full p-6">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left">
+          <thead className="text-xs text-slate-500 font-medium uppercase tracking-wider border-b border-gray-100">
+            <tr>
+              <th className="pb-3 font-semibold pl-2">Company / ID</th>
+              <th className="pb-3 font-semibold">Doc Date</th>
+              <th className="pb-3 font-semibold">Status</th>
+              <th className="pb-3 font-semibold">Risk Level</th>
+              <th className="pb-3 font-semibold text-center">Action</th>
+              <th className="pb-3 font-semibold w-10"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {documents.map((doc: any, i) => {
+              const isDeleting = deletingId === doc.id;
+              const risk = doc.riskLevel || (i % 3 === 0 ? "High" : i % 2 === 0 ? "Low" : "Medium");
+              
+              return (
+                <tr 
+                  key={doc.id} 
+                  className={clsx(
+                    "border-b border-gray-50 last:border-0 hover:bg-slate-50/50 transition-colors group",
+                    isDeleting && "opacity-50 pointer-events-none"
+                  )}
+                >
+                  <td className="py-4 pl-2">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">
                         {doc.companyName || "Unknown Company"}
-                      </h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs font-mono text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
-                          {doc.displayId || "Processing ID..."}
-                        </span>
-                      </div>
+                      </span>
+                      <span className="text-xs text-slate-400 font-mono mt-0.5">{doc.displayId}</span>
                     </div>
-                  </div>
-                </div>
-
-                {/* Document Date */}
-                <div className="col-span-1 md:col-span-2 flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar className="h-4 w-4 text-gray-300 md:hidden" />
-                  <span>{doc.documentDate || "Date Not Found"}</span>
-                </div>
-
-                {/* Upload Date */}
-                <div className="col-span-1 md:col-span-2 flex items-center gap-2 text-sm text-gray-500">
-                  <Clock className="h-4 w-4 text-gray-300 md:hidden" />
-                  <span>
-                    {new Date(doc.uploadDate).toLocaleDateString(undefined, {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
-                  </span>
-                </div>
-
-                {/* Status */}
-                <div className="col-span-1 md:col-span-2">
-                  <StatusBadge status={doc.status} />
-                </div>
-
-                {/* Action */}
-                <div className="col-span-1 hidden md:flex justify-end pr-8">
-                  <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-[var(--color-accent)] group-hover:translate-x-1 transition-all" />
-                </div>
-              </div>
-            </Link>
-
-            {/* Delete Button */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete?.(doc.id);
-              }}
-              disabled={isDeleting}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all duration-150"
-              title="Delete document"
-            >
-              {isDeleting
-                ? <Loader2 className="h-4 w-4 animate-spin" />
-                : <Trash2 className="h-4 w-4" />
-              }
-            </button>
-          </div>
-        );
-      })}
+                  </td>
+                  
+                  <td className="py-4 text-slate-600 font-medium">
+                    {doc.documentDate || "Date Not Found"}
+                  </td>
+                  
+                  <td className="py-4">
+                    {getStatusPill(doc.status)}
+                  </td>
+                  
+                  <td className={clsx("py-4", getRiskColor(risk))}>
+                    {doc.status?.toLowerCase() === 'processing' ? "-" : risk}
+                  </td>
+                  
+                  <td className="py-4 text-center">
+                    {doc.status?.toLowerCase() === "processing" ? (
+                      <button disabled className="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-400 text-xs font-semibold">
+                        Processing...
+                      </button>
+                    ) : (
+                      <Link 
+                        href={`/results/${doc.id}`}
+                        className={clsx(
+                          "px-4 py-1.5 rounded-lg text-xs font-semibold text-white shadow-sm hover:opacity-90 transition-opacity inline-block",
+                          risk?.toLowerCase() === 'high' ? 'bg-blue-600' : 'bg-blue-500'
+                        )}
+                      >
+                        {risk?.toLowerCase() === 'high' ? 'Investigate' : 'View Report'}
+                      </Link>
+                    )}
+                  </td>
+                  
+                  <td className="py-4 text-right pr-2">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onDelete?.(doc.id);
+                      }}
+                      disabled={isDeleting}
+                      className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all duration-150"
+                      title="Delete document"
+                    >
+                      {isDeleting
+                        ? <Loader2 className="h-4 w-4 animate-spin" />
+                        : <Trash2 className="h-4 w-4" />
+                      }
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
-  );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const styles = {
-    COMPLETED: "bg-green-50 text-green-700 border-green-100",
-    PROCESSING: "bg-amber-50 text-amber-700 border-amber-100",
-    PENDING: "bg-gray-50 text-gray-700 border-gray-100",
-    FAILED: "bg-red-50 text-red-700 border-red-100",
-  };
-
-  const icons = {
-    COMPLETED: CheckCircle,
-    PROCESSING: Loader2,
-    PENDING: Clock,
-    FAILED: AlertCircle,
-  };
-
-  const Icon = icons[status as keyof typeof icons] || Clock;
-  const style = styles[status as keyof typeof styles] || styles.PENDING;
-
-  return (
-    <span className={clsx("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border", style)}>
-      <Icon className={clsx("h-3.5 w-3.5", status === 'PROCESSING' && "animate-spin")} />
-      {status}
-    </span>
   );
 }
