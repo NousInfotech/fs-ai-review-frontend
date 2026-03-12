@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (loading) return;
 
     // Define public routes that don't require authentication
-    const publicRoutes = ["/login", "/signup", "/admin/login"];
+    const publicRoutes = ["/login", "/signup", "/admin/login", "/insights"];
     const isPublicRoute = pathname === "/" || publicRoutes.some(route => pathname === route || pathname.startsWith(route));
 
     if (!user) {

@@ -43,7 +43,7 @@ export default function LoginPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       await syncUserWithBackend(result.user);
-      router.push("/upload");
+      router.push("/dashboard");
     } catch (err: any) {
       console.error("Login failed", err);
       setError("Failed to sign in with Google. Please try again.");
@@ -63,7 +63,7 @@ export default function LoginPage() {
         : await signInWithEmailAndPassword(auth, email, password);
       
       await syncUserWithBackend(userCredential.user);
-      router.push("/upload");
+      router.push("/dashboard");
     } catch (err: any) {
       console.error("Auth failed", err);
       let errorMessage = "Authentication failed.";
