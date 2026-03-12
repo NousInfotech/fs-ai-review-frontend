@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, LogOut, Settings as SettingsIcon, User, Search, FileText, AlertTriangle, ArrowRight, Loader } from "lucide-react";
+import { Bell, LogOut, Settings as SettingsIcon, User, Search, FileText, AlertTriangle, ArrowRight, Loader, PanelLeftOpen, PanelLeftClose } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,12 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 
-export default function TopHeader() {
+interface TopHeaderProps {
+    isSidebarOpen: boolean;
+    onToggleSidebar: () => void;
+}
+
+export default function TopHeader({ isSidebarOpen, onToggleSidebar }: TopHeaderProps) {
     const { user, signOut } = useAuth();
     const router = useRouter();
 
@@ -80,9 +85,23 @@ export default function TopHeader() {
         <header className="h-[80px] flex items-center justify-between px-8 bg-white/70 backdrop-blur-2xl border-b border-slate-200/50 sticky top-0 z-40 shrink-0 shadow-[0_4px_30px_rgba(0,0,0,0.03)] transition-all">
 
             {/* Left Title & Search */}
-            <div className="flex items-center gap-8">
-                <h1 className="text-xl lg:text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                    Financial Review<span className="text-blue-600">AI</span>
+            <div className="flex items-center gap-3 lg:gap-6">
+                <button
+                    type="button"
+                    onClick={onToggleSidebar}
+                    className="hidden lg:inline-flex items-center justify-center w-9 h-9 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-200/70 shadow-sm hover:shadow-md transition-all"
+                    aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+                >
+                    {isSidebarOpen ? (
+                        <PanelLeftClose className="w-4 h-4" />
+                    ) : (
+                        <PanelLeftOpen className="w-4 h-4" />
+                    )}
+                </button>
+
+                <h1 className="text-xl lg:text-2xl font-black text-slate-800 tracking-tight flex items-center gap-1">
+                    <span>Financial&nbsp;Review</span>
+                    <span className="text-blue-600">AI</span>
                 </h1>
 
                 {/* Sleek Search Bar */}

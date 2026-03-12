@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { cn } from "../lib/utils";
 import Sidebar from "./Sidebar";
 import TopHeader from "./TopHeader";
 import { motion } from "framer-motion";
@@ -11,12 +13,22 @@ interface PortalLayoutProps {
 }
 
 export default function PortalLayout({ children, title, description }: PortalLayoutProps) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="flex min-h-screen bg-[#f3f5f9]">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} />
       
-      <div className="flex-1 ml-20 flex flex-col min-w-0">
-        <TopHeader />
+      <div
+        className={cn(
+          "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-out",
+          isSidebarOpen ? "ml-64" : "ml-20"
+        )}
+      >
+        <TopHeader
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+        />
         
         <main className="flex-1 p-6 lg:p-8 overflow-x-hidden">
           <div className="max-w-[1280px] mx-auto w-full">
