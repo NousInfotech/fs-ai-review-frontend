@@ -12,9 +12,14 @@ import {
     UploadCloud,
     Loader,
     CheckSquare,
+    LogOut,
+    User,
+    ChevronRight
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -33,155 +38,175 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen }: SidebarProps) {
     const pathname = usePathname();
+    const { user, signOut } = useAuth();
 
     return (
         <TooltipProvider delayDuration={0}>
-            <div
+            <motion.div
+                initial={false}
+                animate={{ 
+                    width: isOpen ? 280 : 88,
+                    transition: { type: "spring", stiffness: 300, damping: 30 }
+                }}
                 className={cn(
-                    "bg-white/70 backdrop-blur-xl border-r border-slate-200/50 flex flex-col py-6 z-50 h-full fixed left-0 top-0 overflow-hidden shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300 ease-out",
-                    isOpen ? "w-64 items-stretch" : "w-20 items-center"
+                    "bg-white/40 backdrop-blur-2xl border-r border-white/20 flex flex-col pt-8 pb-6 z-50 h-full fixed left-0 top-0 overflow-hidden shadow-[20px_0_40px_rgba(0,0,0,0.02)]"
                 )}
             >
-                {/* Logo Element */}
-                <div
-                    className={cn(
-                        "mb-6 px-2 w-full flex shrink-0",
-                        isOpen ? "justify-start pl-4 pr-3" : "justify-center"
-                    )}
-                >
-                    {isOpen ? (
-                        <div className="flex items-center">
-                            <Image
-                                src="/images/test-images/Logo.png"
-                                alt="VACEl logo"
-                                width={200}
-                                height={62}
-                                className="h-10 w-auto object-contain"
-                                priority
-                            />
-                        </div>
-                    ) : (
-                        <div className="w-12 h-12 rounded-2xl overflow-hidden flex items-center justify-center">
-                            <Image
-                                src="/images/Logo.png"
-                                alt="VACEl mark"
-                                width={40}
-                                height={40}
-                                className="h-10 w-10 object-contain"
-                                priority
-                            />
-                        </div>
-                    )}
+                {/* Background decorative element */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20 -z-10">
+                    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200 blur-[100px] rounded-full" />
                 </div>
 
-                {/* Subtile separator */}
-                <div className="w-10 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-6 shrink-0"></div>
+                {/* Logo Section */}
+                <div className="px-5 mb-10 overflow-hidden shrink-0">
+                    <AnimatePresence mode="wait">
+                        {isOpen ? (
+                            <motion.div
+                                key="logo-open"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -10 }}
+                                className="flex items-center gap-3"
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20 overflow-hidden p-1.5">
+                                    <Image
+                                        src="/images/Logo.png"
+                                        alt="VACEI"
+                                        width={32}
+                                        height={32}
+                                        className="w-full h-full object-contain brightness-0 invert"
+                                    />
+                                </div>
+                                <span className="text-xl font-black text-slate-900 tracking-tighter">VACEI <span className="text-blue-600">AI</span></span>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="logo-closed"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className="flex justify-center"
+                            >
+                                <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-xl shadow-blue-500/30 overflow-hidden p-2">
+                                    <Image
+                                        src="/images/Logo.png"
+                                        alt="VACEI"
+                                        width={40}
+                                        height={40}
+                                        className="w-full h-full object-contain brightness-0 invert"
+                                    />
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
 
-                {/* Scrollable Nav Items */}
-                <div
-                    className={cn(
-                        "w-full flex-1 flex flex-col gap-2 overflow-y-auto pb-6 relative [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']",
-                        isOpen ? "items-stretch px-2" : "items-center"
-                    )}
-                >
+                {/* Navigation Items */}
+                <nav className="flex-1 px-4 space-y-2 overflow-y-auto scrollbar-hide">
                     {menuItems.map((item) => {
                         const isActive =
                             pathname === item.href ||
                             (item.href !== "/dashboard" && pathname.startsWith(item.href));
 
-                        if (isOpen) {
-                            return (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className="relative w-full flex items-center gap-3 group focus:outline-none shrink-0 px-3 py-2 rounded-2xl"
-                                >
-                                    {/* Active Highlight Indicator */}
-                                    <div
-                                        className={cn(
-                                            "absolute left-0 top-1/2 -translate-y-1/2 w-1.5 bg-blue-600 rounded-r-full shadow-[0_0_10px_rgba(37,99,235,0.5)] transition-all duration-300 ease-out",
-                                            isActive ? "h-8 opacity-100" : "h-0 opacity-0"
-                                        )}
+                        const NavLink = (
+                            <Link
+                                href={item.href}
+                                className={cn(
+                                    "relative flex items-center group px-4 py-3.5 rounded-2xl transition-all duration-300",
+                                    isActive 
+                                        ? "bg-white shadow-[0_10px_20px_rgba(0,0,0,0.04)] text-slate-900" 
+                                        : "text-slate-500 hover:bg-white/50 hover:text-slate-900"
+                                )}
+                            >
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="active-pill"
+                                        className="absolute left-0 w-1 h-6 bg-blue-600 rounded-r-full"
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                     />
+                                )}
+                                
+                                <div className={cn(
+                                    "flex items-center justify-center transition-all duration-300",
+                                    isOpen ? "mr-4" : "mx-auto"
+                                )}>
+                                    <item.icon className={cn(
+                                        "w-5 h-5 transition-colors",
+                                        isActive ? "text-blue-600" : "group-hover:text-blue-600"
+                                    )} strokeWidth={isActive ? 2.5 : 2} />
+                                </div>
 
-                                    {/* Icon */}
-                                    <div
-                                        className={cn(
-                                            "relative z-10 w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 ease-out",
-                                            isActive
-                                                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-100"
-                                                : "text-slate-400 bg-transparent group-hover:text-blue-600 group-hover:bg-blue-50 group-hover:scale-110"
-                                        )}
-                                    >
-                                        <item.icon
-                                            className={cn(
-                                                "w-[22px] h-[22px] transition-transform duration-300",
-                                                isActive ? "animate-in zoom-in spin-in-2" : ""
-                                            )}
-                                            strokeWidth={isActive ? 2.5 : 2}
-                                        />
-                                    </div>
-
-                                    {/* Label */}
-                                    <span
-                                        className={cn(
-                                            "relative z-10 text-sm font-semibold truncate transition-colors",
-                                            isActive ? "text-slate-900" : "text-slate-500 group-hover:text-blue-700"
-                                        )}
+                                {isOpen && (
+                                    <motion.span
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="text-sm font-bold whitespace-nowrap"
                                     >
                                         {item.name}
-                                    </span>
-                                </Link>
+                                    </motion.span>
+                                )}
+
+                                {isOpen && isActive && (
+                                    <ChevronRight className="ml-auto w-4 h-4 text-slate-400" />
+                                )}
+                            </Link>
+                        );
+
+                        if (!isOpen) {
+                            return (
+                                <Tooltip key={item.name}>
+                                    <TooltipTrigger asChild>
+                                        {NavLink}
+                                    </TooltipTrigger>
+                                    <TooltipContent side="right" sideOffset={20} className="bg-slate-900 text-white border-none rounded-xl px-4 py-2 font-bold text-xs shadow-2xl">
+                                        {item.name}
+                                    </TooltipContent>
+                                </Tooltip>
                             );
                         }
 
-                        // Collapsed: icon-only rail with tooltips
-                        return (
-                            <Tooltip key={item.name}>
-                                <TooltipTrigger asChild>
-                                    <Link
-                                        href={item.href}
-                                        className="relative w-full flex justify-center items-center group focus:outline-none shrink-0"
-                                    >
-                                        {/* Active Highlight Indicator */}
-                                        <div
-                                            className={cn(
-                                                "absolute left-0 top-1/2 -translate-y-1/2 w-1.5 bg-blue-600 rounded-r-full shadow-[0_0_10px_rgba(37,99,235,0.5)] transition-all duration-300 ease-out",
-                                                isActive ? "h-8 opacity-100" : "h-0 opacity-0"
-                                            )}
-                                        />
-
-                                        {/* Icon */}
-                                        <div
-                                            className={cn(
-                                                "relative z-10 w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 ease-out",
-                                                isActive
-                                                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-100"
-                                                    : "text-slate-400 bg-transparent hover:text-blue-600 hover:bg-blue-50 hover:scale-110"
-                                            )}
-                                        >
-                                            <item.icon
-                                                className={cn(
-                                                    "w-[22px] h-[22px] transition-transform duration-300",
-                                                    isActive ? "animate-in zoom-in spin-in-2" : ""
-                                                )}
-                                                strokeWidth={isActive ? 2.5 : 2}
-                                            />
-                                        </div>
-                                    </Link>
-                                </TooltipTrigger>
-                                <TooltipContent
-                                    side="right"
-                                    sideOffset={15}
-                                    className="bg-slate-800/95 backdrop-blur-md text-white font-semibold px-4 py-2 rounded-xl text-sm border-none shadow-2xl shadow-slate-300/50 z-[100] animate-in slide-in-from-left-2"
-                                >
-                                    {item.name}
-                                </TooltipContent>
-                            </Tooltip>
-                        );
+                        return <div key={item.name}>{NavLink}</div>;
                     })}
+                </nav>
+
+                {/* User Profile Section */}
+                <div className="px-4 mt-auto">
+                    <div className={cn(
+                        "rounded-[2rem] p-2 transition-all duration-500",
+                        isOpen ? "bg-slate-900/5 backdrop-blur-sm" : ""
+                    )}>
+                        <button className={cn(
+                            "w-full flex items-center rounded-[1.5rem] transition-all duration-300",
+                            isOpen ? "px-4 py-3 hover:bg-white/80" : "flex-col gap-4 py-4"
+                        )}>
+                            <div className="relative shrink-0">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                                    <User className="w-5 h-5" />
+                                </div>
+                                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
+                            </div>
+
+                            {isOpen && (
+                                <div className="ml-3 text-left overflow-hidden">
+                                    <p className="text-xs font-black text-slate-900 truncate uppercase tracking-wider">{user?.displayName || "User"}</p>
+                                    <p className="text-[10px] font-bold text-slate-500 truncate">{user?.email || "user@example.com"}</p>
+                                </div>
+                            )}
+                        </button>
+                        
+                        {isOpen && (
+                            <button 
+                                onClick={() => signOut()}
+                                className="w-full mt-2 flex items-center gap-3 px-4 py-3 rounded-[1.5rem] text-red-500 hover:bg-red-50 transition-all font-black text-[10px] tracking-widest uppercase"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                LOGOUT ACCOUNT
+                            </button>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </motion.div>
         </TooltipProvider>
     );
 }
+

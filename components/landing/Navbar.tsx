@@ -11,24 +11,24 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: "Features", href: "#features" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "Pricing", href: "#pricing" },
+    { name: "Features", href: "/#features" },
+    { name: "How It Works", href: "/#how-it-works" },
+    { name: "Pricing", href: "/#pricing" },
     { name: "Insights", href: "/insights" },
-    { name: "Contact", href: "#contact" },
-    { name: "FAQ", href: "#faq" },
+    { name: "Contact", href: "/#contact" },
+    { name: "FAQ", href: "/#faq" },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("#")) {
+    if (href.startsWith("/#") && window.location.pathname === "/") {
       e.preventDefault();
-      const id = href.substring(1);
+      const id = href.substring(2);
       const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
         setIsOpen(false);
         // Update URL hash without jumping the page instantly
-        window.history.pushState(null, "", href);
+        window.history.pushState(null, "", href.substring(1));
       }
     }
   };
@@ -42,9 +42,9 @@ export default function Navbar() {
             {/* Left: Logo and Name */}
             <div className="flex items-center">
               <Link 
-                href="#hero" 
+                href="/#hero" 
                 className="flex items-center gap-2 group"
-                onClick={(e) => scrollToSection(e, "#hero")}
+                onClick={(e) => scrollToSection(e, "/#hero")}
               >
                 <div className="relative w-8 h-8 flex items-center justify-center">
                   <Image 

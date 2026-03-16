@@ -162,10 +162,10 @@ export default function TopHeader({ isSidebarOpen, onToggleSidebar }: TopHeaderP
             <div className="flex items-center gap-4 lg:gap-6">
 
                 {/* Notification Bell */}
-                <button className="relative p-2.5 text-slate-400 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-full transition-all shadow-sm hover:shadow-md">
+                {/* <button className="relative p-2.5 text-slate-400 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 border border-slate-100 rounded-full transition-all shadow-sm hover:shadow-md">
                     <Bell className="w-5 h-5" />
                     <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white pointer-events-none"></span>
-                </button>
+                </button> */}
 
                 <div className="h-8 w-px bg-gradient-to-b from-transparent via-slate-200 to-transparent"></div>
 

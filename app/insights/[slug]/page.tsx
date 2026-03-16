@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import BlogTemplate from "@/components/insights/BlogTemplate";
-import { getBlogBySlug, getRelatedBlogs, getBlogSlugs } from "@/utils/blog";
+import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+import BlogTemplate from '@/components/insights/BlogTemplate';
+import { getBlogBySlug, getRelatedBlogs, getBlogSlugs } from '@/utils/blog';
 
 interface BlogPageProps {
   params: Promise<{
@@ -16,28 +16,31 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: BlogPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
   const { slug } = await params;
   const blog = getBlogBySlug(slug);
-
+  
   if (!blog) {
     return {
-      title: "Post Not Found",
+      title: 'Post Not Found',
     };
   }
 
   return {
-    title: `${blog.title} | Insights`,
+    title: `${blog.title} | VACEI Insights`,
     description: blog.excerpt,
     openGraph: {
       title: blog.title,
       description: blog.excerpt,
-      type: "article",
+      type: 'article',
       publishedTime: blog.date,
-      authors: [blog.author || "Insights Team"],
+      authors: [blog.author || 'VACEI Team'],
       tags: blog.tags || [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: blog.title,
+      description: blog.excerpt,
     },
   };
 }
@@ -45,7 +48,7 @@ export async function generateMetadata({
 export default async function BlogPage({ params }: BlogPageProps) {
   const { slug } = await params;
   const blog = getBlogBySlug(slug);
-
+  
   if (!blog) {
     notFound();
   }

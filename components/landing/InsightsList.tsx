@@ -75,6 +75,43 @@ const insightsData: InsightArticle[] = [
     readTime: "6 min read",
     author: "Cleven",
   },
+  {
+    id: "6",
+    slug: "compliance-is-becoming-a-systems-problem-not-a-paperwork-problem",
+    title: "Compliance Is Becoming a Systems Problem, Not a Paperwork Problem",
+    subtitle: "Regulatory compliance now depends on digital infrastructure.",
+    description:
+      "As regulators move toward real-time, digital reporting, compliance is shifting away from static documents and toward the systems that generate structured financial data.",
+    category: "Tax & Compliance",
+    publishDate: "March 13, 2026",
+    readTime: "7 min read",
+    author: "Cleven",
+  },
+  {
+    id: "7",
+    slug: "the-end-of-spreadsheet-accounting-how-automation-is-reshaping-financial-operations",
+    title:
+      "The End of Spreadsheet Accounting: How Automation Is Reshaping Financial Operations",
+    subtitle: "Accounting is moving from files to infrastructure.",
+    description:
+      "Manual spreadsheet workflows struggle to keep pace with growing data volumes and regulatory expectations. Automated, integrated systems are becoming the new foundation of financial operations.",
+    category: "Accounting & Finance",
+    publishDate: "March 13, 2026",
+    readTime: "8 min read",
+    author: "Cleven",
+  },
+  {
+    id: "8",
+    slug: "the-rise-of-platform-based-professional-services",
+    title: "The Rise of Platform-Based Professional Services",
+    subtitle: "Advisors are becoming infrastructure providers.",
+    description:
+      "Instead of fragmented advisors working in separate tools, integrated platforms now connect accounting, corporate services, tax, and audit into a single digital environment.",
+    category: "Business & Growth",
+    publishDate: "March 12, 2026",
+    readTime: "7 min read",
+    author: "Cleven",
+  },
 ];
 
 const InsightsList = () => {

@@ -6,11 +6,11 @@ import api from "@/lib/api";
 import { DashboardStats, HistoryDocument } from "@/lib/types";
 import SummaryCards from "./components/SummaryCards";
 import RecentStatementsTable from "./components/RecentStatementsTable";
-import TopIssuesPanel from "./components/TopIssuesPanel";
-import AiInsightsPanel from "./components/AiInsightsPanel";
 import UploadCard from "./components/UploadCard";
 import StatusBar from "./components/StatusBar";
+import BannerCarousel from "./components/BannerCarousel";
 import { generateDisplayId } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export default function DashboardPage() {
   // Fetch dashboard stats
@@ -59,38 +59,38 @@ export default function DashboardPage() {
 
   return (
     <PortalLayout>
-      <div className="w-full h-full flex flex-col pt-2">
+      <div className="w-full h-full flex flex-col pt-2 pb-8 scrollbar-hide overflow-y-auto">
+        {/* Top Banner Carousel */}
+        <BannerCarousel />
+
         {/* Top Summary Cards */}
         <SummaryCards stats={stats} isLoading={statsLoading} />
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-          {/* Left Column (Table + Upload) */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            <div className="flex-1 min-h-[350px]">
-              <RecentStatementsTable documents={recentReviews || []} isLoading={reviewsLoading} />
-            </div>
-            
-            <div className="h-64 mt-auto">
-              {/* Note: In image this section has a blue dashed border and a different style */}
-              <UploadCard />
-            </div>
-          </div>
-
-          {/* Right Column (Insights Panels) */}
-          <div className="flex flex-col gap-6 h-full">
-            <div className="min-h-[250px]">
-              <TopIssuesPanel />
-            </div>
-            
-            <div className="flex-1 min-h-[150px]">
-              <AiInsightsPanel />
-            </div>
-          </div>
+        {/* Main Content (Stacked Full Width) */}
+        <div className="flex flex-col gap-10 mt-6">
+          {/* Recent Statements Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full"
+          >
+            <RecentStatementsTable documents={recentReviews || []} isLoading={reviewsLoading} />
+          </motion.div>
+          
+          {/* Upload Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="w-full"
+          >
+            <UploadCard />
+          </motion.div>
         </div>
 
         {/* Bottom Status Bar */}
-        <div className="mt-6 border-t border-gray-200 pt-2">
+        <div className="mt-12 border-t border-slate-100 pt-6">
           <StatusBar stats={stats} />
         </div>
       </div>
