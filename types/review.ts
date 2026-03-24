@@ -84,12 +84,59 @@ export interface SectionE {
   document_url?: string;
 }
 
+export type SectionFOverallStatus = "PASS" | "FAIL";
+
+export interface SectionFCalculationStats {
+  checks_run: number;
+  checks_passed: number;
+  checks_failed: number;
+}
+
+export type SectionFFindingSeverity = "critical" | "high" | "warning" | "info";
+
+export interface SectionFFinding {
+  test_id: string;
+  rule_id: string;
+  severity: SectionFFindingSeverity;
+  description: string;
+  result: string;
+  current: string;
+  expected: string;
+  reported_value: number | string;
+  expected_value: number | string;
+  difference: number | string;
+  page_no?: number;
+  location?: string;
+  image_url?: string | null;
+}
+
+export interface SectionFCalculationStage {
+  overall_status: SectionFOverallStatus;
+  current_year?: string;
+  stats: SectionFCalculationStats;
+  findings: SectionFFinding[];
+  explanation?: string;
+}
+
+export interface SectionFStages {
+  extracted_fs_json?: Record<string, unknown>;
+  classification?: Record<string, unknown>;
+  calculation?: SectionFCalculationStage;
+}
+
+export interface SectionF {
+  status: string;
+  overall_status: SectionFOverallStatus;
+  stages: SectionFStages;
+}
+
 export interface ReviewResult {
   A: SectionA;
   B: SectionB;
   C: SectionC;
   D: SectionD;
   E: SectionE;
+  F?: SectionF;
 }
 
 export interface TestResult {
@@ -98,7 +145,7 @@ export interface TestResult {
   status: 'PASS' | 'FAIL' | 'WARNING';
   message: string;
   annotated_image_url?: string;
-  extractedValues?: Record<string, any>;
+  extractedValues?: Record<string, unknown>;
 }
 
 export interface ReviewResponse {
