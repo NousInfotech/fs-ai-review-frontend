@@ -5,6 +5,7 @@ import SectionA from "./SectionA";
 import SectionB from "./SectionB";
 import SectionC from "./SectionC";
 import SectionD from "./SectionD";
+import SectionF from "./SectionF";
 import ImageAnnotation from "./ImageAnnotation";
 
 import { Download, Upload } from "lucide-react";
@@ -225,6 +226,7 @@ export default function FinancialStatusReport({ data, onUploadAgain }: { data: R
           <SectionA items={filteredAItems} content={data.A?.content} />
           <SectionB items={filteredBItems} content={data.B?.content} onItemClick={handleItemClick} />
           <SectionC items={filteredCItems} content={data.C?.content} onItemClick={handleItemClick} />
+          <SectionF data={data.F} />
           {data.D && data.D.tables && (
             <SectionD tables={data.D.tables} content={data.D?.content} />
           )}
