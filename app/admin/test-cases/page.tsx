@@ -11,11 +11,18 @@ import {
   Power, 
   FileText,
   Loader2,
-  X
+  X,
+  Settings2,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  Code
 } from "lucide-react";
 import { TestCase } from "@/types/admin";
 import { useAdminAuth } from "@/components/admin/AdminAuthProvider";
 import api from "@/lib/api";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const fetchTestCases = async (): Promise<TestCase[]> => {
   const { data } = await api.get('/api/v1/admin/test-cases');
@@ -156,114 +163,141 @@ export default function TestCasesPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="w-full h-full flex flex-col pt-2 pb-8 scrollbar-hide">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Test Cases</h1>
-          <p className="text-gray-500 mt-1">Configure validation rules and logic</p>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+             <Settings2 className="w-8 h-8 text-blue-600" />
+             AI Test Cases
+          </h1>
+          <p className="text-slate-500 font-medium mt-1">Configure validation rules, prompt templates, and system logic</p>
         </div>
         
         {canEdit && (
           <button 
             onClick={openCreateModal}
-            className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 text-sm font-bold gap-2 group"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4 group-hover:scale-110 transition-transform" />
             New Test Case
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="audit-card flex flex-col min-w-0">
         {/* Toolbar */}
-        <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row items-center gap-4">
+        <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center gap-4">
           <div className="relative flex-1 w-full sm:max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search by ID or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 shadow-sm"
             />
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-4 h-4 text-gray-500" />
-            <select 
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="ALL">All Categories</option>
-              {CATEGORY_OPTIONS.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+             <div className="relative w-full sm:w-64">
+                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <select 
+                  value={filterCategory}
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                  className="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-bold text-slate-600 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer shadow-sm"
+                >
+                  <option value="ALL">All Categories</option>
+                  {CATEGORY_OPTIONS.map(cat => (
+                    <option key={cat} value={cat}>{cat.replace(/_/g, ' ')}</option>
+                  ))}
+                </select>
+             </div>
           </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Severity</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ver.</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        {/* Table — scroll horizontally when content is wider than the card */}
+        <div className="overflow-x-auto min-w-0">
+          <table className="min-w-[920px] w-full border-collapse">
+            <thead>
+              <tr className="bg-slate-50/50">
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Test Logic Identifier</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Functional Group</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Severity Impact</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Version Control</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Functional Status</th>
+                <th className="px-6 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] sticky right-0 bg-slate-50/95 backdrop-blur-sm z-[2] shadow-[-8px_0_12px_-8px_rgba(15,23,42,0.08)]">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-100 bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto" />
+                  <td colSpan={6} className="px-6 py-20 text-center">
+                    <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto" strokeWidth={3} />
+                    <p className="mt-4 text-slate-500 font-bold">Synchronizing validation rules...</p>
                   </td>
                 </tr>
               ) : filteredCases?.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                    No test cases found.
+                  <td colSpan={6} className="px-6 py-20 text-center text-slate-500">
+                    <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                       <Search className="w-8 h-8" />
+                    </div>
+                    <p className="text-slate-500 font-bold">No test cases found matching your search</p>
                   </td>
                 </tr>
               ) : (
-                filteredCases?.map((tc) => (
-                  <tr key={tc._id} className="hover:bg-gray-50 group">
-                    <td className="px-6 py-4">
+                filteredCases?.map((tc, idx) => (
+                  <motion.tr 
+                    key={tc._id} 
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.03 }}
+                    className="group/row hover:bg-slate-50/50 transition-colors"
+                  >
+                    <td className="px-6 py-5">
                       <div className="flex items-center">
-                        <FileText className="w-4 h-4 text-gray-400 mr-3" />
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors mr-4">
+                           <FileText className="w-5 h-5" />
+                        </div>
                         <div>
-                          <div className="text-sm font-medium text-indigo-600 font-mono">{tc.test_id}</div>
-                          <div className="text-xs text-gray-500 max-w-xs truncate">{tc.description}</div>
+                          <div className="text-sm font-black text-blue-600 font-mono tracking-tighter">{tc.test_id}</div>
+                          <div className="text-[13px] font-medium text-slate-500 max-w-[min(320px,55vw)] sm:max-w-md line-clamp-2 mt-0.5">{tc.description}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      {tc.category}
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg">
+                        {tc.category?.replace(/_/g, ' ')}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                        tc.severity === 'CRITICAL' ? 'bg-red-100 text-red-800' :
-                        tc.severity === 'HIGH' ? 'bg-orange-100 text-orange-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <span className={cn(
+                        "inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase border",
+                        tc.severity === 'CRITICAL' ? 'bg-red-50 text-red-700 border-red-100' :
+                        tc.severity === 'HIGH' ? 'bg-orange-50 text-orange-700 border-orange-100' :
+                        'bg-blue-50 text-blue-700 border-blue-100'
+                      )}>
                         {tc.severity}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-5 whitespace-nowrap text-sm font-black text-slate-400">
                       v{tc.version}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className={`h-2.5 w-2.5 rounded-full mr-2 ${tc.enabled ? 'bg-green-500' : 'bg-gray-300'}`} />
-                        <span className="text-sm text-gray-700">{tc.enabled ? 'Enabled' : 'Disabled'}</span>
+                        <div className={cn(
+                          "h-2.5 w-2.5 rounded-full mr-2.5 animate-pulse",
+                          tc.enabled ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-slate-300'
+                        )} />
+                        <span className={cn(
+                          "text-xs font-black tracking-widest uppercase",
+                          tc.enabled ? 'text-emerald-700' : 'text-slate-400'
+                        )}>{tc.enabled ? 'Enabled' : 'Disabled'}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button title="View History" className="text-gray-400 hover:text-gray-600 p-1">
+                    <td className="px-6 py-5 whitespace-nowrap text-right align-middle sticky right-0 bg-white group-hover/row:bg-slate-50/50 z-[1] shadow-[-8px_0_12px_-8px_rgba(15,23,42,0.12)]">
+                      <div className="flex justify-end gap-2">
+                        <button title="View History" className="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 rounded-xl transition-all shadow-sm">
                           <History className="w-4 h-4" />
                         </button>
                         {canEdit && (
@@ -271,7 +305,10 @@ export default function TestCasesPage() {
                             <button 
                               onClick={() => handleToggleStatus(tc)}
                               title="Toggle Status" 
-                              className={`${tc.enabled ? 'text-green-600' : 'text-gray-400'} hover:text-green-700 p-1`}
+                              className={cn(
+                                "w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl transition-all shadow-sm",
+                                tc.enabled ? 'text-emerald-500 hover:text-emerald-600 hover:border-emerald-200' : 'text-slate-400 hover:text-emerald-500 hover:border-emerald-200'
+                              )}
                               disabled={toggleStatusMutation.isPending}
                             >
                               <Power className="w-4 h-4" />
@@ -279,7 +316,7 @@ export default function TestCasesPage() {
                             <button 
                               onClick={() => openEditModal(tc)}
                               title="Edit" 
-                              className="text-indigo-600 hover:text-indigo-900 p-1"
+                              className="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 rounded-xl transition-all shadow-sm"
                             >
                               <Edit className="w-4 h-4" />
                             </button>
@@ -287,7 +324,7 @@ export default function TestCasesPage() {
                         )}
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))
               )}
             </tbody>
@@ -296,159 +333,139 @@ export default function TestCasesPage() {
       </div>
 
       {/* Create/Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75" onClick={closeModal}></div>
-            </div>
-
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full z-[101] relative">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    {editingCase ? 'Edit Test Case' : 'Create Test Case'}
-                  </h3>
-                  <button onClick={closeModal} className="text-gray-400 hover:text-gray-500">
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-[100] p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeModal}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-[2.5rem] p-8 w-full max-w-[min(42rem,calc(100vw-2rem))] shadow-2xl relative z-10 border border-slate-100 overflow-y-auto overflow-x-auto max-h-[90vh]"
+            >
+              <div className="flex items-center justify-between mb-8">
+                 <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                       <Plus className="w-6 h-6" />
+                    </div>
+                    <div>
+                       <h3 className="text-xl font-black text-slate-800 tracking-tight">{editingCase ? 'Update Rule Logic' : 'New Validation Rule'}</h3>
+                       <p className="text-slate-500 text-sm font-medium">Define logic templates for AI analysis</p>
+                    </div>
+                 </div>
+                 <button onClick={closeModal} className="w-10 h-10 flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full transition-all">
                     <X className="w-5 h-5" />
-                  </button>
+                 </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-1.5">
+                     <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Test Name</label>
+                     <input
+                       type="text"
+                       required
+                       value={formData.name}
+                       onChange={(e) => setFormData({...formData, name: e.target.value})}
+                       className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all placeholder:text-slate-300"
+                       placeholder="e.g. Audit Report Compliance"
+                     />
+                   </div>
+                   <div className="space-y-1.5">
+                     <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Logic ID</label>
+                     <input
+                       type="text"
+                       required
+                       value={formData.test_id}
+                       onChange={(e) => setFormData({...formData, test_id: e.target.value})}
+                       disabled={!!editingCase}
+                       className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all disabled:opacity-60 font-mono"
+                       placeholder="e.g. TC-001"
+                     />
+                   </div>
+                   <div className="space-y-1.5">
+                     <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Functional Category</label>
+                     <select
+                       value={formData.category}
+                       onChange={(e) => setFormData({...formData, category: e.target.value})}
+                       className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer"
+                     >
+                       {CATEGORY_OPTIONS.map(cat => (
+                         <option key={cat} value={cat}>{cat.replace(/_/g, ' ')}</option>
+                       ))}
+                     </select>
+                   </div>
+                   <div className="space-y-1.5">
+                     <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Priority Level</label>
+                     <select
+                       value={formData.severity}
+                       onChange={(e) => setFormData({...formData, severity: e.target.value})}
+                       className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer"
+                     >
+                       {SEVERITY_OPTIONS.map(sev => (
+                         <option key={sev} value={sev}>{sev}</option>
+                       ))}
+                     </select>
+                   </div>
+                </div>
+
+                <div className="space-y-1.5">
+                   <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1 text-left">Functional Description</label>
+                   <textarea
+                     required
+                     rows={2}
+                     value={formData.description}
+                     onChange={(e) => setFormData({...formData, description: e.target.value})}
+                     className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none"
+                     placeholder="How does this rule help in auditing?"
+                   />
+                </div>
+
+                <div className="space-y-1.5">
+                   <div className="flex items-center justify-between px-1">
+                      <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">AI Logic Template (Prompt)</label>
+                      <div className="flex items-center gap-1.5 text-[10px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg tracking-widest uppercase">
+                         <Code className="w-3.5 h-3.5" />
+                         Markdown Supported
+                      </div>
+                   </div>
+                   <textarea
+                     required
+                     rows={6}
+                     value={formData.promptTemplate}
+                     onChange={(e) => setFormData({...formData, promptTemplate: e.target.value})}
+                     className="w-full px-4 py-3.5 bg-slate-900 text-slate-100 rounded-2xl text-xs font-mono leading-relaxed focus:ring-2 focus:ring-blue-500/40 outline-none transition-all border-none"
+                     placeholder="Enter the AI logic template..."
+                   />
                 </div>
                 
-                <form id="testCaseForm" onSubmit={handleSubmit} className="space-y-5">
-                  <div className="space-y-1">
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700">Test Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
-                      placeholder="e.g. Audit Report Compliance Check"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                    <div className="space-y-1">
-                      <label htmlFor="test_id" className="block text-sm font-semibold text-gray-700">Test ID</label>
-                      <input
-                        type="text"
-                        id="test_id"
-                        required
-                        value={formData.test_id}
-                        onChange={(e) => setFormData({...formData, test_id: e.target.value})}
-                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all disabled:bg-gray-50 disabled:text-gray-500"
-                        placeholder="e.g. TC-FIN-001"
-                        disabled={!!editingCase}
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label htmlFor="category" className="block text-sm font-semibold text-gray-700">Category</label>
-                      <select
-                        id="category"
-                        value={formData.category}
-                        onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
-                      >
-                        {CATEGORY_OPTIONS.map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label htmlFor="severity" className="block text-sm font-semibold text-gray-700">Severity</label>
-                      <select
-                        id="severity"
-                        value={formData.severity}
-                        onChange={(e) => setFormData({...formData, severity: e.target.value})}
-                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
-                      >
-                        {SEVERITY_OPTIONS.map(sev => (
-                          <option key={sev} value={sev}>{sev}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label htmlFor="accountingStandard" className="block text-sm font-semibold text-gray-700">Accounting Standard</label>
-                      <select
-                        id="accountingStandard"
-                        value={formData.accountingStandard}
-                        onChange={(e) => setFormData({...formData, accountingStandard: e.target.value as any})}
-                        className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
-                      >
-                        {ACCOUNTING_STANDARD_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700">Description</label>
-                    <textarea
-                      id="description"
-                      required
-                      rows={2}
-                      value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
-                      className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-all"
-                      placeholder="Briefly describe what this test case validates..."
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label htmlFor="promptTemplate" className="block text-sm font-semibold text-gray-700">AI Instructions (Prompt Template)</label>
-                    <textarea
-                      id="promptTemplate"
-                      required
-                      rows={5}
-                      value={formData.promptTemplate}
-                      onChange={(e) => setFormData({...formData, promptTemplate: e.target.value})}
-                      className="block w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3.5 text-gray-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm font-mono text-xs leading-relaxed transition-all"
-                      placeholder="Enter the AI instructions or prompt template here..."
-                    />
-                  </div>
-
-                  <div className="flex items-center">
-                    <input
-                      id="enabled"
-                      type="checkbox"
-                      checked={formData.enabled}
-                      onChange={(e) => setFormData({...formData, enabled: e.target.checked})}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="enabled" className="ml-2 block text-sm text-gray-900">
-                      Enabled
-                    </label>
-                  </div>
-                </form>
-              </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="submit"
-                  form="testCaseForm"
-                  disabled={createMutation.isPending || updateMutation.isPending}
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
-                >
-                  {createMutation.isPending || updateMutation.isPending ? 'Saving...' : 'Save'}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-100">
+                  <button 
+                    type="submit"
+                    disabled={createMutation.isPending || updateMutation.isPending}
+                    className="flex-1 py-4 bg-blue-600 text-white rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+                  >
+                    {createMutation.isPending || updateMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : 'SAVE RULE CONFIGURATION'}
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={closeModal}
+                    className="py-4 px-8 bg-slate-100 text-slate-500 rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-slate-200 transition-all"
+                  >
+                    CANCEL
+                  </button>
+                </div>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter, usePathname } from "next/navigation";
 import { PlatformUser, AdminRole } from "@/types/admin";
 import api from "@/lib/api";
@@ -15,6 +15,7 @@ interface AdminAuthContextType {
   loading: boolean;
   role: AdminRole | null;
   isAuthorized: boolean;
+  signOut: () => Promise<void>;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType>({
@@ -23,6 +24,7 @@ const AdminAuthContext = createContext<AdminAuthContextType>({
   loading: true,
   role: null,
   isAuthorized: false,
+  signOut: async () => {},
 });
 
 export const useAdminAuth = () => useContext(AdminAuthContext);
@@ -56,6 +58,16 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []);
 
+  const signOutUser = async () => {
+    try {
+      await signOut(auth);
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error signing out admin:', error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     if (!loading) {
       const isLoginPage = pathname === '/admin/login';
@@ -87,7 +99,8 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         platformUser, 
         loading, 
         role: platformUser?.role || null,
-        isAuthorized: !!platformUser 
+        isAuthorized: !!platformUser,
+        signOut: signOutUser
       }}
     >
       {children}

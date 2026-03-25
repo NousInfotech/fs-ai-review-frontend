@@ -30,6 +30,18 @@ export interface HistoryDocument {
   error?: string;
 }
 
+/** Dashboard table row: metrics derived from API summary / report / test results. */
+export type DashboardRiskLevel = 'Low' | 'Medium' | 'Critical' | 'Fully passed';
+
+export interface DashboardReviewRow extends HistoryDocument {
+  documentYear: string;
+  passes: number;
+  regulatoryBreaches: number;
+  criticalErrors: number;
+  issues: number;
+  riskLevel: DashboardRiskLevel;
+}
+
 export interface CreditStats {
   total: number;
   used: number;

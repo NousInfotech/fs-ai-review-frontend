@@ -3,7 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import PortalLayout from "@/components/PortalLayout";
 import api from "@/lib/api";
-import { DashboardStats, HistoryDocument } from "@/lib/types";
+import { DashboardStats, DashboardReviewRow } from "@/lib/types";
+import {
+  mapApiReviewToDashboardRow,
+  mergeReviewReportIntoRow,
+} from "@/lib/reviewDashboardMetrics";
+import type { ReviewResult } from "@/types/review";
 import SummaryCards from "./components/SummaryCards";
 import RecentStatementsTable from "./components/RecentStatementsTable";
 import UploadCard from "./components/UploadCard";
@@ -29,27 +34,30 @@ export default function DashboardPage() {
   });
 
   // Fetch recent reviews
-  const { data: recentReviews, isLoading: reviewsLoading } = useQuery<HistoryDocument[]>({
+  const { data: recentReviews, isLoading: reviewsLoading } = useQuery<DashboardReviewRow[]>({
     queryKey: ['recentReviews'],
     queryFn: async () => {
       try {
         const response = await api.get('/api/v1/reviews/');
-        const allReviews = (response.data as any[]).map(item => {
-          const id = item.id || item._id;
-          return {
-            id: id,
-            displayId: item.displayId || generateDisplayId(id),
-            companyName: item.companyName || item.metadata?.companyName || "Unknown Company",
-            documentDate: item.documentDate || item.metadata?.documentDate || "2024",
-            uploadDate: item.createdAt || new Date().toISOString(),
-            fileUrl: item.fileUrl || "",
-            status: item.status,
-            riskLevel: item.riskLevel || 'Medium',
-            issues: item.issues || 0,
-            totalPages: item.totalPages || 0
-          } as HistoryDocument;
-        });
-        return allReviews.slice(0, 4);
+        const items = response.data as Record<string, unknown>[];
+
+        const rows = await Promise.all(
+          items.map(async (item) => {
+            const id = String(item.id ?? item._id ?? "");
+            const displayId = (item.displayId as string) || generateDisplayId(id);
+            const base = mapApiReviewToDashboardRow(item, id, displayId);
+            const st = String(item.status ?? "").toUpperCase();
+            if (st !== "COMPLETED" && st !== "FAILED") return base;
+
+            try {
+              const reportRes = await api.get<ReviewResult>(`/api/v1/reviews/${id}/report`);
+              return mergeReviewReportIntoRow(base, reportRes.data);
+            } catch {
+              return base;
+            }
+          })
+        );
+        return rows;
       } catch (error) {
         console.error("Failed to fetch recent reviews", error);
         return [];
@@ -75,7 +83,11 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="w-full"
           >
-            <RecentStatementsTable documents={recentReviews || []} isLoading={reviewsLoading} />
+            <RecentStatementsTable
+              documents={(recentReviews || []).slice(0, 4)}
+              isLoading={reviewsLoading}
+              hasMore={(recentReviews?.length || 0) > 4}
+            />
           </motion.div>
           
           {/* Upload Section */}

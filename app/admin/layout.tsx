@@ -1,9 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import { usePathname, useRouter } from "next/navigation";
+import PortalLayout from "@/components/PortalLayout";
+import { adminMenuItems } from "@/components/Sidebar";
 import { AdminAuthProvider, useAdminAuth } from "@/components/admin/AdminAuthProvider";
-import { Loader2 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,9 +16,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isLoginPage = pathname === '/admin/login';
-  const { isAuthorized, loading } = useAdminAuth();
+  const { isAuthorized, loading, platformUser, signOut } = useAdminAuth();
+  const router = useRouter();
 
-  // Note: loading is usually handled by AdminAuthProvider, but strictly safely check here
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   if (loading) return null;
 
   if (isLoginPage) {
@@ -33,11 +42,15 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <AdminSidebar />
-      <main className="flex-1 overflow-y-auto p-8">
-        {children}
-      </main>
-    </div>
+    <PortalLayout
+      menuItems={adminMenuItems}
+      user={{
+        displayName: platformUser?.name,
+        email: platformUser?.role?.replace('_', ' ') + ' PORTAL'
+      }}
+      signOut={handleSignOut}
+    >
+      {children}
+    </PortalLayout>
   );
 }

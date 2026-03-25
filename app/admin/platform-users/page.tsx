@@ -5,17 +5,23 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
   Search, 
   Plus, 
-  MoreVertical, 
   Trash2, 
   Edit2, 
   Shield, 
   CheckCircle, 
+  Loader2,
+  UserPlus,
+  Filter,
+  MoreVertical,
   XCircle,
-  Loader2
+  ShieldCheck,
+  Users
 } from "lucide-react";
 import { PlatformUser, AdminRole } from "@/types/admin";
 import { useAdminAuth } from "@/components/admin/AdminAuthProvider";
 import api from "@/lib/api";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const fetchUsers = async (): Promise<PlatformUser[]> => {
   const { data } = await api.get('/api/v1/admin/platform-users');
@@ -111,115 +117,137 @@ export default function PlatformUsersPage() {
   const canManageUsers = myRole === 'SUPER_ADMIN';
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="w-full h-full flex flex-col pt-2 pb-8 scrollbar-hide">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Platform Users</h1>
-          <p className="text-gray-500 mt-1">Manage internal team access and roles</p>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+             <Users className="w-8 h-8 text-blue-600" />
+             Platform Users
+          </h1>
+          <p className="text-slate-500 font-medium mt-1">Manage internal team access, roles, and platform permissions</p>
         </div>
         
         {canManageUsers && (
           <button
             onClick={() => openModal()}
-            className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 text-sm font-bold gap-2 group"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add User
+            <UserPlus className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            Add New User
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="audit-card overflow-hidden flex flex-col">
         {/* Toolbar */}
-        <div className="p-4 border-b border-gray-200 bg-gray-50 flex items-center gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center gap-4">
+          <div className="relative flex-1 w-full sm:max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400 shadow-sm"
             />
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+             <button className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+                <Filter className="w-4 h-4" />
+                Filter
+             </button>
           </div>
         </div>
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          <table className="min-w-full border-collapse">
+            <thead>
+              <tr className="bg-slate-50/50">
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">User Information</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Access Role</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Account Status</th>
+                <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Joined Date</th>
+                <th className="px-6 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-100 bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto" />
+                  <td colSpan={5} className="px-6 py-20 text-center">
+                    <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto" strokeWidth={3} />
+                    <p className="mt-4 text-slate-500 font-bold">Synchronizing user data...</p>
                   </td>
                 </tr>
               ) : filteredUsers?.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                    No users found matching your search.
+                  <td colSpan={5} className="px-6 py-20 text-center">
+                    <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                       <Search className="w-8 h-8" />
+                    </div>
+                    <p className="text-slate-500 font-bold">No users matching "{searchTerm}"</p>
+                    <p className="text-slate-400 text-sm">Try adjusting your filters or search terms</p>
                   </td>
                 </tr>
               ) : (
-                filteredUsers?.map((user) => (
-                  <tr key={user._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                filteredUsers?.map((user, idx) => (
+                  <motion.tr 
+                    key={user._id} 
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.03 }}
+                    className="group hover:bg-slate-50/50 transition-colors"
+                  >
+                    <td className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                        <div className="flex-shrink-0 h-12 w-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20">
                           {user.name?.charAt(0) || user.email?.charAt(0) || '?'}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{user.name || 'Unnamed User'}</div>
-                          <div className="text-sm text-gray-500">{user.email || 'No Email'}</div>
+                          <div className="text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{user.name || 'Unnamed User'}</div>
+                          <div className="text-[13px] font-medium text-slate-500">{user.email || 'No Email'}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        user.role === 'SUPER_ADMIN' ? 'bg-purple-100 text-purple-800' :
-                        user.role === 'ADMIN' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {user.role === 'SUPER_ADMIN' && <Shield className="w-3 h-3 mr-1" />}
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <span className={cn(
+                        "inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase border transition-all",
+                        user.role === 'SUPER_ADMIN' ? 'bg-purple-50 text-purple-700 border-purple-100' :
+                        user.role === 'ADMIN' ? 'bg-blue-50 text-blue-700 border-blue-100' :
+                        'bg-slate-50 text-slate-600 border-slate-100'
+                      )}>
+                        {user.role === 'SUPER_ADMIN' ? <ShieldCheck className="w-3 h-3 mr-1.5" /> : <Shield className="w-3 h-3 mr-1.5" />}
                         {user.role || 'User'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-5 whitespace-nowrap">
                       {user.active ? (
-                        <span className="inline-flex items-center text-sm text-green-600">
-                          <CheckCircle className="w-4 h-4 mr-1.5" /> Active
+                        <span className="inline-flex items-center px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg text-[10px] font-black tracking-widest uppercase">
+                          <CheckCircle className="w-3 h-3 mr-1.5" /> Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center text-sm text-gray-500">
-                          <XCircle className="w-4 h-4 mr-1.5" /> Inactive
+                        <span className="inline-flex items-center px-3 py-1 bg-slate-50 text-slate-400 border border-slate-100 rounded-lg text-[10px] font-black tracking-widest uppercase">
+                          <XCircle className="w-3 h-3 mr-1.5" /> Deactivated
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(user.created_at).toLocaleDateString()}
+                    <td className="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-500">
+                      {new Date(user.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-6 py-5 whitespace-nowrap text-right">
                       {canManageUsers && (
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
                             onClick={() => openModal(user)}
-                            className="text-indigo-600 hover:text-indigo-900 p-1 hover:bg-indigo-50 rounded"
+                            className="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 rounded-xl transition-all shadow-sm"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           {user.role !== 'SUPER_ADMIN' && (
                             <button 
                               onClick={() => handleDelete(user._id)}
-                              className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded"
+                              className="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 rounded-xl transition-all shadow-sm"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -227,7 +255,7 @@ export default function PlatformUsersPage() {
                         </div>
                       )}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))
               )}
             </tbody>
@@ -235,76 +263,101 @@ export default function PlatformUsersPage() {
         </div>
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-            <h3 className="text-lg font-bold mb-4">{editingUser ? 'Edit User' : 'Add New User'}</h3>
-            <form onSubmit={handleSave}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
-                  />
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-[100] p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl relative z-10 border border-slate-100"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <UserPlus className="w-6 h-6" />
+                 </div>
+                 <div>
+                    <h3 className="text-xl font-black text-slate-800 tracking-tight">{editingUser ? 'Edit User' : 'Add New User'}</h3>
+                    <p className="text-slate-500 text-sm font-medium">Configure team access and permissions</p>
+                 </div>
+              </div>
+
+              <form onSubmit={handleSave} className="space-y-5">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. John Doe"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="e.g. john@vacei.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Access Level</label>
+                    <select
+                      value={formData.role}
+                      onChange={(e) => setFormData({...formData, role: e.target.value as AdminRole})}
+                      className="w-full px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer"
+                    >
+                      <option value="EMPLOYEE">Primary Team Member</option>
+                      <option value="ADMIN">System Administrator</option>
+                      <option value="SUPER_ADMIN">Platform Owner (Super Admin)</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <input
+                      type="checkbox"
+                      id="active-toggle"
+                      checked={formData.active}
+                      onChange={(e) => setFormData({...formData, active: e.target.checked})}
+                      className="h-5 w-5 rounded-lg border-slate-300 text-blue-600 focus:ring-blue-500 outline-none transition-all cursor-pointer"
+                    />
+                    <label htmlFor="active-toggle" className="text-sm font-bold text-slate-700 cursor-pointer select-none">Grant active account access</label>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Role</label>
-                  <select
-                    value={formData.role}
-                    onChange={(e) => setFormData({...formData, role: e.target.value as AdminRole})}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
+                
+                <div className="flex flex-col gap-3 mt-8">
+                  <button 
+                    type="submit"
+                    disabled={saveMutation.isPending}
+                    className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
                   >
-                    <option value="EMPLOYEE">Employee</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="SUPER_ADMIN">Super Admin</option>
-                  </select>
+                    {saveMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : editingUser ? 'UPDATE PERMISSIONS' : 'PROVISION USER'}
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="w-full py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-slate-200 transition-all"
+                  >
+                    CANCEL
+                  </button>
                 </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.active}
-                    onChange={(e) => setFormData({...formData, active: e.target.checked})}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label className="ml-2 block text-sm text-gray-900">Active Account</label>
-                </div>
-              </div>
-              
-              <div className="flex justify-end gap-3 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  disabled={saveMutation.isPending}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center"
-                >
-                  {saveMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                  {editingUser ? 'Update User' : 'Create User'}
-                </button>
-              </div>
-            </form>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

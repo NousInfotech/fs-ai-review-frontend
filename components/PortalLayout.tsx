@@ -6,31 +6,51 @@ import Sidebar from "./Sidebar";
 import TopHeader from "./TopHeader";
 import { motion } from "framer-motion";
 
+import { MenuItem } from "./Sidebar";
+
 interface PortalLayoutProps {
   children: React.ReactNode;
   title?: string;
   description?: string;
+  menuItems?: MenuItem[];
+  user?: any;
+  signOut?: () => void;
 }
 
-export default function PortalLayout({ children, title, description }: PortalLayoutProps) {
+export default function PortalLayout({ 
+  children, 
+  title, 
+  description,
+  menuItems,
+  user,
+  signOut
+}: PortalLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <div className="flex min-h-screen bg-[#f3f5f9]">
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        menuItems={menuItems}
+        user={user}
+        signOut={signOut}
+      />
       
       <div
         className={cn(
           "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-out",
-          isSidebarOpen ? "ml-64" : "ml-20"
+          /* Match Sidebar motion widths (280 open / 88 collapsed) — ml-64 was 256px and ate into left breathing room */
+          isSidebarOpen ? "ml-[280px]" : "ml-[88px]"
         )}
       >
         <TopHeader
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          user={user}
+          signOut={signOut}
         />
         
-        <main className="flex-1 p-6 lg:p-8 overflow-x-hidden">
+        <main className="flex-1 overflow-x-hidden pl-6 pr-5 pt-6 pb-6 sm:pl-8 sm:pr-6 sm:pt-7 sm:pb-7 lg:pl-10 lg:pr-8 lg:pt-8 lg:pb-8">
           <div className="max-w-[1280px] mx-auto w-full">
             {/* If there is a title passed strictly, maybe show it, but new dash relies on custom rendering */}
             {(title || description) && (

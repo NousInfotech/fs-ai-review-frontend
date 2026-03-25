@@ -5,40 +5,59 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
     Home,
-    FileText,
-    AlertTriangle,
     BarChart2,
     Settings,
     UploadCloud,
-    Loader,
-    CheckSquare,
     LogOut,
     User,
-    ChevronRight
+    ChevronRight,
+    Users,
+    FileText,
+    Activity
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 
-const menuItems = [
+export interface MenuItem {
+    name: string;
+    href: string;
+    icon: any;
+}
+
+export const userMenuItems: MenuItem[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "Upload", href: "/upload", icon: UploadCloud },
-    { name: "Processing", href: "/processing", icon: Loader },
-    { name: "Results", href: "/results", icon: CheckSquare },
-    { name: "Financial Statements", href: "/history", icon: FileText },
-    { name: "Issues", href: "/issues", icon: AlertTriangle },
     { name: "Reports", href: "/reports", icon: BarChart2 },
     { name: "Settings", href: "/settings", icon: Settings },
 ];
 
+export const adminMenuItems: MenuItem[] = [
+    { name: 'Dashboard', href: '/admin/dashboard', icon: Home },
+    { name: 'Platform Users', href: '/admin/platform-users', icon: Users },
+    { name: 'Test Cases', href: '/admin/test-cases', icon: FileText },
+    { name: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
+];
+
 interface SidebarProps {
     isOpen: boolean;
+    menuItems?: MenuItem[];
+    user?: any;
+    signOut?: () => void;
 }
 
-export default function Sidebar({ isOpen }: SidebarProps) {
+export default function Sidebar({ 
+    isOpen, 
+    menuItems = userMenuItems, 
+    user: propUser, 
+    signOut: propSignOut 
+}: SidebarProps) {
     const pathname = usePathname();
-    const { user, signOut } = useAuth();
+    const { user: authUser, signOut: authSignOut } = useAuth();
+    
+    const user = propUser || authUser;
+    const signOut = propSignOut || authSignOut;
 
     return (
         <TooltipProvider delayDuration={0}>
