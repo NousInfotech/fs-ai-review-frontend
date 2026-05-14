@@ -16,8 +16,14 @@ function severityStyles(severity: SectionFFinding["severity"]) {
       return { pill: "bg-red-50 text-red-700 border-red-200", icon: "text-red-500" };
     case "high":
       return { pill: "bg-orange-50 text-orange-700 border-orange-200", icon: "text-orange-500" };
+    case "medium":
+      return { pill: "bg-amber-50 text-amber-700 border-amber-200", icon: "text-amber-500" };
     case "warning":
       return { pill: "bg-yellow-50 text-yellow-700 border-yellow-200", icon: "text-yellow-600" };
+    case "info":
+      return { pill: "bg-emerald-50 text-emerald-800 border-emerald-200", icon: "text-emerald-600" };
+    case "low":
+      return { pill: "bg-slate-50 text-slate-600 border-slate-200", icon: "text-slate-500" };
     default:
       return { pill: "bg-slate-50 text-slate-700 border-slate-200", icon: "text-slate-500" };
   }
@@ -33,15 +39,42 @@ export default function SectionF({ data }: { data?: SectionFType }) {
   if (stats) summaryParts.push(`Checks: ${stats.checks_run} run / ${stats.checks_passed} passed / ${stats.checks_failed} failed`);
   if (calculation?.current_year) summaryParts.push(`Year: ${calculation.current_year}`);
 
+  const allChecksPassedNoRows =
+    findings.length === 0 &&
+    calculation?.overall_status === "PASS" &&
+    stats != null &&
+    stats.checks_run > 0 &&
+    stats.checks_failed === 0;
+
+  const insufficientExplanation =
+    calculation?.overall_status === "INSUFFICIENT_DATA" && calculation?.explanation
+      ? String(calculation.explanation)
+      : "";
+
+  const emptyMessage = allChecksPassedNoRows
+    ? `All ${stats!.checks_run} arithmetic check(s) passed; there are no detailed rows to list.`
+    : insufficientExplanation && findings.length === 0
+      ? insufficientExplanation
+      : "No calculation findings found.";
+
+  const badgeCount =
+    findings.length > 0
+      ? findings.length
+      : stats != null && stats.checks_run > 0
+        ? stats.checks_run
+        : insufficientExplanation
+          ? 1
+          : 0;
+
   return (
     <ReviewSection
       title="Calculations"
       titleColorClass="text-indigo-700"
       badgeColorClass="bg-indigo-700"
-      count={findings.length}
+      count={badgeCount}
       content={summaryParts.length ? summaryParts.join(" • ") : undefined}
       items={findings}
-      emptyMessage="No calculation findings found."
+      emptyMessage={emptyMessage}
       emptyBgClass="bg-indigo-50/40"
       emptyBorderClass="border-indigo-100"
       renderItem={(finding, idx) => {
