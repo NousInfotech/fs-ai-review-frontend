@@ -10,6 +10,7 @@ function formatValue(value: number | string | undefined) {
   return String(value);
 }
 
+
 function severityStyles(severity: SectionFFinding["severity"]) {
   switch (severity) {
     case "critical":
@@ -29,7 +30,11 @@ function severityStyles(severity: SectionFFinding["severity"]) {
   }
 }
 
-export default function SectionF({ data }: { data?: SectionFType }) {
+export default function SectionF({
+  data,
+}: {
+  data?: SectionFType;
+}) {
   const calculation = data?.stages?.calculation;
   const findings = calculation?.findings || [];
   const stats = calculation?.stats;

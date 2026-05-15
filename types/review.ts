@@ -130,6 +130,18 @@ export interface SectionF {
   stages: SectionFStages;
 }
 
+export interface ReviewValidation {
+  overall_status?: string;
+  explanation?: string | null;
+  findings?: SectionFFinding[];
+}
+
+export interface ReviewStatistics {
+  checks_run?: number;
+  checks_passed?: number;
+  checks_failed?: number;
+}
+
 export interface ReviewResult {
   A: SectionA;
   B: SectionB;
@@ -137,6 +149,9 @@ export interface ReviewResult {
   D: SectionD;
   E: SectionE;
   F?: SectionF;
+  validation?: ReviewValidation;
+  statistics?: ReviewStatistics;
+  passed_checks?: unknown[];
 }
 
 export interface TestResult {
