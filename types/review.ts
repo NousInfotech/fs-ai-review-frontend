@@ -84,7 +84,7 @@ export interface SectionE {
   document_url?: string;
 }
 
-export type SectionFOverallStatus = "PASS" | "FAIL";
+export type SectionFOverallStatus = "PASS" | "FAIL" | "INSUFFICIENT_DATA";
 
 export interface SectionFCalculationStats {
   checks_run: number;
@@ -92,7 +92,7 @@ export interface SectionFCalculationStats {
   checks_failed: number;
 }
 
-export type SectionFFindingSeverity = "critical" | "high" | "warning" | "info";
+export type SectionFFindingSeverity = "critical" | "high" | "medium" | "warning" | "info" | "low";
 
 export interface SectionFFinding {
   test_id: string;
