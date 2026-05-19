@@ -37,9 +37,11 @@ export default function SectionC({
               <Info className="text-yellow-500" size={18} />
               <div className="flex flex-col items-start text-left">
                 <span className="group-hover:underline underline-offset-4">
-                  {issue.test_id
-                    ? `${issue.test_id} — ${issue.name || issue.result || ""}`
-                    : issue.name || issue.result || `Unknown — ${(issue.id || "").slice(0, 8)}`}
+                  {issue.rule_id?.startsWith("PRES_")
+                    ? issue.name || issue.result || "Column layout"
+                    : issue.test_id
+                      ? `${issue.test_id} — ${issue.name || issue.result || ""}`
+                      : issue.name || issue.result || `Unknown — ${(issue.id || "").slice(0, 8)}`}
                 </span>
               </div>
               {issue.category && (

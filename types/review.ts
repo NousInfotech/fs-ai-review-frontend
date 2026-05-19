@@ -39,6 +39,7 @@ export interface CriticalError {
 export interface DisclosureBreach {
   id?: string;       // Canonical MongoDB ObjectId (set by backend sanitize_items)
   test_id?: string;  // Friendly label e.g. T1, T2 — enriched from test_cases collection by backend
+  rule_id?: string;
   category?: string;
   name?: string;
   description?: string;
